@@ -1,0 +1,290 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #091934;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: whitesmoke;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.logo {
+    margin-bottom: 10px;
+    width: 400px;
+    height: auto;
+}
+
+nav {
+    background-color: #007bff;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.search-bar {
+    margin: 20px;
+    padding: 10px;
+    width: 50%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 90%;
+    margin: 20px 0;
+}
+
+.category {
+    width: 45%;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 10px;
+}
+
+.category h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.year-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.year-button:hover {
+    background-color: #0056b3;
+}
+
+.months {
+    display: none;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.months.open {
+    display: block;
+    max-height: 1000px;
+}
+
+.month-link {
+    display: block;
+    margin: 5px 0;
+    color: #000000;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.month-link:hover {
+    text-decoration: underline;
+    width: max-content;
+    background: #061c39;
+    color: white;
+}
+
+footer {
+    color: whitesmoke;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .category {
+        width: 100%;
+    }
+
+    .search-bar {
+        width: 80%;
+    }
+}
+
+.highlight {
+    background-color: yellow;
+    color: black;
+}
+
+body.dark-mode {
+    background-color: #121212;
+    color: #f5f5f5;
+}
+
+body.dark-mode nav {
+    background-color: #1f1f1f;
+}
+
+body.dark-mode .search-bar {
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    border-color: #444;
+}
+
+body.dark-mode .category {
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .month-link {
+    color: #f5f5f5;
+}
+
+body.dark-mode .month-link:hover {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark-mode .year-button {
+    background-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-mode .year-button:hover {
+    background-color: #666;
+}
+
+body.dark-mode .theme-toggle {
+    background-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-mode .theme-toggle:hover {
+    background-color: #666;
+}
+
+body.dark-mode #links {
+    background-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-mode #links:hover {
+    background-color: #666;
+}
+
+body.dark-mode #aniver {
+    background-color: #444;
+    color: #f5f5f5;
+}
+
+body.dark-mode #aniver:hover {
+    background-color: #666;
+}
+
+#links {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+#links a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#links:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
+
+#aniver {
+    position: fixed;
+    bottom: 180px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+#aniver a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#aniver:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
+
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.theme-toggle:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
+
+.months {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.months.open {
+    max-height: 1000px;
+}
