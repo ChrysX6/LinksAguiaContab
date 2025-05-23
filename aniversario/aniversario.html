@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aniversariantes do Mês 🎉</title>
+    <link rel="shortcut icon" href="bolologo.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff9800, #ffeb3b);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        #lista-aniversariantes {
+            margin: 20px auto;
+            padding: 0;
+            max-width: 600px;
+            list-style: none;
+        }
+
+        .aniversariante {
+            background: #fff;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .aniversariante:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .destaque {
+            background-color: #ffeb3b;
+            font-weight: bold;
+            border: 2px solid #ff9800;
+            animation: pulse 1.5s infinite;
+        }
+
+        .countdown {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 5px #ff9800;
+            }
+            50% {
+                box-shadow: 0 0 20px #ff9800;
+            }
+            100% {
+                box-shadow: 0 0 5px #ff9800;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Aniversariantes do Mês 🎉</h1>
+        <div class="confetti" id="confetti"></div>
+    </header>
+
+    <ul id="lista-aniversariantes"></ul>
+
+    <script>
+        // Dados dos aniversariantes
+        const aniversariantes = [
+            { nome: "Andreia Zago", data: "2025-07-26" },
+            { nome: "Chrystian", data: "2025-11-25" },
+            { nome: "Edson", data: "2025-08-04" },
+            { nome: "Jéssica", data: "2025-12-20" },
+            { nome: "José", data: "2025-08-03" },
+            { nome: "Marcelo", data: "2025-09-04" },
+            { nome: "Márcia Barreto", data: "2026-02-14" },
+            { nome: "Márcia Costa", data: "2026-03-23" },
+            { nome: "Marcia Oliveira", data: "2026-03-27" },
+            { nome: "Martins", data: "2026-02-25" },
+            { nome: "Nicoly", data: "2026-04-30" },
+            { nome: "Ryan", data: "2026-04-24" },
+            { nome: "Tânia", data: "2025-05-27" },
+            { nome: "Victhor", data: "2025-07-13" },
+        ];
+
+        const hoje = new Date().toISOString().split("T")[0];
+        const lista = document.getElementById("lista-aniversariantes");
+
+        aniversariantes.forEach((aniversariante) => {
+            const item = document.createElement("li");
+            item.classList.add("aniversariante");
+
+            const aniversario = new Date(aniversariante.data);
+            const hojeDate = new Date();
+            const diffTime = aniversario - hojeDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            let countdownText = "";
+            if (diffDays > 0) {
+                countdownText = `<span class='countdown'>Faltam ${diffDays} dia(s) para o aniversário!</span>`;
+            } else if (diffDays === 0) {
+                countdownText = `<span class='countdown'>É hoje! 🎉</span>`;
+            }
+
+            if (aniversariante.data === hoje) {
+                item.classList.add("destaque");
+                item.innerHTML = `🎂 <strong>${aniversariante.nome}</strong> - HOJE! ${countdownText}`; // Destaque do dia
+            } else {
+                item.innerHTML = `${aniversariante.nome} - ${aniversariante.data} ${countdownText}`;
+            }
+
+            lista.appendChild(item);
+        });
+
+        // Função para adicionar confetes animados
+        function criarConfetes() {
+            const confettiContainer = document.getElementById("confetti");
+
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement("div");
+                confetti.style.position = "absolute";
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = confetti.style.width;
+                confetti.style.top = "-10px";
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s ease-out infinite`;
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        criarConfetes();
+
+        // Estilos para queda de confetes
+        const style = document.createElement("style");
+        style.innerHTML = `
+            @keyframes fall {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(100vh) rotate(720deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
