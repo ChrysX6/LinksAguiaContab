@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Links Favoritos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset e Estilos Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #7f8c8d;
+        }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 35px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 10px;
+            color: #7f8c8d;
+        }
+
+        /* Categorias */
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background-color: #ecf0f1;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Links Container */
+        .links-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .link-card h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .link-card a {
+            color: #3498db;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+
+        .link-card .category {
+            display: inline-block;
+            background-color: #e0f7fa;
+            color: #00838f;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .link-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .link-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .link-actions button:hover {
+            color: #e74c3c;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .no-links {
+            text-align: center;
+            grid-column: 1 / -1;
+            color: #7f8c8d;
+            padding: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box, .search-box input {
+                width: 100%;
+            }
+            
+            .categories {
+                overflow-x: auto;
+                padding-bottom: 10px;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .category-btn {
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .form-group input, .form-group select {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Links Favoritos</h1>
+            <p>Acesso rápido aos seus sites preferidos</p>
+        </header>
+
+        <div class="controls">
+            <button id="addLinkBtn" class="btn" aria-label="Adicionar novo link">+ Adicionar Link</button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Pesquisar links...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn active" data-category="all">Todos</button>
+            <button class="category-btn" data-category="FISCAL">FISCAL</button>
+            <button class="category-btn" data-category="DP">DP</button>
+            <button class="category-btn" data-category="CONTÁBIL">CONTÁBIL</button>
+            <button class="category-btn" data-category="SOCIETÁRIO">SOCIETÁRIO</button>
+        </div>
+
+        <div class="links-container" id="linksContainer">
+            <!-- Links serão inseridos aqui via JavaScript -->
+        </div>
+
+        <!-- Modal para adicionar/editar links -->
+        <div class="modal" id="linkModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2 id="modalTitle">Adicionar Novo Link</h2>
+                <form id="linkForm">
+                    <input type="hidden" id="linkId">
+                    <div class="form-group">
+                        <label for="linkName">Nome:</label>
+                        <input type="text" id="linkName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkUrl">URL:</label>
+                        <input type="url" id="linkUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkCategory">Categoria:</label>
+                        <select id="linkCategory" required>
+                            <option value="FISCAL">FISCAL</option>
+                            <option value="DP">DP</option>
+                            <option value="CONTÁBIL">CONTÁBIL</option>
+                            <option value="SOCIETÁRIO">SOCIETÁRIO</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const linksContainer = document.getElementById('linksContainer');
+            const addLinkBtn = document.getElementById('addLinkBtn');
+            const linkModal = document.getElementById('linkModal');
+            const closeBtn = document.querySelector('.close-btn');
+            const linkForm = document.getElementById('linkForm');
+            const searchInput = document.getElementById('searchInput');
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            
+            // Variáveis de estado
+            let links = [];
+            try {
+                const storedLinks = localStorage.getItem('employeeLinks');
+                links = storedLinks ? JSON.parse(storedLinks) : [];
+            } catch (e) {
+                console.error('Erro ao carregar links:', e);
+                links = [];
+            }
+            
+            let currentCategory = 'all';
+            let currentSearch = '';
+            let editingLinkId = null;
+            
+            // Inicializar a aplicação
+            function init() {
+                renderLinks();
+                setupEventListeners();
+            }
+            
+            // Configurar event listeners
+            function setupEventListeners() {
+                // Botão adicionar link
+                addLinkBtn.addEventListener('click', () => {
+                    editingLinkId = null;
+                    document.getElementById('modalTitle').textContent = 'Adicionar Novo Link';
+                    document.getElementById('linkForm').reset();
+                    linkModal.style.display = 'flex';
+                    document.getElementById('linkName').focus();
+                });
+                
+                // Fechar modal
+                closeBtn.addEventListener('click', () => {
+                    linkModal.style.display = 'none';
+                    document.getElementById('linkForm').reset();
+                });
+                
+                // Fechar modal ao clicar fora
+                window.addEventListener('click', (e) => {
+                    if (e.target === linkModal) {
+                        linkModal.style.display = 'none';
+                        document.getElementById('linkForm').reset();
+                    }
+                });
+                
+                // Formulário de link
+                linkForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleLinkSubmit();
+                });
+                
+                // Pesquisa
+                searchInput.addEventListener('input', (e) => {
+                    currentSearch = e.target.value.toLowerCase();
+                    renderLinks();
+                });
+                
+                // Categorias
+                categoryBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        categoryBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentCategory = btn.dataset.category;
+                        renderLinks();
+                    });
+                });
+            }
+            
+            // Manipular envio do formulário
+            function handleLinkSubmit() {
+                const linkName = document.getElementById('linkName').value.trim();
+                const linkUrl = document.getElementById('linkUrl').value.trim();
+                const linkCategory = document.getElementById('linkCategory').value;
+                
+                // Validar campos
+                if (!linkName || !linkUrl || !linkCategory) {
+                    alert('Por favor, preencha todos os campos');
+                    return;
+                }
+                
+                // Verificar se a URL começa com http/https
+                let finalUrl = linkUrl;
+                if (!linkUrl.startsWith('http://') && !linkUrl.startsWith('https://')) {
+                    finalUrl = 'https://' + linkUrl;
+                }
+                
+                // Validar URL
+                try {
+                    new URL(finalUrl);
+                } catch (e) {
+                    alert('Por favor, insira uma URL válida');
+                    return;
+                }
+                
+                if (editingLinkId !== null) {
+                    // Editar link existente
+                    links = links.map(link => {
+                        if (link.id === editingLinkId) {
+                            return {
+                                ...link,
+                                name: linkName,
+                                url: finalUrl,
+                                category: linkCategory
+                            };
+                        }
+                        return link;
+                    });
+                } else {
+                    // Adicionar novo link
+                    const newLink = {
+                        id: Date.now().toString(),
+                        name: linkName,
+                        url: finalUrl,
+                        category: linkCategory,
+                        createdAt: new Date().toISOString()
+                    };
+                    links.push(newLink);
+                }
+                
+                // Salvar e atualizar
+                saveLinks();
+                renderLinks();
+                linkModal.style.display = 'none';
+                document.getElementById('linkForm').reset();
+            }
+            
+            // Salvar links no localStorage
+            function saveLinks() {
+                localStorage.setItem('employeeLinks', JSON.stringify(links));
+            }
+            
+            // Sanitizar entradas para prevenir XSS
+            function sanitizeInput(input) {
+                const div = document.createElement('div');
+                div.textContent = input;
+                return div.innerHTML;
+            }
+            
+            // Renderizar links na tela
+            function renderLinks() {
+                // Filtrar links por categoria e pesquisa
+                let filteredLinks = links.filter(link => {
+                    const matchesCategory = currentCategory === 'all' || link.category === currentCategory;
+                    const matchesSearch = link.name.toLowerCase().includes(currentSearch) || 
+                                        link.url.toLowerCase().includes(currentSearch);
+                    return matchesCategory && matchesSearch;
+                });
+                
+                // Ordenar por nome
+                filteredLinks.sort((a, b) => a.name.localeCompare(b.name));
+                
+                // Limpar container
+                linksContainer.innerHTML = '';
+                
+                // Adicionar links filtrados
+                if (filteredLinks.length === 0) {
+                    linksContainer.innerHTML = '<p class="no-links">Nenhum link encontrado.</p>';
+                    return;
+                }
+                
+                // Mapear categorias para nomes mais amigáveis
+                const categoryNames = {
+                    'FISCAL': 'FISCAL',
+                    'DP': 'DP',
+                    'CONTÁBIL': 'CONTÁBIL',
+                    'SOCIETÁRIO': 'SOCIETÁRIO'
+                };
+                
+                filteredLinks.forEach(link => {
+                    const linkCard = document.createElement('div');
+                    linkCard.className = 'link-card';
+                    
+                    linkCard.innerHTML = `
+                        <div class="link-actions">
+                            <button class="edit-btn" data-id="${sanitizeInput(link.id)}" aria-label="Editar link">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn" data-id="${sanitizeInput(link.id)}" aria-label="Excluir link">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <h3>${sanitizeInput(link.name)}</h3>
+                        <a href="${sanitizeInput(link.url)}" target="_blank" rel="noopener noreferrer">
+                            ${sanitizeInput(link.url)}
+                        </a>
+                        <span class="category">${sanitizeInput(categoryNames[link.category] || link.category)}</span>
+                    `;
+                    
+                    linksContainer.appendChild(linkCard);
+                });
+                
+                // Adicionar event listeners para os botões de editar/excluir
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.dataset.id;
+                        editLink(id);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.dataset.id;
+                        deleteLink(id);
+                    });
+                });
+            }
+            
+            // Editar link
+            function editLink(id) {
+                const linkToEdit = links.find(link => link.id === id);
+                if (!linkToEdit) return;
+                
+                editingLinkId = id;
+                document.getElementById('modalTitle').textContent = 'Editar Link';
+                document.getElementById('linkId').value = id;
+                document.getElementById('linkName').value = linkToEdit.name;
+                document.getElementById('linkUrl').value = linkToEdit.url;
+                document.getElementById('linkCategory').value = linkToEdit.category;
+                
+                linkModal.style.display = 'flex';
+                document.getElementById('linkName').focus();
+            }
+            
+            // Excluir link
+            function deleteLink(id) {
+                if (confirm('Tem certeza que deseja excluir este link?')) {
+                    links = links.filter(link => link.id !== id);
+                    saveLinks();
+                    renderLinks();
+                }
+            }
+            
+            // Inicializar a aplicação
+            init();
+        });
+    </script>
+</body>
+</html>
