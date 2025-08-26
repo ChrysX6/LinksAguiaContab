@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favoritos Contábeis</title>
+    <link rel="stylesheet" href="favoritos.css">
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
+    
+</head>
+<body>
+    <header>
+        <h1>Favoritos dos Departamentos</h1>
+    </header>
+    <main>
+        <div class="departamento" onclick="openModal('fiscal-content')">
+            <img src="img/fiscal.png" alt="Departamento Fiscal">
+            <h2>Fiscal</h2>
+        </div>
+        <div class="departamento" onclick="openModal('pessoal-content')">
+            <img src="img/pessoal.png" alt="Departamento Pessoal">
+            <h2>Pessoal</h2>
+        </div>
+        <div class="departamento" onclick="openModal('contabil-content')">
+            <img src="img/contabil.png" alt="Contabilidade Geral">
+            <h2>Contábil</h2>
+        </div>
+        <div class="departamento" onclick="openModal('societario-content')">
+            <img src="img/societario.png" alt="Departamento Societário">
+            <h2>Societário</h2>
+        </div>
+    </main>
+
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modal-content">
+            <!-- Conteúdo dinâmico será inserido aqui -->
+        </div>
+        <button class="close-modal" onclick="closeModal()">Fechar</button>
+    </div>
+
+    <!-- Conteúdos ocultos para os departamentos -->
+    <div id="fiscal-content" style="display: none;">
+        <h2>Departamento Fiscal</h2>
+        <ul class="lista-favoritos">
+            <li><a href="#" target="_blank">Gerar PGMEI</a></li>
+            <li><a href="#" target="_blank">Nota do milhão</a></li>
+            <li><a href="#" target="_blank">GISS ONLINE</a></li>
+            <li><a href="#" target="_blank">Nota do MEI</a></li>
+            <li><a href="#" target="_blank">PGDAS Direto</a></li>
+            <li><a href="#" target="_blank">Nota de Barueri</a></li>
+            <li><a href="#" target="_blank">Nota de Curitiba</a></li>
+            <li><a href="#" target="_blank">Nota de Lins</a></li>
+            <li><a href="../acessos/acessos.html" target="_blank">Acesso as notas de Comércios</a></li>
+        </ul>
+    </div>
+    <div id="pessoal-content" style="display: none;">
+        <h2>Departamento Pessoal</h2>
+        <ul class="lista-favoritos">
+            <li><a href="https://www.esocial.gov.br" target="_blank">eSocial</a></li>
+            <li><a href="https://www.inss.gov.br" target="_blank">INSS</a></li>
+            <li><a href="https://www.caixa.gov.br" target="_blank">FGTS - Caixa Econômica</a></li>
+        </ul>
+    </div>
+    <div id="contabil-content" style="display: none;">
+        <h2>Departamento Contábil</h2>
+        <ul class="lista-favoritos">
+            <li><a href="https://cfc.org.br" target="_blank">Conselho Federal de Contabilidade</a></li>
+            <li><a href="https://www.ibpt.com.br" target="_blank">IBPT</a></li>
+            <li><a href="https://www.sebrae.com.br" target="_blank">Sebrae</a></li>
+        </ul>
+    </div>
+    <div id="societario-content" style="display: none;">
+        <h2>Departamento Societário</h2>
+        <ul class="lista-favoritos">
+            <li><a href="https://www.jucesp.sp.gov.br" target="_blank">Junta Comercial</a></li>
+            <li><a href="https://www.gov.br/empresas-e-negocios" target="_blank">Portal Gov - Empresas</a></li>
+            <li><a href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp" target="_blank">CNPJ - Receita Federal</a></li>
+            <li><a href="https://senhawebsts.prefeitura.sp.gov.br/Account/Login.aspx?ReturnUrl=%2f%3fwa%3dwsignin1.0%26wtrealm%3dhttps%253a%252f%252fduc.prefeitura.sp.gov.br%252fportal%252f%26wctx%3drm%253d0%2526id%253dpassive%2526ru%253d%25252fportal%25252fforms%25252ffrm04_SelecaoDebito.aspx%26wct%3d2025-01-24T19%253a02%253a26Z&wa=wsignin1.0&wtrealm=https%3a%2f%2fduc.prefeitura.sp.gov.br%2fportal%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fportal%252fforms%252ffrm04_SelecaoDebito.aspx&wct=2025-01-24T19%3a02%3a26Z" target="_blank">DUC Prefeitura</a></li>
+            <li><a href="https://cav.receita.fazenda.gov.br/autenticacao/login" target="_blank">eCAC</a></li>
+            <li><a href="https://sp156.prefeitura.sp.gov.br/portal/servicos" target="_blank">Portal 156</a></li>
+            <li><a href="https://vreredesim.sp.gov.br/home" target="_blank">Redeseim</a></li>
+            <li><a href="http://www.sintegra.gov.br/" target="_blank">Sintegra</a></li>
+            <li><a href="https://consopt.www8.receita.fazenda.gov.br/consultaoptantes" target="_blank">Consulta optante</a></li>
+        </ul>
+    </div>
+
+    <script src="favoritos.js"></script>
+</body>
+</html>
