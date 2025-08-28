@@ -31,38 +31,6 @@
             transform: scale(1.05);
         }
 
-        /* Águia decorativa */
-        .eagle-decoration {
-            position: absolute;
-            opacity: 0.1;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .eagle-1 {
-            top: 50px;
-            left: 5%;
-            font-size: 120px;
-            transform: rotate(-15deg);
-            color: #ffffff;
-        }
-
-        .eagle-2 {
-            top: 200px;
-            right: 5%;
-            font-size: 100px;
-            transform: rotate(15deg);
-            color: #ffffff;
-        }
-
-        .eagle-3 {
-            bottom: 100px;
-            left: 10%;
-            font-size: 80px;
-            transform: rotate(-10deg);
-            color: #ffffff;
-        }
-
         nav {
             background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
             width: 100%;
@@ -424,3 +392,4 @@
         .eagle-3 {
             animation: float 9s ease-in-out infinite;
         }
+
