@@ -1,4 +1,4 @@
-document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.getElementById('theme-toggle').addEventListener('click', () => {
             const body = document.body;
             const themeToggle = document.getElementById('theme-toggle');
             const logo = document.getElementById('logo');
@@ -9,10 +9,10 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
             // Muda o ícone do botão e a logo dependendo do modo
             if (body.classList.contains('dark-mode')) {
                 themeToggle.textContent = '🌙';  // Muda o ícone do botão para lua
-                logo.src = 'links/img/logo2.png';  // Logo para o modo escuro
+                logo.src = 'https://via.placeholder.com/400x150/333333/ffffff?text=AGUIACONTAB';  // Logo para o modo escuro
             } else {
                 themeToggle.textContent = '☀️';  // Muda o ícone do botão para sol
-                logo.src = 'links/img/logo1.png';  // Logo para o modo claro
+                logo.src = 'https://via.placeholder.com/400x150/007bff/ffffff?text=AGUIACONTAB';  // Logo para o modo claro
             }
         });
 
