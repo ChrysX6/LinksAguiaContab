@@ -86,3 +86,81 @@
                 category.style.display = categoryHasMatch ? '' : 'none';
             });
         }
+
+        // Sistema de Chat com Senha
+document.addEventListener('DOMContentLoaded', function() {
+    const chatBubble = document.getElementById('chatBubble');
+    const chatIcon = chatBubble.querySelector('.chat-icon');
+    const chatWindow = document.getElementById('chatWindow');
+    const closeChat = document.getElementById('closeChat');
+    const passwordInput = document.getElementById('passwordInput');
+    const submitPassword = document.getElementById('submitPassword');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    // Senha correta
+    const CORRECT_PASSWORD = "Aguia2025@";
+    // Link que será acessado após a senha correta
+    const TARGET_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true"; // SUBSTITUA PELO SEU LINK
+    
+    // Abrir chat
+    chatIcon.addEventListener('click', function() {
+        chatWindow.classList.add('active');
+        passwordInput.focus();
+    });
+    
+    // Fechar chat
+    closeChat.addEventListener('click', function() {
+        chatWindow.classList.remove('active');
+        resetForm();
+    });
+    
+    // Fechar chat clicando fora
+    document.addEventListener('click', function(event) {
+        if (!chatBubble.contains(event.target) && chatWindow.classList.contains('active')) {
+            chatWindow.classList.remove('active');
+            resetForm();
+        }
+    });
+    
+    // Submeter senha
+    submitPassword.addEventListener('click', validatePassword);
+    
+    // Submeter com Enter
+    passwordInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            validatePassword();
+        }
+    });
+    
+    function validatePassword() {
+        const enteredPassword = passwordInput.value.trim();
+        
+        if (enteredPassword === CORRECT_PASSWORD) {
+            // Senha correta - redirecionar para o link
+            window.open(TARGET_LINK, '_blank');
+            resetForm();
+            chatWindow.classList.remove('active');
+        } else {
+            // Senha incorreta
+            errorMessage.textContent = "Senha incorreta. Tente novamente.";
+            errorMessage.classList.add('show');
+            passwordInput.value = '';
+            passwordInput.focus();
+            
+            // Remover mensagem de erro após 3 segundos
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+    }
+    
+    function resetForm() {
+        passwordInput.value = '';
+        errorMessage.classList.remove('show');
+    }
+    
+    // Prevenir que cliques no chat fechem o window
+    chatWindow.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+});
