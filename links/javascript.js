@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessage = document.getElementById('errorMessage');
     
     // Senha correta
-    const CORRECT_PASSWORD = "Aguia2025@";
+    const CORRECT_PASSWORD = "Gestao2025@";
     // Link que será acessado após a senha correta
     const TARGET_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true"; // SUBSTITUA PELO SEU LINK
     
@@ -163,4 +163,5 @@ document.addEventListener('DOMContentLoaded', function() {
     chatWindow.addEventListener('click', function(event) {
         event.stopPropagation();
     });
+
 });
