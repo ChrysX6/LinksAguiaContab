@@ -27,15 +27,95 @@
         <a href="https://onvio.com.br/login/#/" target="_blank"><i class="fa fa-comments"></i> MESSENGER</a>
         <a href="https://drive.google.com/drive/folders/1afARryGTwrtxzlE25qCjvkTvZd1HtH1Z" target="_blank"><i
                 class="fas fa-cloud"></i> DRIVE CONTABIL</a>
+        
+        <!-- Menu Controle Fiscal -->
+        <div class="nav-dropdown">
+            <a href="#" class="nav-dropdown-toggle">
+                <i class="fas fa-chart-line"></i> DEP. FISCAL <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <div class="nav-dropdown-menu">
+                <div class="dropdown-section">
+                    <h4>Escolha o Tipo:</h4>
+                    <button class="dropdown-option" onclick="showYearSelection('lucro-presumido')">
+                        <i class="fas fa-calculator"></i> Lucro Presumido/Real
+                    </button>
+                    <button class="dropdown-option" onclick="showYearSelection('simples-nacional')">
+                        <i class="fas fa-building"></i> Simples Nacional
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Departamento Pessoal -->
+        <div class="nav-dropdown">
+            <a href="#" class="nav-dropdown-toggle">
+                <i class="fas fa-users"></i> DEP. PESSOAL <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <div class="nav-dropdown-menu">
+                <div class="dropdown-section">
+                    <h4>Controles DP:</h4>
+                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-link">
+                        <i class="fas fa-folder"></i> Todos os Controles DP
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-link">
+                        <i class="fas fa-calendar"></i> Controle 2025
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Departamento Contábil -->
+        <div class="nav-dropdown">
+            <a href="#" class="nav-dropdown-toggle">
+                <i class="fas fa-book"></i> DEP. CONTÁBIL <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <div class="nav-dropdown-menu">
+                <div class="dropdown-section">
+                    <h4>Controles Contábeis:</h4>
+                    <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=1051746445#gid=1051746445" target="_blank" class="dropdown-link">
+                        <i class="fas fa-file-excel"></i> Controle 2025
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1afARryGTwrtxzlE25qCjvkTvZd1HtH1Z" target="_blank" class="dropdown-link">
+                        <i class="fas fa-folder"></i> Drive Contábil
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <a href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=1078786846#gid=1078786846"
             target="_blank"><i class="fa fa-university" aria-hidden="true"></i>
-            EMPRESAS PREFEITURAS</a>
+            EMPRESAS PREF.</a>
         <a href="https://drive.google.com/drive/folders/12j2DjMvintoExbiKb_PnsUO0_La7l3R4" target="_blank"><i
                 class="fa fa-clipboard" aria-hidden="true"></i>
             DECLARAÇÕES 2025</a>
         <a href="https://email.uolhost.com.br/" target="_blank"><i
                 class="fas fa-envelope"></i> E-MAIL UOL</a>
     </nav>
+
+    <!-- Modal para seleção de ano e mês -->
+    <div id="yearMonthModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Selecionar Período</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="year-selection">
+                    <h4>Selecione o Ano:</h4>
+                    <div class="year-buttons-modal">
+                        <button class="year-btn" onclick="showMonthSelection(2024)">2024</button>
+                        <button class="year-btn" onclick="showMonthSelection(2025)">2025</button>
+                    </div>
+                </div>
+                <div id="monthSelection" class="month-selection" style="display: none;">
+                    <h4>Selecione o Mês:</h4>
+                    <div class="month-grid" id="monthGrid">
+                        <!-- Os meses serão gerados dinamicamente via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Seção de Avisos e Prazos -->
     <div class="avisos-container">
@@ -65,129 +145,15 @@
         </div>
     </div>
 
-    <input type="text" id="search-bar" class="search-bar" placeholder="Pesquise um mês ou ano..."
+    <input type="text" id="search-bar" class="search-bar" placeholder="Pesquise um sistema ou serviço (ex: E-CAC, SEFIP, DCTF)..."
         oninput="filterLinks()">
 
+    <!-- Container único para todos os links de sistemas -->
     <div class="container">
         <div class="category">
-            <h2><i class="fas fa-folder"></i> Controle Lucro Presumido e Lucro Real</h2>
-            <div class="year-buttons">
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2024-presumido-real')">2024</button>
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2025-presumido-real')">2025</button>
-            </div>
-
-            <div id="months-2024-presumido-real" class="months">
-                <a href="https://drive.google.com/drive/folders/1BIV1OYCNnqLA6AFtt74tri3cb9D7RnhB" target="_blank"
-                    class="month-link">TODOS OS MESES DE 2024</a>
-            </div>
-
-            <div id="months-2025-presumido-real" class="months">
-                <a href="https://drive.google.com/drive/folders/1ykiBqOId1eyw9Vxuv5M6wDdrB0fut5s1?usp=drive_link"
-                    class="month-link" target="_blank">Janeiro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1cuP5LINjfQVmdBuMEEFdjUhIASgAKqIN" class="month-link" target="_blank">Fevereiro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1elN9-Br-O9eCd19Sz7lNg3Bq5Fd0O4W7" class="month-link" target="_blank">Março/2025</a>
-                <a href="https://drive.google.com/drive/folders/1PtCIeLrCc0_aNJXaFzZRlGcRRCziJVgu" class="month-link" target="_blank">Abril/2025</a>
-                <a href="https://drive.google.com/drive/folders/1wXU3nZwDe54mR9URFTGAH3xLNma9oiuS" class="month-link" target="_blank">Maio/2025</a>
-                <a href="https://drive.google.com/drive/folders/1aNgApurd8T540p2oHq5TqyWdJurfg0Pr" class="month-link" target="_blank">Junho/2025</a>
-                <a href="https://drive.google.com/drive/folders/1w_INrhgTi4ahVHz7Xa_V06wxZeKUnMPW" class="month-link" target="_blank">Julho/2025</a>
-                <a href="https://drive.google.com/drive/folders/1bkp9_K5fWyYOSz9UZWRqToTqp_-vdI9G" class="month-link" target="_blank">Agosto/2025</a>
-                <a href="https://drive.google.com/drive/folders/1c6Kfp-GmrInteN1YIyZ3meMcdxxcgR3s" class="month-link" target="_blank">Setembro/2025</a>
-                <a href="https://drive.google.com/drive/folders/19IsvE2x1KFfjDEBU1KWm-yihk0UYiiwy" class="month-link" target="_blank">Outubro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1TXXPTtN9ob2QHYf3z8W7HFTr0qZeCykD" class="month-link" target="_blank">Novembro/2025</a>
-                <a href="https://drive.google.com/drive/folders/15Wkar3DSMYVPXBJ4G_KpGwrLzHn5ciit" class="month-link" target="_blank">Dezembro/2025</a>
-            </div>
-        </div>
-
-        <div class="category">
-            <h2><i class="fas fa-folder"></i> Controle Simples Nacional e MEI</h2>
-            <div class="year-buttons">
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2024-simples-mei')">2024</button>
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2025-simples-mei')">2025</button>
-            </div>
-
-            <div id="months-2024-simples-mei" class="months">
-                <a href="https://drive.google.com/drive/folders/1MxzHoAX6MYGpnzUt1Qu4j0cCaGxSgrfu?hl=pt-br"
-                    target="_blank" class="month-link">TODOS OS MESES DE 2024</a>
-            </div>
-
-            <div id="months-2025-simples-mei" class="months">
-                <a href="https://drive.google.com/drive/folders/1PLUeH7eXGwuaXl7gry_H6fNlGfFXAfBl?usp=drive_link"
-                    class="month-link" target="_blank">Janeiro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1vC2ohs-RIT6GMcwD0eGvTTYh86SeQPoC" class="month-link" target="_blank">Fevereiro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1_zRsOXMKML23Oqf4SAjHLwzSNuxo86Xe" class="month-link" target="_blank">Março/2025</a>
-                <a href="https://drive.google.com/drive/folders/1txRhXA9LpWPREbcVM1HYBGbJWuApkVyH" class="month-link" target="_blank">Abril/2025</a>
-                <a href="https://drive.google.com/drive/folders/1HmX65TNajLCiA9KZsLClq0sr3UTZ3bzW" class="month-link" target="_blank">Maio/2025</a>
-                <a href="https://drive.google.com/drive/folders/1vTQuNDkspN7Uhdp0Q_4d29wHvn2okfj9" class="month-link" target="_blank">Junho/2025</a>
-                <a href="https://drive.google.com/drive/folders/1yfB8RdAbDg6GC01v0DexwRamAfoTzq6Q" class="month-link" target="_blank">Julho/2025</a>
-                <a href="https://drive.google.com/drive/folders/1gNx_IAkvimMUFrHjogMoXho0ZvcVM5TT" class="month-link" target="_blank">Agosto/2025</a>
-                <a href="https://drive.google.com/drive/folders/1kQtzbhm5wgxC-QvDHYclmawN_nFCaGml" class="month-link" target="_blank">Setembro/2025</a>
-                <a href="https://drive.google.com/drive/folders/14Ync6AtztJ8ZVyA6H3poGYZx-eFURKXV" class="month-link" target="_blank">Outubro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1w9l-3mEDS4fs4nQ6_3RfMl6nviKfVYWQ" class="month-link" target="_blank">Novembro/2025</a>
-                <a href="https://drive.google.com/drive/folders/1SBOazBR5XnKfqfpziXwzkMZs-HqC4JN2" class="month-link" target="_blank">Dezembro/2025</a>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="category">
-            <h2><i class="fas fa-folder"></i> Controle Departamento Pessoal</h2>
-            <div class="year-buttons">
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2024-pessoal')">2024</button>
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2025-pessoal')">2025</button>
-            </div>
-
-            <div id="months-2024-pessoal" class="months">
-                <a href="#" target="_blank" class="month-link">TODOS OS MESES DE 2024</a>
-            </div>
-
-            <div id="months-2025-pessoal" class="months">
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Janeiro/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="month-link">Fevereiro/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Março/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Abril/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Maio/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Junho/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Julho/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Agosto/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Setembro/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Outubro/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Novembro/2025</a>
-                <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank"
-                    class="month-link">Dezembro/2025</a>
-            </div>
-        </div>
-
-        <div class="category">
-            <h2><i class="fas fa-folder"></i> Controle Departamento Contábil</h2>
-            <div class="year-buttons">
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2024-contabil')">2024</button>
-                <button class="year-button" aria-expanded="false"
-                    onclick="toggleMonths('months-2025-contabil')">2025</button>
-            </div>
-
-            <div id="months-2024-contabil" class="months">
-                <a href="https://drive.google.com/drive/folders/1Exemplo2024Contabil" target="_blank"
-                    class="month-link">TODOS OS MESES DE 2024</a>
-            </div>
-
-            <div id="months-2025-contabil" class="months">
-                <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=1051746445#gid=1051746445" target="_blank" class="month-link">CONTROLE 2025</a>
+            <h2><i class="fas fa-search"></i> Busca de Sistemas e Serviços</h2>
+            <div class="search-results" id="searchResults">
+                <!-- Links serão gerados dinamicamente via JavaScript -->
             </div>
         </div>
     </div>
@@ -224,6 +190,3 @@
 </body>
 
 </html>
-
-
-
