@@ -1,93 +1,366 @@
- document.getElementById('theme-toggle').addEventListener('click', () => {
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            const logo = document.getElementById('logo');
+// Base de dados de sistemas e serviços
+const systemsDatabase = [
+    {
+        name: "E-CAC",
+        description: "Sistema da Receita Federal - Centro Virtual de Atendimento",
+        url: "https://cav.receita.fazenda.gov.br/",
+        icon: "fas fa-file-invoice-dollar",
+        tags: ["receita federal", "impostos", "declaracoes", "fiscal", "ecac"]
+    },
+    {
+        name: "CONSULTA OPTANTES SIMPLES NACIONAL",
+        description: "Sistema para consultar empresas optantes pelo Simples Nacional",
+        url: "https://consopt.www8.receita.fazenda.gov.br/consultaoptantes",
+        icon: "fas fa-users",
+        tags: ["simples nacional", "consulta", "optantes"]
+    },
+    {
+        name: "DCTF",
+        description: "Declaração de Débitos e Créditos Tributários Federais",
+        url: "https://www8.receita.fazenda.gov.br/SIMPLESNACIONAL/",
+        icon: "fas fa-chart-line",
+        tags: ["receita federal", "impostos", "declaracao"]
+    },
+    {
+        name: "CONSULTA CNPJ",
+        description: "Sistema de consulta de CNPJ da Receita Federal",
+        url: "https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp",
+        icon: "fas fa-database",
+        tags: ["cnpj", "consulta", "receita federal"]
+    },
+    {
+        name: "JUCESP",
+        description: "Junta Comercial do Estado de São Paulo",
+        url: "https://www.jucesponline.sp.gov.br/",
+        icon: "fas fa-landmark",
+        tags: ["junta comercial", "sp", "empresas"]
+    },
+    {
+        name: "SIMPLES NACIONAL",
+        description: "Sistema de recolhimento de impostos para micro e pequenas empresas",
+        url: "https://www8.receita.fazenda.gov.br/SIMPLESNACIONAL/",
+        icon: "fas fa-building",
+        tags: ["simples", "mei", "microempresa"]
+    },
+    {
+        name: "PGMEI",
+        description: "Programa Gerador do Documento de Arrecadação do MEI",
+        url: "https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao",
+        icon: "fas fa-city",
+        tags: ["mei", "pgmei", "recolhimento"]
+    },
+    {
+        name: "NOTA FISCAL - PREFEITURA SP",
+        description: "Sistema de emissão de Nota Fiscal Eletrônica de Serviços - Prefeitura de São Paulo",
+        url: "https://nfe.prefeitura.sp.gov.br/contribuinte/inicio.aspx",
+        icon: "fas fa-file-alt",
+        tags: ["nota fiscal", "prefeitura sp", "nfs-e"]
+    },
+    {
+        name: "SINTEGRA",
+        description: "Sistema Integrado de Informações sobre Operações Interestaduais",
+        url: "https://www.sintegra.gov.br/",
+        icon: "fas fa-exchange-alt",
+        tags: ["icms", "interestadual", "fiscal"]
+    },
+    {
+        name: "eSocial",
+        description: "Sistema de Escrituração Digital das Obrigações Fiscais Trabalhistas",
+        url: "https://www.esocial.gov.br/",
+        icon: "fas fa-id-card",
+        tags: ["trabalhista", "folha", "inss"]
+    },
+    {
+        name: "DUC PREFEITURA SP",
+        description: "",
+        url: "https://duc.prefeitura.sp.gov.br/portal/",
+        icon: "fas fa-file-invoice",
+        tags: ["duc", "prefeitura sp", "recolhimento"]
+    },
+    {
+        name: "DAS",
+        description: "Documento de Arrecadação do Simples Nacional",
+        url: "https://www8.receita.fazenda.gov.br/SimplesNacional/Servicos/Grupo.aspx?grp=t&area=1",
+        icon: "fas fa-receipt",
+        tags: ["simples", "das", "recolhimento"]
+    },
+    {
+        name: "DEC PREFEITURA SP",
+        description: "Declaração Eletrônica de Serviços - Prefeitura de São Paulo",
+        url: "https://dec.prefeitura.sp.gov.br/",
+        icon: "fas fa-briefcase",
+        tags: ["dec", "prefeitura sp", "servicos"]
+    },
+    {
+        name: "DEC SEFAZ",
+        description: "Declaração Eletrônica de Serviços - SEFAZ",
+        url: "https://www.dec.fazenda.sp.gov.br/DEC/UCLogin/login.aspx",
+        icon: "fas fa-briefcase",
+        tags: ["dec", "sefaz", "servicos"]
+    },
+    {
+        name: "PFE - POSTO FISCAL ELETRÔNICO",
+        description: "Sistema de Posto Fiscal Eletrônico",
+        url: "https://www3.fazenda.sp.gov.br/CAWEB/Account/Login.aspx/",
+        icon: "fas fa-clipboard-check",
+        tags: ["posto fiscal", "pfe", "fiscal"]
+    },
+];
 
-            // Alterna o modo escuro
-            body.classList.toggle('dark-mode');
-
-            // Muda o ícone do botão e a logo dependendo do modo
-            if (body.classList.contains('dark-mode')) {
-                themeToggle.textContent = '🌙';  // Muda o ícone do botão para lua
-                // Verifica se a logo existe antes de tentar mudar
-                if (logo) {
-                    logo.src = 'links/img/logo2.png';  // Logo para o modo escuro
-                }
-            } else {
-                themeToggle.textContent = '☀️';  // Muda o ícone do botão para sol
-                // Verifica se a logo existe antes de tentar mudar
-                if (logo) {
-                    logo.src = 'links/img/logo1.png';  // Logo para o modo claro
-                }
-            }
-            
-            // Salva a preferência no localStorage
-            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-
-        // Aplica o tema salvo ao carregar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            const logo = document.getElementById('logo');
-            
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-                themeToggle.textContent = '🌙';
-                if (logo) {
-                    logo.src = 'links/img/logo2.png';
-                }
-            }
-        });
-
-        function toggleMonths(id) {
-            const months = document.getElementById(id);
-            const isOpen = months.classList.contains('open');
-            
-            // Fecha todas as seções de meses primeiro
-            document.querySelectorAll('.months').forEach(section => {
-                section.classList.remove('open');
-            });
-            
-            // Se não estava aberto, abre a seção clicada
-            if (!isOpen) {
-                months.classList.add('open');
-            }
+// Variáveis globais para controle do modal
+let currentControlType = '';
+const monthLinks = {
+    'lucro-presumido': {
+        2024: {
+            'todos': 'https://drive.google.com/drive/folders/1BIV1OYCNnqLA6AFtt74tri3cb9D7RnhB'
+        },
+        2025: {
+            'janeiro': 'https://drive.google.com/drive/folders/1ykiBqOId1eyw9Vxuv5M6wDdrB0fut5s1',
+            'fevereiro': 'https://drive.google.com/drive/folders/1cuP5LINjfQVmdBuMEEFdjUhIASgAKqIN',
+            'março': 'https://drive.google.com/drive/folders/1elN9-Br-O9eCd19Sz7lNg3Bq5Fd0O4W7',
+            'abril': 'https://drive.google.com/drive/folders/1PtCIeLrCc0_aNJXaFzZRlGcRRCziJVgu',
+            'maio': 'https://drive.google.com/drive/folders/1wXU3nZwDe54mR9URFTGAH3xLNma9oiuS',
+            'junho': 'https://drive.google.com/drive/folders/1aNgApurd8T540p2oHq5TqyWdJurfg0Pr',
+            'julho': 'https://drive.google.com/drive/folders/1w_INrhgTi4ahVHz7Xa_V06wxZeKUnMPW',
+            'agosto': 'https://drive.google.com/drive/folders/1bkp9_K5fWyYOSz9UZWRqToTqp_-vdI9G',
+            'setembro': 'https://drive.google.com/drive/folders/1c6Kfp-GmrInteN1YIyZ3meMcdxxcgR3s',
+            'outubro': 'https://drive.google.com/drive/folders/19IsvE2x1KFfjDEBU1KWm-yihk0UYiiwy',
+            'novembro': 'https://drive.google.com/drive/folders/1TXXPTtN9ob2QHYf3z8W7HFTr0qZeCykD',
+            'dezembro': 'https://drive.google.com/drive/folders/15Wkar3DSMYVPXBJ4G_KpGwrLzHn5ciit'
         }
-
-        function filterLinks() {
-            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
-            const categories = document.querySelectorAll('.category');
-
-            categories.forEach(category => {
-                const monthsSections = category.querySelectorAll('.months');
-                let categoryHasMatch = false;
-
-                monthsSections.forEach(section => {
-                    const links = section.querySelectorAll('.month-link');
-                    let sectionHasMatch = false;
-
-                    links.forEach(link => {
-                        const isMatch = link.textContent.toLowerCase().includes(searchTerm);
-                        link.style.display = isMatch ? '' : 'none';
-                        if (isMatch) sectionHasMatch = true;
-                    });
-
-                    // Mostrar ou esconder a seção de meses com base no resultado
-                    section.style.display = sectionHasMatch ? '' : 'none';
-                    if (sectionHasMatch) section.classList.add('open');
-                    else section.classList.remove('open');
-
-                    if (sectionHasMatch) categoryHasMatch = true;
-                });
-
-                // Mostrar ou esconder a categoria inteira com base no resultado
-                category.style.display = categoryHasMatch ? '' : 'none';
-            });
+    },
+    'simples-nacional': {
+        2024: {
+            'todos': 'https://drive.google.com/drive/folders/1MxzHoAX6MYGpnzUt1Qu4j0cCaGxSgrfu'
+        },
+        2025: {
+            'janeiro': 'https://drive.google.com/drive/folders/1PLUeH7eXGwuaXl7gry_H6fNlGfFXAfBl',
+            'fevereiro': 'https://drive.google.com/drive/folders/1vC2ohs-RIT6GMcwD0eGvTTYh86SeQPoC',
+            'março': 'https://drive.google.com/drive/folders/1_zRsOXMKML23Oqf4SAjHLwzSNuxo86Xe',
+            'abril': 'https://drive.google.com/drive/folders/1txRhXA9LpWPREbcVM1HYBGbJWuApkVyH',
+            'maio': 'https://drive.google.com/drive/folders/1HmX65TNajLCiA9KZsLClq0sr3UTZ3bzW',
+            'junho': 'https://drive.google.com/drive/folders/1vTQuNDkspN7Uhdp0Q_4d29wHvn2okfj9',
+            'julho': 'https://drive.google.com/drive/folders/1yfB8RdAbDg6GC01v0DexwRamAfoTzq6Q',
+            'agosto': 'https://drive.google.com/drive/folders/1gNx_IAkvimMUFrHjogMoXho0ZvcVM5TT',
+            'setembro': 'https://drive.google.com/drive/folders/1kQtzbhm5wgxC-QvDHYclmawN_nFCaGml',
+            'outubro': 'https://drive.google.com/drive/folders/14Ync6AtztJ8ZVyA6H3poGYZx-eFURKXV',
+            'novembro': 'https://drive.google.com/drive/folders/1w9l-3mEDS4fs4nQ6_3RfMl6nviKfVYWQ',
+            'dezembro': 'https://drive.google.com/drive/folders/1SBOazBR5XnKfqfpziXwzkMZs-HqC4JN2'
         }
+    }
+};
 
-        // Sistema de Chat com Senha
+// Funções para o modal de seleção
+function showYearSelection(controlType) {
+    currentControlType = controlType;
+    const modalTitle = document.getElementById('modalTitle');
+    
+    if (controlType === 'lucro-presumido') {
+        modalTitle.textContent = 'Lucro Presumido/Real - Selecionar Período';
+    } else {
+        modalTitle.textContent = 'Simples Nacional - Selecionar Período';
+    }
+    
+    document.getElementById('monthSelection').style.display = 'none';
+    document.getElementById('yearMonthModal').style.display = 'block';
+}
+
+function showMonthSelection(year) {
+    const monthGrid = document.getElementById('monthGrid');
+    monthGrid.innerHTML = '';
+    
+    const months = monthLinks[currentControlType][year];
+    const monthNames = {
+        'todos': 'TODOS OS MESES',
+        'janeiro': 'JANEIRO',
+        'fevereiro': 'FEVEREIRO', 
+        'março': 'MARÇO',
+        'abril': 'ABRIL',
+        'maio': 'MAIO',
+        'junho': 'JUNHO',
+        'julho': 'JULHO',
+        'agosto': 'AGOSTO',
+        'setembro': 'SETEMBRO',
+        'outubro': 'OUTUBRO',
+        'novembro': 'NOVEMBRO',
+        'dezembro': 'DEZEMBRO'
+    };
+    
+    // Adiciona botão "TODOS OS MESES" se existir
+    if (months.todos) {
+        const allMonthsBtn = document.createElement('button');
+        allMonthsBtn.className = 'month-btn';
+        allMonthsBtn.textContent = monthNames['todos'];
+        allMonthsBtn.onclick = () => redirectToLink(months.todos);
+        monthGrid.appendChild(allMonthsBtn);
+    }
+    
+    // Adiciona os meses individuais
+    Object.keys(months).forEach(month => {
+        if (month !== 'todos') {
+            const monthBtn = document.createElement('button');
+            monthBtn.className = 'month-btn';
+            monthBtn.textContent = monthNames[month];
+            monthBtn.onclick = () => redirectToLink(months[month]);
+            monthGrid.appendChild(monthBtn);
+        }
+    });
+    
+    document.getElementById('monthSelection').style.display = 'block';
+}
+
+function redirectToLink(url) {
+    window.open(url, '_blank');
+    closeModal();
+}
+
+function closeModal() {
+    document.getElementById('yearMonthModal').style.display = 'none';
+    currentControlType = '';
+}
+
+// Fechar modal ao clicar fora
+document.getElementById('yearMonthModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// Função para inicializar os resultados
+function initializeSearchResults() {
+    const searchResults = document.getElementById('searchResults');
+    // Exibe todos os sistemas inicialmente
+    displayResults(systemsDatabase, '');
+}
+
+// Função para exibir resultados
+function displayResults(results, searchTerm) {
+    const searchResults = document.getElementById('searchResults');
+    
+    if (results.length === 0) {
+        searchResults.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <p>Nenhum sistema encontrado para "${searchTerm}"</p>
+                <small>Tente buscar por: E-CAC, SEFIP, DCTF, SPED, etc.</small>
+            </div>
+        `;
+        return;
+    }
+
+    searchResults.innerHTML = results.map(system => {
+        const highlightedName = highlightText(system.name, searchTerm);
+        const highlightedDescription = highlightText(system.description, searchTerm);
+        
+        return `
+            <a href="${system.url}" target="_blank" class="system-link">
+                <div class="system-icon">
+                    <i class="${system.icon}"></i>
+                </div>
+                <div class="system-info">
+                    <div class="system-name">${highlightedName}</div>
+                    <div class="system-description">${highlightedDescription}</div>
+                    <div class="system-tags">
+                        ${system.tags.map(tag => `<span class="system-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            </a>
+        `;
+    }).join('');
+}
+
+// Função para destacar o texto buscado
+function highlightText(text, searchTerm) {
+    if (!searchTerm.trim()) return text;
+    
+    const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+    return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+// Função para escapar caracteres especiais no regex
+function escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Função principal de busca
+function filterLinks() {
+    const searchTerm = document.getElementById('search-bar').value.toLowerCase().trim();
+    
+    if (searchTerm === '') {
+        // Se a busca estiver vazia, mostra todos os sistemas
+        displayResults(systemsDatabase, '');
+        return;
+    }
+
+    const results = systemsDatabase.filter(system => {
+        // Busca no nome
+        if (system.name.toLowerCase().includes(searchTerm)) return true;
+        
+        // Busca na descrição
+        if (system.description.toLowerCase().includes(searchTerm)) return true;
+        
+        // Busca nas tags
+        if (system.tags.some(tag => tag.toLowerCase().includes(searchTerm))) return true;
+        
+        return false;
+    });
+
+    displayResults(results, searchTerm);
+}
+
+// Tema dark/light
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    const logo = document.getElementById('logo');
+
+    // Alterna o modo escuro
+    body.classList.toggle('dark-mode');
+
+    // Muda o ícone do botão e a logo dependendo do modo
+    if (body.classList.contains('dark-mode')) {
+        themeToggle.textContent = '🌙';
+        if (logo) {
+            logo.src = 'links/img/logo2.png';
+        }
+    } else {
+        themeToggle.textContent = '☀️';
+        if (logo) {
+            logo.src = 'links/img/logo1.png';
+        }
+    }
+    
+    // Salva a preferência no localStorage
+    localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+
+// Aplica o tema salvo ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    const logo = document.getElementById('logo');
+    
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.textContent = '🌙';
+        if (logo) {
+            logo.src = 'links/img/logo2.png';
+        }
+    }
+    
+    // Inicializa o sistema de busca
+    initializeSearchResults();
+});
+
+// Sistema de Chat com Senha
 document.addEventListener('DOMContentLoaded', function() {
     const chatBubble = document.getElementById('chatBubble');
     const chatIcon = chatBubble.querySelector('.chat-icon');
@@ -100,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Senha correta
     const CORRECT_PASSWORD = "Gestao2025@";
     // Link que será acessado após a senha correta
-    const TARGET_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true"; // SUBSTITUA PELO SEU LINK
+    const TARGET_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true";
     
     // Abrir chat
     chatIcon.addEventListener('click', function() {
@@ -163,6 +436,4 @@ document.addEventListener('DOMContentLoaded', function() {
     chatWindow.addEventListener('click', function(event) {
         event.stopPropagation();
     });
-
 });
-
