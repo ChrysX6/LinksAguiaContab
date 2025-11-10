@@ -105,6 +105,34 @@ const systemsDatabase = [
         icon: "fas fa-clipboard-check",
         tags: ["posto fiscal", "pfe", "fiscal"]
     },
+    {
+        name: "FGTS DIGITAL",
+        description: "Sistema de recolhimento do FGTS",
+        url: "https://fgtsdigital.sistema.gov.br/portal/login",
+        icon: "fas fa-university",
+        tags: ["fgts", "recolhimento", "trabalhista"]
+    },
+    {
+        name: "EMPREGADOR WEB",
+        description: "Tirar seguro-desemprego e outros serviços trabalhistas",
+        url: "https://sd.maisemprego.mte.gov.br/sdweb/empregadorweb/index.jsf",
+        icon: "fas fa-briefcase",
+        tags: ["empregador", "trabalhista", "seguro desemprego"]
+    },
+    {
+        name: "SAL - SISTEMA DE ACRÉSCIMOS LEGAIS",
+        description: "Tirar guias de inss",
+        url: "https://sal.rfb.gov.br/home",
+        icon: "fas fa-file-invoice-dollar",
+        tags: ["inss", "guias", "recolhimento"]
+    },
+    {
+        name: "DET - DOMICÍLIO ELETRÔNICO TRABALHISTA",
+        description: "sistema do governo federal brasileiro que centraliza a comunicação entre a Inspeção do Trabalho e os empregadores",
+        url: "https://det.sit.trabalho.gov.br/",
+        icon: "fas fa-envelope-open-text",
+        tags: ["inspecao do trabalho", "trabalhista", "comunicacao"]
+    },
 ];
 
 // Variáveis globais para controle do modal
