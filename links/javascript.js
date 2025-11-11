@@ -15,13 +15,6 @@ const systemsDatabase = [
         tags: ["simples nacional", "consulta", "optantes"]
     },
     {
-        name: "DCTF",
-        description: "Declaração de Débitos e Créditos Tributários Federais",
-        url: "https://www8.receita.fazenda.gov.br/SIMPLESNACIONAL/",
-        icon: "fas fa-chart-line",
-        tags: ["receita federal", "impostos", "declaracao"]
-    },
-    {
         name: "CONSULTA CNPJ",
         description: "Sistema de consulta de CNPJ da Receita Federal",
         url: "https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp",
@@ -64,7 +57,7 @@ const systemsDatabase = [
         tags: ["icms", "interestadual", "fiscal"]
     },
     {
-        name: "eSocial",
+        name: "ESOCIAL",
         description: "Sistema de Escrituração Digital das Obrigações Fiscais Trabalhistas",
         url: "https://www.esocial.gov.br/",
         icon: "fas fa-id-card",
@@ -72,7 +65,7 @@ const systemsDatabase = [
     },
     {
         name: "DUC PREFEITURA SP",
-        description: "",
+        description: "O Demonstrativo Unificado do Contribuinte (DUC) - Prefeitura de São Paulo",
         url: "https://duc.prefeitura.sp.gov.br/portal/",
         icon: "fas fa-file-invoice",
         tags: ["duc", "prefeitura sp", "recolhimento"]
@@ -132,6 +125,34 @@ const systemsDatabase = [
         url: "https://det.sit.trabalho.gov.br/",
         icon: "fas fa-envelope-open-text",
         tags: ["inspecao do trabalho", "trabalhista", "comunicacao"]
+    },
+    {
+        name: "IOB ONLINE",
+        description: "Plataforma de conteúdos e serviços para profissionais de contabilidade e gestão",
+        url: "https://www.iobonline.com.br/",
+        icon: "fas fa-envelope-open-text",
+        tags: ["iob", "conteudos", "servicos"]
+    },
+    {
+        name: "NFSE MEI",
+        description: "Sistema de emissão de Nota Fiscal de Serviços Eletrônica para MEI",
+        url: "https://www.nfse.gov.br/EmissorNacional/",
+        icon: "fas fa-envelope-open-text",
+        tags: ["nfse", "mei", "nota fiscal"]
+    },
+    {
+        name: "GISS ONLINE",
+        description: "Sistema de Gestão de ISS para Municípios",
+        url: "https://www.iobonline.com.br/",
+        icon: "fas fa-envelope-open-text",
+        tags: ["giss", "iss", "municipios"]
+    },
+     {
+        name: "DARE ICMS SP",
+        description: "Documento de Arrecadação de Receitas Estaduais - ICMS São Paulo",
+        url: "https://www4.fazenda.sp.gov.br/DareICMS/DareAvulso",
+        icon: "fas fa-file-invoice-dollar",
+        tags: ["dare", "icms", "sp"]
     },
 ];
 
