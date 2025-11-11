@@ -26,7 +26,7 @@ const systemsDatabase = [
         description: "Junta Comercial do Estado de São Paulo",
         url: "https://www.jucesponline.sp.gov.br/",
         icon: "fas fa-landmark",
-        tags: ["junta comercial", "sp", "empresas"]
+        tags: ["junta comercial", "SP", "empresas"]
     },
     {
         name: "SIMPLES NACIONAL",
@@ -486,3 +486,4 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();
     });
 });
+
