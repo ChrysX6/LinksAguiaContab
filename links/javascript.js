@@ -377,7 +377,7 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
     if (body.classList.contains('dark-mode')) {
         themeToggle.textContent = '🌙';
         if (logo) {
-            logo.src = 'links/img/logo2.png';
+            logo.src = 'links/img/logo2natal.png';
         }
     } else {
         themeToggle.textContent = '☀️';
@@ -485,4 +485,5 @@ document.addEventListener('DOMContentLoaded', function() {
     chatWindow.addEventListener('click', function(event) {
         event.stopPropagation();
     });
+
 });
