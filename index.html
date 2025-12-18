@@ -6,250 +6,185 @@
     <meta name="description" content="Um site para funcionários da AGUIACONTAB TATUAPÉ ter mais mobilidade na hora de procurar os itens necessários.">
     <meta name="keywords" content="Controle, Links, Aguiacontab, Lucro Presumido, Simples Nacional">
     <meta name="author" content="Chrystian Gabriel">
-    <title>Links Aguiacontab - Feliz Natal!</title>
+    <title>Links Aguiacontab</title>
     <link rel="shortcut icon" href="links/img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="links/style.css">
 </head>
 
 <body>
-    <!-- Decorações Natalinas -->
-    <div class="christmas-decoration snowflake">❄</div>
-    <div class="christmas-decoration snowflake">❅</div>
-    <div class="christmas-decoration snowflake">❆</div>
-    <div class="christmas-decoration ornament">🔴</div>
-    <div class="christmas-decoration ornament">🟢</div>
-    <div class="christmas-decoration ornament">🟡</div>
-    <div class="christmas-decoration bell">🔔</div>
-    <div class="christmas-decoration tree">🎄</div>
-    
     <div class="decoration decoration-1"></div>
     <div class="decoration decoration-2"></div>
     
-    <!-- Logo com efeito natalino -->
-    <div class="logo-container">
-        <img src="links/img/logo1natal.png" alt="Logo" class="logo" id="logo">
-        <div class="christmas-hat">🎅</div>
-    </div>
-    
-    <h1>LINKS AGUIACONTAB TATUAPÉ <span class="christmas-title">🎄 Feliz Natal! 🎁</span></h1>
+    <img src="links/img/logo1natal.png" alt="Logo" class="logo" id="logo">
+    <h1>LINKS AGUIACONTAB TATUAPÉ</h1>
 
     <nav>
-        <!-- Adicionando decorações natalinas nos links -->
-        <div class="nav-christmas">
-            <span class="nav-ornament">🎄</span>
-            <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=0#gid=0"
-                target="_blank"><i class="fa fa-clipboard" aria-hidden="true"></i> DADOS EMPRESAS</a>
-        </div>
+        <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=0#gid=0"
+            target="_blank"><i class="fa fa-clipboard" aria-hidden="true"></i> DADOS EMPRESAS</a>
+        <a href="https://hub.sieg.com/" target="_blank"><i class="fas fa-clipboard"></i> SIEG HUB</a>
+        <a href="https://www.dominioweb.com.br/" target="_blank"><i class="fas fa-eye"></i> DOMINIOS</a>
+        <a href="https://onvio.com.br/login/#/" target="_blank"><i class="fa fa-comments"></i> MESSENGER</a>
         
-        <div class="nav-christmas">
-            <span class="nav-ornament">🎁</span>
-            <a href="https://hub.sieg.com/" target="_blank"><i class="fas fa-clipboard"></i> SIEG HUB</a>
-        </div>
-        
-        <div class="nav-christmas">
-            <span class="nav-ornament">❄</span>
-            <a href="https://www.dominioweb.com.br/" target="_blank"><i class="fas fa-eye"></i> DOMINIOS</a>
-        </div>
-        
-        <div class="nav-christmas">
-            <span class="nav-ornament">🔔</span>
-            <a href="https://onvio.com.br/login/#/" target="_blank"><i class="fa fa-comments"></i> MESSENGER</a>
-        </div>
-        
-        <!-- Menu Controle Fiscal com tema natalino -->
-        <div class="nav-dropdown nav-christmas">
-            <span class="nav-ornament">📊</span>
+        <!-- Menu Controle Fiscal -->
+        <div class="nav-dropdown">
             <a href="#" class="nav-dropdown-toggle">
                 <i class="fas fa-chart-line"></i>DEP. FISCAL<i class="fas fa-chevron-down dropdown-arrow"></i>
             </a>
-            <div class="nav-dropdown-menu christmas-dropdown">
+            <div class="nav-dropdown-menu">
                 <div class="dropdown-section">
-                    <h4><i class="fas fa-tree"></i> Escolha o Tipo:</h4>
-                    <button class="dropdown-option christmas-option" onclick="showYearSelection('lucro-presumido')">
+                    <h4>Escolha o Tipo:</h4>
+                    <button class="dropdown-option" onclick="showYearSelection('lucro-presumido')">
                         <i class="fas fa-calculator"></i> Lucro Presumido/Real
                     </button>
-                    <button class="dropdown-option christmas-option" onclick="showYearSelection('simples-nacional')">
+                    <button class="dropdown-option" onclick="showYearSelection('simples-nacional')">
                         <i class="fas fa-building"></i> Simples Nacional
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Menu Departamento Pessoal com tema natalino -->
-        <div class="nav-dropdown nav-christmas">
-            <span class="nav-ornament">👥</span>
+        <!-- Menu Departamento Pessoal -->
+        <div class="nav-dropdown">
             <a href="#" class="nav-dropdown-toggle">
                 <i class="fas fa-users"></i>DEP. PESSOAL <i class="fas fa-chevron-down dropdown-arrow"></i>
             </a>
-            <div class="nav-dropdown-menu christmas-dropdown">
+            <div class="nav-dropdown-menu">
                 <div class="dropdown-section">
-                    <h4><i class="fas fa-gift"></i> Controles DP:</h4>
-                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-link christmas-link">
+                    <h4>Controles DP:</h4>
+                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-link">
                         <i class="fas fa-folder"></i> Todos os Controles DP
                     </a>
-                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-link christmas-link">
+                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-link">
                         <i class="fas fa-calendar"></i> Controle 2025
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Menu Departamento Contábil com tema natalino -->
-        <div class="nav-dropdown nav-christmas">
-            <span class="nav-ornament">📚</span>
+        <!-- Menu Departamento Contábil -->
+        <div class="nav-dropdown">
             <a href="#" class="nav-dropdown-toggle">
                 <i class="fas fa-book"></i>DEP. CONTÁBIL<i class="fas fa-chevron-down dropdown-arrow"></i>
             </a>
-            <div class="nav-dropdown-menu christmas-dropdown">
+            <div class="nav-dropdown-menu">
                 <div class="dropdown-section">
-                    <h4><i class="fas fa-star"></i> Controles Contábeis:</h4>
-                    <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=1051746445#gid=1051746445" target="_blank" class="dropdown-link christmas-link">
+                    <h4>Controles Contábeis:</h4>
+                    <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=1051746445#gid=1051746445" target="_blank" class="dropdown-link">
                         <i class="fas fa-file-excel"></i> Controle 2025
                     </a>
-                    <a href="https://drive.google.com/drive/folders/1afARryGTwrtxzlE25qCjvkTvZd1HtH1Z" target="_blank" class="dropdown-link christmas-link">
+                    <a href="https://drive.google.com/drive/folders/1afARryGTwrtxzlE25qCjvkTvZd1HtH1Z" target="_blank" class="dropdown-link">
                         <i class="fas fa-folder"></i> Drive Contábil
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="nav-christmas">
-            <span class="nav-ornament">🏛️</span>
-            <a href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=237378784#gid=237378784"
-                target="_blank"><i class="fa fa-university" aria-hidden="true"></i>
-                EMPRESAS PREF.</a>
-        </div>
-        
-        <div class="nav-christmas">
-            <span class="nav-ornament">📧</span>
-            <a href="https://email.uolhost.com.br/" target="_blank"><i
-                    class="fas fa-envelope"></i> E-MAIL UOL</a>
-        </div>
+        <a href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=237378784#gid=237378784"
+            target="_blank"><i class="fa fa-university" aria-hidden="true"></i>
+            EMPRESAS PREF.</a>
+        <a href="https://email.uolhost.com.br/" target="_blank"><i
+                class="fas fa-envelope"></i> E-MAIL UOL</a>
     </nav>
 
-    <!-- Modal para seleção de ano e mês com tema natalino -->
+    <!-- Modal para seleção de ano e mês -->
     <div id="yearMonthModal" class="modal">
-        <div class="modal-content christmas-modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle"><i class="fas fa-tree"></i> Selecionar Período</h3>
+                <h3 id="modalTitle">Selecionar Período</h3>
                 <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="year-selection">
-                    <h4><i class="fas fa-gift"></i> Selecione o Ano:</h4>
+                    <h4>Selecione o Ano:</h4>
                     <div class="year-buttons-modal">
-                        <button class="year-btn christmas-btn" onclick="showMonthSelection(2024)">2024</button>
-                        <button class="year-btn christmas-btn" onclick="showMonthSelection(2025)">2025</button>
+                        <button class="year-btn" onclick="showMonthSelection(2024)">2024</button>
+                        <button class="year-btn" onclick="showMonthSelection(2025)">2025</button>
                     </div>
                 </div>
                 <div id="monthSelection" class="month-selection" style="display: none;">
-                    <h4><i class="fas fa-calendar-alt"></i> Selecione o Mês:</h4>
+                    <h4>Selecione o Mês:</h4>
                     <div class="month-grid" id="monthGrid">
                         <!-- Os meses serão gerados dinamicamente via JavaScript -->
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <p class="christmas-greeting">🎄 Feliz Natal e Próspero Ano Novo! 🎅</p>
-            </div>
         </div>
     </div>
 
-    <!-- Seção de Avisos e Prazos com tema natalino -->
+    <!-- Seção de Avisos e Prazos -->
     <div class="avisos-container">
-        <div class="avisos-card avisos christmas-card">
+        <div class="avisos-card avisos">
             <div class="avisos-header">
                 <i class="fas fa-bullhorn"></i>
-                <h2><i class="fas fa-santa"></i> Avisos Importantes</h2>
+                <h2>Avisos Importantes</h2>
             </div>
             <ul class="avisos-list">
-                <li class="aviso-item aviso-urgente christmas-item">
-                    <span class="aviso-title">🎅 QUALQUER DUVIDA CHAMAR O MARTINS</span>
+                <li class="aviso-item aviso-urgente">
+                    <span class="aviso-title">QUALQUER DUVIDA CHAMAR O MARTINS</span>
                     <span class="aviso-date">Publicado em: 28/10/2025</span>
                 </li>
-                <li class="aviso-item christmas-item">
-                    <span class="aviso-title">🎄 Recesso de Natal: 24/12 a 01/01</span>
-                    <span class="aviso-date">Atenção aos prazos!</span>
-                </li>
             </ul>
         </div>
 
-        <div class="avisos-card prazos christmas-card">
+        <div class="avisos-card prazos">
             <div class="avisos-header">
                 <i class="fas fa-clock"></i>
-                <h2><i class="fas fa-gift"></i> Próximos Vencimentos</h2>
+                <h2>Próximos Vencimentos</h2>
             </div>
-            <ul class="avisos-list">
-                <li class="aviso-item christmas-item">
-                    <span class="aviso-title">🎁 DIFAL - DECLARAÇÃO</span>
-                    <span class="aviso-date">Vence em: 28/11/2025</span>
+                <li class="aviso-item">
+                    <span class="aviso-title">ICMS</span>
+                    <span class="aviso-date">Vence em: 19/12/2025</span>
                 </li>
-                <li class="aviso-item christmas-item">
-                    <span class="aviso-title">🔔 IRPF - Último Lote</span>
-                    <span class="aviso-date">Vence em: 15/12/2025</span>
+            <li class="aviso-item">
+                    <span class="aviso-title">REINF</span>
+                    <span class="aviso-date">Vence em: 19/12/2025</span>
                 </li>
-            </ul>
         </div>
     </div>
 
-    <!-- Barra de busca com tema natalino -->
-    <div class="search-container">
-        <input type="text" id="search-bar" class="search-bar christmas-search" placeholder="🎄 Pesquise um sistema ou serviço (ex: E-CAC, SEFIP, DCTF)..."
-            oninput="filterLinks()">
-        <div class="search-icon">🔍</div>
-    </div>
+    <input type="text" id="search-bar" class="search-bar" placeholder="Pesquise um sistema ou serviço (ex: E-CAC, SEFIP, DCTF)..."
+        oninput="filterLinks()">
 
     <!-- Container único para todos os links de sistemas -->
     <div class="container">
-        <div class="category christmas-category">
-            <h2><i class="fas fa-search"></i> 🎅 Busca de Sistemas e Serviços</h2>
+        <div class="category">
+            <h2><i class="fas fa-search"></i> Busca de Sistemas e Serviços</h2>
             <div class="search-results" id="searchResults">
                 <!-- Links serão gerados dinamicamente via JavaScript -->
             </div>
         </div>
     </div>
 
-    <footer class="christmas-footer">
-        <h2>🎄 Vamos atualizando a página mensalmente com novos links de controles e etc... 🎁</h2>
-        <h4>🎅 Criado para facilitar a navegação dos funcionários... Feliz Natal! 🎄</h4>
-        <div class="footer-snowflakes">
-            <span>❄</span><span>❅</span><span>❆</span>
-        </div>
+    <footer>
+        <h2>Vamos atualizando a página mensalmente com novos links de controles e etc...</h2>
+        <h4>Criado para facilitar a navegação dos funcionários...</h4>
     </footer>
 
-    <!-- Botões flutuantes com tema natalino -->
-    <button class="floating-btn theme-toggle" id="theme-toggle">🎄</button>
-    <button class="floating-btn aniver christmas-float" id="aniver">
-        <a href="aniversario/aniversario.html" target="_blank">
-            <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-        </a>
-    </button>
-    
-    <!-- Botão extra para mensagem de Natal -->
-    <button class="floating-btn christmas-message" id="christmasMessage">
-        🎅
-    </button>
-
-    <!-- Balão de Chat com Proteção por Senha -->
-    <div class="chat-bubble" id="chatBubble">
-        <div class="chat-icon christmas-chat">
-            <i class="fas fa-lock"></i>
+    <button class="floating-btn theme-toggle" id="theme-toggle">☀️</button>
+    <button class="floating-btn aniver" id="aniver"><a href="aniversario/aniversario.html" target="_blank"><i
+                class="fa fa-birthday-cake" aria-hidden="true"></i>
+        </a></button>
+        <!-- Balão de Chat com Proteção por Senha -->
+<div class="chat-bubble" id="chatBubble">
+    <div class="chat-icon">
+        <i class="fas fa-lock"></i>
+    </div>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3>Acesso Restrito</h3>
+            <button class="close-chat" id="closeChat">&times;</button>
         </div>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <h3><i class="fas fa-gift"></i> Acesso Restrito</h3>
-                <button class="close-chat" id="closeChat">&times;</button>
-            </div>
-            <div class="chat-body">
-                <p>🎄 Digite a senha para acessar o link:</p>
-                <input type="password" id="passwordInput" class="password-input" placeholder="Digite a senha...">
-                <button id="submitPassword" class="submit-btn christmas-btn">Acessar</button>
-                <p id="errorMessage" class="error-message"></p>
-            </div>
+        <div class="chat-body">
+            <p>Digite a senha para acessar o link:</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Digite a senha...">
+            <button id="submitPassword" class="submit-btn">Acessar</button>
+            <p id="errorMessage" class="error-message"></p>
         </div>
     </div>
+</div>
 
     <script src="links/javascript.js"></script>
 </body>
+
 </html>
