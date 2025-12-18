@@ -382,7 +382,7 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
     } else {
         themeToggle.textContent = '☀️';
         if (logo) {
-            logo.src = 'links/img/logo1.png';
+            logo.src = 'links/img/logo1natal.png';
         }
     }
     
@@ -486,3 +486,4 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();
     });
 });
+
