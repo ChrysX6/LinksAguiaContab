@@ -486,3 +486,40 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();
     });
 });
+
+// Efeitos especiais de Natal
+function initChristmasEffects() {
+  // Adicionar classes especiais durante o período natalino
+  const today = new Date();
+  const month = today.getMonth() + 1; // Janeiro é 1
+  
+  // Aplicar efeitos apenas em Dezembro (ou se quiser forçar sempre, remova o if)
+  if (month === 12) {
+    document.body.classList.add('christmas-mode');
+    
+    // Efeito de piscar luzes no cabeçalho
+    const header = document.querySelector('h1');
+    if (header) {
+      setInterval(() => {
+        header.style.textShadow = `0 0 10px ${Math.random() > 0.5 ? '#dc3545' : '#28a745'}`;
+      }, 1000);
+    }
+  }
+}
+
+// Inicializar efeitos de Natal quando a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+  initChristmasEffects();
+  
+  // Adicionar mensagem de Natal nos avisos
+  const avisosList = document.querySelector('.avisos-list');
+  if (avisosList) {
+    const natalMessage = document.createElement('li');
+    natalMessage.className = 'aviso-item aviso-urgente';
+    natalMessage.innerHTML = `
+      <span class="aviso-title">🎄 FELIZ NATAL DA EQUIPE AGUIACONTAB! 🎅</span>
+      <span class="aviso-date">Boas festas! 🎁</span>
+    `;
+    avisosList.insertBefore(natalMessage, avisosList.firstChild);
+  }
+});
