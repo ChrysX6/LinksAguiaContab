@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body.classList.add('dark-mode');
         themeToggle.textContent = '🌙';
         if (logo) {
-            logo.src = 'links/img/logo2.png';
+            logo.src = 'links/img/logo2natal.png';
         }
     }
     
@@ -486,4 +486,3 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();
     });
 });
-
