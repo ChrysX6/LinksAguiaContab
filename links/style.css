@@ -1057,3 +1057,135 @@ footer h2::after {
         font-size: 20px;
     }
 }
+
+/* Balão do DeepSeek */
+.deepseek-bubble {
+    position: fixed;
+    bottom: 150px; /* Posicionado acima do botão de aniversário */
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.deepseek-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 6px 15px var(--shadow-color);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 6px 15px var(--shadow-color);
+    }
+}
+
+.deepseek-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+    animation: none;
+}
+
+.deepseek-icon i {
+    font-size: 22px;
+    color: white;
+}
+
+.deepseek-tooltip {
+    position: absolute;
+    bottom: 60px;
+    background: var(--card-gradient);
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.deepseek-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--border-color);
+}
+
+.deepseek-icon:hover + .deepseek-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Reorganização dos botões flutuantes */
+#aniver {
+    bottom: 90px;
+    right: 20px;
+}
+
+.theme-toggle {
+    bottom: 20px;
+    right: 20px;
+}
+
+/* Ajuste responsivo */
+@media (max-width: 768px) {
+    .deepseek-bubble {
+        bottom: 130px;
+        right: 10px;
+    }
+    
+    .deepseek-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .deepseek-tooltip {
+        font-size: 12px;
+        padding: 6px 12px;
+        bottom: 55px;
+    }
+    
+    #aniver {
+        bottom: 80px;
+        right: 10px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .theme-toggle {
+        bottom: 15px;
+        right: 10px;
+        width: 45px;
+        height: 45px;
+    }
+}
