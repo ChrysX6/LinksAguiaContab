@@ -486,3 +486,39 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();
     });
 });
+
+// Sistema do balão do DeepSeek
+document.addEventListener('DOMContentLoaded', function() {
+    const deepseekIcon = document.getElementById('deepseekIcon');
+    const deepseekTooltip = document.getElementById('deepseekTooltip');
+    
+    // URL do DeepSeek
+    const DEEPSEEK_URL = "https://chat.deepseek.com/";
+    
+    // Adicionar evento de clique para abrir o DeepSeek
+    deepseekIcon.addEventListener('click', function() {
+        window.open(DEEPSEEK_URL, '_blank');
+    });
+    
+    // Tooltip automático ao carregar
+    setTimeout(() => {
+        deepseekTooltip.style.opacity = '1';
+        deepseekTooltip.style.transform = 'translateY(0)';
+        
+        setTimeout(() => {
+            deepseekTooltip.style.opacity = '0';
+            deepseekTooltip.style.transform = 'translateY(10px)';
+        }, 3000);
+    }, 1000);
+    
+    // Adicionar efeito de hover para tooltip
+    deepseekIcon.addEventListener('mouseenter', function() {
+        deepseekTooltip.style.opacity = '1';
+        deepseekTooltip.style.transform = 'translateY(0)';
+    });
+    
+    deepseekIcon.addEventListener('mouseleave', function() {
+        deepseekTooltip.style.opacity = '0';
+        deepseekTooltip.style.transform = 'translateY(10px)';
+    });
+});
