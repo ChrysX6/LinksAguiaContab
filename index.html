@@ -132,10 +132,12 @@
                 <i class="fas fa-clock"></i>
                 <h2>Próximos Vencimentos</h2>
             </div>
+            <ul class="avisos-list">
                 <li class="aviso-item">
-                    <span class="aviso-title">*****</span>
+                    <span class="aviso-title">****</span>
                     <span class="aviso-date">Vence em: 31/01/2026</span>
                 </li>
+            </ul>
         </div>
     </div>
 
@@ -161,27 +163,36 @@
     <button class="floating-btn aniver" id="aniver"><a href="aniversario/aniversario.html" target="_blank"><i
                 class="fa fa-birthday-cake" aria-hidden="true"></i>
         </a></button>
-        <!-- Balão de Chat com Proteção por Senha -->
-<div class="chat-bubble" id="chatBubble">
-    <div class="chat-icon">
-        <i class="fas fa-lock"></i>
-    </div>
-    <div class="chat-window" id="chatWindow">
-        <div class="chat-header">
-            <h3>Acesso Restrito</h3>
-            <button class="close-chat" id="closeChat">&times;</button>
+
+    <!-- Balão do DeepSeek -->
+    <div class="deepseek-bubble" id="deepseekBubble">
+        <div class="deepseek-icon" id="deepseekIcon">
+            <i class="fas fa-robot"></i>
         </div>
-        <div class="chat-body">
-            <p>Digite a senha para acessar o link:</p>
-            <input type="password" id="passwordInput" class="password-input" placeholder="Digite a senha...">
-            <button id="submitPassword" class="submit-btn">Acessar</button>
-            <p id="errorMessage" class="error-message"></p>
+        <div class="deepseek-tooltip" id="deepseekTooltip">
+            <span>Ir para DeepSeek</span>
         </div>
     </div>
-</div>
+
+    <!-- Balão de Chat com Proteção por Senha -->
+    <div class="chat-bubble" id="chatBubble">
+        <div class="chat-icon">
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3>Acesso Restrito</h3>
+                <button class="close-chat" id="closeChat">&times;</button>
+            </div>
+            <div class="chat-body">
+                <p>Digite a senha para acessar o link:</p>
+                <input type="password" id="passwordInput" class="password-input" placeholder="Digite a senha...">
+                <button id="submitPassword" class="submit-btn">Acessar</button>
+                <p id="errorMessage" class="error-message"></p>
+            </div>
+        </div>
+    </div>
 
     <script src="links/javascript.js"></script>
 </body>
-
-
 </html>
