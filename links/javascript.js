@@ -8,6 +8,13 @@ const systemsDatabase = [
         tags: ["receita federal", "impostos", "declaracoes", "fiscal", "ecac"]
     },
     {
+        name: "DISTRIBUIÇÃO 2025",
+        description: "Planilha para realizar a distribuição do ano de 2025",
+        url: "https://docs.google.com/spreadsheets/d/1KnV2UPIZuCA3rBcubj9-h65jTwY3ypMQ/edit?pli=1&gid=816413539#gid=816413539",
+        icon: "fas fa-file-invoice-dollar",
+        tags: ["Distribuição", "Martins"]
+    },
+    {
         name: "CONSULTA OPTANTES SIMPLES NACIONAL",
         description: "Sistema para consultar empresas optantes pelo Simples Nacional",
         url: "https://consopt.www8.receita.fazenda.gov.br/consultaoptantes",
@@ -522,3 +529,4 @@ document.addEventListener('DOMContentLoaded', function() {
         deepseekTooltip.style.transform = 'translateY(10px)';
     });
 });
+
