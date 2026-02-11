@@ -1,552 +1,281 @@
-// Base de dados de sistemas e serviços
-const systemsDatabase = [
-    {
-        name: "E-CAC",
-        description: "Sistema da Receita Federal - Centro Virtual de Atendimento",
-        url: "https://cav.receita.fazenda.gov.br/",
-        icon: "fas fa-file-invoice-dollar",
-        tags: ["receita federal", "impostos", "declaracoes", "fiscal", "ecac"]
-    },
-    {
-        name: "CONSULTA OPTANTES SIMPLES NACIONAL",
-        description: "Sistema para consultar empresas optantes pelo Simples Nacional",
-        url: "https://consopt.www8.receita.fazenda.gov.br/consultaoptantes",
-        icon: "fas fa-users",
-        tags: ["simples nacional", "consulta", "optantes"]
-    },
-    {
-        name: "CONSULTA CNPJ",
-        description: "Sistema de consulta de CNPJ da Receita Federal",
-        url: "https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp",
-        icon: "fas fa-database",
-        tags: ["cnpj", "consulta", "receita federal"]
-    },
-    {
-        name: "JUCESP",
-        description: "Junta Comercial do Estado de São Paulo",
-        url: "https://www.jucesponline.sp.gov.br/",
-        icon: "fas fa-landmark",
-        tags: ["junta comercial", "sp", "empresas"]
-    },
-    {
-        name: "SIMPLES NACIONAL",
-        description: "Sistema de recolhimento de impostos para micro e pequenas empresas",
-        url: "https://www8.receita.fazenda.gov.br/SIMPLESNACIONAL/",
-        icon: "fas fa-building",
-        tags: ["simples", "mei", "microempresa"]
-    },
-    {
-        name: "PGMEI",
-        description: "Programa Gerador do Documento de Arrecadação do MEI",
-        url: "https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao",
-        icon: "fas fa-city",
-        tags: ["mei", "pgmei", "recolhimento"]
-    },
-    {
-        name: "NOTA FISCAL - PREFEITURA SP",
-        description: "Sistema de emissão de Nota Fiscal Eletrônica de Serviços - Prefeitura de São Paulo",
-        url: "https://nfe.prefeitura.sp.gov.br/contribuinte/inicio.aspx",
-        icon: "fas fa-file-alt",
-        tags: ["nota fiscal", "prefeitura sp", "nfs-e"]
-    },
-    {
-        name: "SINTEGRA",
-        description: "Sistema Integrado de Informações sobre Operações Interestaduais",
-        url: "https://www.sintegra.gov.br/",
-        icon: "fas fa-exchange-alt",
-        tags: ["icms", "interestadual", "fiscal"]
-    },
-    {
-        name: "ESOCIAL",
-        description: "Sistema de Escrituração Digital das Obrigações Fiscais Trabalhistas",
-        url: "https://www.esocial.gov.br/",
-        icon: "fas fa-id-card",
-        tags: ["trabalhista", "folha", "inss"]
-    },
-    {
-        name: "DUC PREFEITURA SP",
-        description: "O Demonstrativo Unificado do Contribuinte (DUC) - Prefeitura de São Paulo",
-        url: "https://duc.prefeitura.sp.gov.br/portal/",
-        icon: "fas fa-file-invoice",
-        tags: ["duc", "prefeitura sp", "recolhimento"]
-    },
-    {
-        name: "DAS",
-        description: "Documento de Arrecadação do Simples Nacional",
-        url: "https://www8.receita.fazenda.gov.br/SimplesNacional/Servicos/Grupo.aspx?grp=t&area=1",
-        icon: "fas fa-receipt",
-        tags: ["simples", "das", "recolhimento"]
-    },
-    {
-        name: "DEC PREFEITURA SP",
-        description: "Declaração Eletrônica de Serviços - Prefeitura de São Paulo",
-        url: "https://dec.prefeitura.sp.gov.br/",
-        icon: "fas fa-briefcase",
-        tags: ["dec", "prefeitura sp", "servicos"]
-    },
-    {
-        name: "DEC SEFAZ",
-        description: "Declaração Eletrônica de Serviços - SEFAZ",
-        url: "https://www.dec.fazenda.sp.gov.br/DEC/UCLogin/login.aspx",
-        icon: "fas fa-briefcase",
-        tags: ["dec", "sefaz", "servicos"]
-    },
-    {
-        name: "PFE - POSTO FISCAL ELETRÔNICO",
-        description: "Sistema de Posto Fiscal Eletrônico",
-        url: "https://www3.fazenda.sp.gov.br/CAWEB/Account/Login.aspx/",
-        icon: "fas fa-clipboard-check",
-        tags: ["posto fiscal", "pfe", "fiscal"]
-    },
-    {
-        name: "FGTS DIGITAL",
-        description: "Sistema de recolhimento do FGTS",
-        url: "https://fgtsdigital.sistema.gov.br/portal/login",
-        icon: "fas fa-university",
-        tags: ["fgts", "recolhimento", "trabalhista"]
-    },
-    {
-        name: "EMPREGADOR WEB",
-        description: "Tirar seguro-desemprego e outros serviços trabalhistas",
-        url: "https://sd.maisemprego.mte.gov.br/sdweb/empregadorweb/index.jsf",
-        icon: "fas fa-briefcase",
-        tags: ["empregador", "trabalhista", "seguro desemprego"]
-    },
-    {
-        name: "SAL - SISTEMA DE ACRÉSCIMOS LEGAIS",
-        description: "Tirar guias de inss",
-        url: "https://sal.rfb.gov.br/home",
-        icon: "fas fa-file-invoice-dollar",
-        tags: ["inss", "guias", "recolhimento"]
-    },
-    {
-        name: "DET - DOMICÍLIO ELETRÔNICO TRABALHISTA",
-        description: "sistema do governo federal brasileiro que centraliza a comunicação entre a Inspeção do Trabalho e os empregadores",
-        url: "https://det.sit.trabalho.gov.br/",
-        icon: "fas fa-envelope-open-text",
-        tags: ["inspecao do trabalho", "trabalhista", "comunicacao"]
-    },
-    {
-        name: "IOB ONLINE",
-        description: "Plataforma de conteúdos e serviços para profissionais de contabilidade e gestão",
-        url: "https://www.iobonline.com.br/",
-        icon: "fas fa-envelope-open-text",
-        tags: ["iob", "conteudos", "servicos"]
-    },
-    {
-        name: "NFSE MEI",
-        description: "Sistema de emissão de Nota Fiscal de Serviços Eletrônica para MEI",
-        url: "https://www.nfse.gov.br/EmissorNacional/",
-        icon: "fas fa-envelope-open-text",
-        tags: ["nfse", "mei", "nota fiscal"]
-    },
-    {
-        name: "GISS ONLINE",
-        description: "Sistema de Gestão de ISS para Municípios",
-        url: "https://www.iobonline.com.br/",
-        icon: "fas fa-envelope-open-text",
-        tags: ["giss", "iss", "municipios"]
-    },
-     {
-        name: "DARE ICMS SP",
-        description: "Documento de Arrecadação de Receitas Estaduais - ICMS São Paulo",
-        url: "https://www4.fazenda.sp.gov.br/DareICMS/DareAvulso",
-        icon: "fas fa-file-invoice-dollar",
-        tags: ["dare", "icms", "sp"]
-    },
-];
-
-// Variáveis globais para controle do modal
-let currentControlType = '';
-const monthLinks = {
-    'lucro-presumido': {
-        2025: {
-            'janeiro': 'https://drive.google.com/drive/folders/1ykiBqOId1eyw9Vxuv5M6wDdrB0fut5s1',
-            'fevereiro': 'https://drive.google.com/drive/folders/1cuP5LINjfQVmdBuMEEFdjUhIASgAKqIN',
-            'março': 'https://drive.google.com/drive/folders/1elN9-Br-O9eCd19Sz7lNg3Bq5Fd0O4W7',
-            'abril': 'https://drive.google.com/drive/folders/1PtCIeLrCc0_aNJXaFzZRlGcRRCziJVgu',
-            'maio': 'https://drive.google.com/drive/folders/1wXU3nZwDe54mR9URFTGAH3xLNma9oiuS',
-            'junho': 'https://drive.google.com/drive/folders/1aNgApurd8T540p2oHq5TqyWdJurfg0Pr',
-            'julho': 'https://drive.google.com/drive/folders/1w_INrhgTi4ahVHz7Xa_V06wxZeKUnMPW',
-            'agosto': 'https://drive.google.com/drive/folders/1bkp9_K5fWyYOSz9UZWRqToTqp_-vdI9G',
-            'setembro': 'https://drive.google.com/drive/folders/1c6Kfp-GmrInteN1YIyZ3meMcdxxcgR3s',
-            'outubro': 'https://drive.google.com/drive/folders/19IsvE2x1KFfjDEBU1KWm-yihk0UYiiwy',
-            'novembro': 'https://drive.google.com/drive/folders/1TXXPTtN9ob2QHYf3z8W7HFTr0qZeCykD',
-            'dezembro': 'https://drive.google.com/drive/folders/15Wkar3DSMYVPXBJ4G_KpGwrLzHn5ciit'
-        },
-        2026: {
-            'janeiro': 'https://drive.google.com/drive/folders/1wRZCDogRXtmLFOkNtYI6Jt7OBEKAw1qB?usp=drive_link',
-            'fevereiro': 'https://drive.google.com/drive/folders/1IsLBfSuS_3fYUSG4eaYgn4Cyz9_DihBg?usp=drive_link',
-            'março': 'https://drive.google.com/drive/folders/1hel_PCcbQ7eordwcDS_quj2yvQkta2i4?usp=drive_link',
-            'abril': 'https://drive.google.com/drive/folders/1S33RWlzZK2kH_3uHY2Cg5up9M30US469?usp=drive_link',
-            'maio': 'https://drive.google.com/drive/folders/1PRlq8rS61KBvndPq1IxsrEBGr_uPGLJ1?usp=drive_link',
-            'junho': 'https://drive.google.com/drive/folders/1bDaPzWIXWD_keWIDgeH4MTA-nekTm8X7?usp=drive_link',
-            'julho': 'https://drive.google.com/drive/folders/1_p1tWJ5M2qZzGzHHsVljOVznZjRIo_q9?usp=drive_link',
-            'agosto': 'https://drive.google.com/drive/folders/1-uf2926nJhyyka2BJyZuSnQo3jJm83x2?usp=drive_link',
-            'setembro': 'https://drive.google.com/drive/folders/1JqT0jxqwbGretxBeOsH6g3EeV8DZCyns?usp=drive_link',
-            'outubro': 'https://drive.google.com/drive/folders/15DvjIjceDIHRzYIXb0GFfpZbZ2CLCoOi?usp=drive_link',
-            'novembro': 'https://drive.google.com/drive/folders/1HAuLNhECCbhV9CA0yjkNinaTb5B-U3zk?usp=drive_link',
-            'dezembro': 'https://drive.google.com/drive/folders/1Z5evXqJkpFOugl_CXeN4s6XtqnvfusTv?usp=drive_link'
-        }
-    },
-    'simples-nacional': {
-        2025: {
-            'janeiro': 'https://drive.google.com/drive/folders/1PLUeH7eXGwuaXl7gry_H6fNlGfFXAfBl',
-            'fevereiro': 'https://drive.google.com/drive/folders/1vC2ohs-RIT6GMcwD0eGvTTYh86SeQPoC',
-            'março': 'https://drive.google.com/drive/folders/1_zRsOXMKML23Oqf4SAjHLwzSNuxo86Xe',
-            'abril': 'https://drive.google.com/drive/folders/1txRhXA9LpWPREbcVM1HYBGbJWuApkVyH',
-            'maio': 'https://drive.google.com/drive/folders/1HmX65TNajLCiA9KZsLClq0sr3UTZ3bzW',
-            'junho': 'https://drive.google.com/drive/folders/1vTQuNDkspN7Uhdp0Q_4d29wHvn2okfj9',
-            'julho': 'https://drive.google.com/drive/folders/1yfB8RdAbDg6GC01v0DexwRamAfoTzq6Q',
-            'agosto': 'https://drive.google.com/drive/folders/1gNx_IAkvimMUFrHjogMoXho0ZvcVM5TT',
-            'setembro': 'https://drive.google.com/drive/folders/1kQtzbhm5wgxC-QvDHYclmawN_nFCaGml',
-            'outubro': 'https://drive.google.com/drive/folders/14Ync6AtztJ8ZVyA6H3poGYZx-eFURKXV',
-            'novembro': 'https://drive.google.com/drive/folders/1w9l-3mEDS4fs4nQ6_3RfMl6nviKfVYWQ',
-            'dezembro': 'https://drive.google.com/drive/folders/1SBOazBR5XnKfqfpziXwzkMZs-HqC4JN2'
-        },
-        2026: {
-            'janeiro': 'https://drive.google.com/drive/folders/1PLUeH7eXGwuaXl7gry_H6fNlGfFXAfBl',
-            'fevereiro': 'https://drive.google.com/drive/folders/1vC2ohs-RIT6GMcwD0eGvTTYh86SeQPoC',
-            'março': 'https://drive.google.com/drive/folders/1_zRsOXMKML23Oqf4SAjHLwzSNuxo86Xe',
-            'abril': 'https://drive.google.com/drive/folders/1txRhXA9LpWPREbcVM1HYBGbJWuApkVyH',
-            'maio': 'https://drive.google.com/drive/folders/1HmX65TNajLCiA9KZsLClq0sr3UTZ3bzW',
-            'junho': 'https://drive.google.com/drive/folders/1vTQuNDkspN7Uhdp0Q_4d29wHvn2okfj9',
-            'julho': 'https://drive.google.com/drive/folders/1yfB8RdAbDg6GC01v0DexwRamAfoTzq6Q',
-            'agosto': 'https://drive.google.com/drive/folders/1gNx_IAkvimMUFrHjogMoXho0ZvcVM5TT',
-            'setembro': 'https://drive.google.com/drive/folders/1kQtzbhm5wgxC-QvDHYclmawN_nFCaGml',
-            'outubro': 'https://drive.google.com/drive/folders/14Ync6AtztJ8ZVyA6H3poGYZx-eFURKXV',
-            'novembro': 'https://drive.google.com/drive/folders/1w9l-3mEDS4fs4nQ6_3RfMl6nviKfVYWQ',
-            'dezembro': 'https://drive.google.com/drive/folders/1SBOazBR5XnKfqfpziXwzkMZs-HqC4JN2'
-        }
-    }
-};
-
-// Funções para o modal de seleção
-function showYearSelection(controlType) {
-    currentControlType = controlType;
-    const modalTitle = document.getElementById('modalTitle');
-    
-    if (controlType === 'lucro-presumido') {
-        modalTitle.textContent = 'Lucro Presumido/Real - Selecionar Período';
-    } else {
-        modalTitle.textContent = 'Simples Nacional - Selecionar Período';
-    }
-    
-    document.getElementById('monthSelection').style.display = 'none';
-    document.getElementById('yearMonthModal').style.display = 'block';
-}
-
-function showMonthSelection(year) {
-    const monthGrid = document.getElementById('monthGrid');
-    monthGrid.innerHTML = '';
-    
-    const months = monthLinks[currentControlType][year];
-    const monthNames = {
-        'janeiro': 'JANEIRO',
-        'fevereiro': 'FEVEREIRO', 
-        'março': 'MARÇO',
-        'abril': 'ABRIL',
-        'maio': 'MAIO',
-        'junho': 'JUNHO',
-        'julho': 'JULHO',
-        'agosto': 'AGOSTO',
-        'setembro': 'SETEMBRO',
-        'outubro': 'OUTUBRO',
-        'novembro': 'NOVEMBRO',
-        'dezembro': 'DEZEMBRO'
-    };
-    
-    // Adiciona botão "TODOS OS MESES" se existir
-    if (months.todos) {
-        const allMonthsBtn = document.createElement('button');
-        allMonthsBtn.className = 'month-btn';
-        allMonthsBtn.textContent = monthNames['todos'];
-        allMonthsBtn.onclick = () => redirectToLink(months.todos);
-        monthGrid.appendChild(allMonthsBtn);
-    }
-    
-    // Adiciona os meses individuais
-    Object.keys(months).forEach(month => {
-        if (month !== 'todos') {
-            const monthBtn = document.createElement('button');
-            monthBtn.className = 'month-btn';
-            monthBtn.textContent = monthNames[month];
-            monthBtn.onclick = () => redirectToLink(months[month]);
-            monthGrid.appendChild(monthBtn);
-        }
-    });
-    
-    document.getElementById('monthSelection').style.display = 'block';
-}
-
-function redirectToLink(url) {
-    window.open(url, '_blank');
-    closeModal();
-}
-
-function closeModal() {
-    document.getElementById('yearMonthModal').style.display = 'none';
-    currentControlType = '';
-}
-
-// Fechar modal ao clicar fora
-document.getElementById('yearMonthModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
-
-// Fechar modal com ESC
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
-
-// Função para inicializar os resultados
-function initializeSearchResults() {
-    const searchResults = document.getElementById('searchResults');
-    // Exibe todos os sistemas inicialmente
-    displayResults(systemsDatabase, '');
-}
-
-// Função para exibir resultados
-function displayResults(results, searchTerm) {
-    const searchResults = document.getElementById('searchResults');
-    
-    if (results.length === 0) {
-        searchResults.innerHTML = `
-            <div class="no-results">
-                <i class="fas fa-search"></i>
-                <p>Nenhum sistema encontrado para "${searchTerm}"</p>
-                <small>Tente buscar por: E-CAC, SEFIP, DCTF, SPED, etc.</small>
-            </div>
-        `;
-        return;
-    }
-
-    searchResults.innerHTML = results.map(system => {
-        const highlightedName = highlightText(system.name, searchTerm);
-        const highlightedDescription = highlightText(system.description, searchTerm);
-        
-        return `
-            <a href="${system.url}" target="_blank" class="system-link">
-                <div class="system-icon">
-                    <i class="${system.icon}"></i>
-                </div>
-                <div class="system-info">
-                    <div class="system-name">${highlightedName}</div>
-                    <div class="system-description">${highlightedDescription}</div>
-                    <div class="system-tags">
-                        ${system.tags.map(tag => `<span class="system-tag">${tag}</span>`).join('')}
-                    </div>
-                </div>
-            </a>
-        `;
-    }).join('');
-}
-
-// Função para destacar o texto buscado
-function highlightText(text, searchTerm) {
-    if (!searchTerm.trim()) return text;
-    
-    const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
-    return text.replace(regex, '<span class="highlight">$1</span>');
-}
-
-// Função para escapar caracteres especiais no regex
-function escapeRegex(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-// Função principal de busca
-function filterLinks() {
-    const searchTerm = document.getElementById('search-bar').value.toLowerCase().trim();
-    
-    if (searchTerm === '') {
-        // Se a busca estiver vazia, mostra todos os sistemas
-        displayResults(systemsDatabase, '');
-        return;
-    }
-
-    const results = systemsDatabase.filter(system => {
-        // Busca no nome
-        if (system.name.toLowerCase().includes(searchTerm)) return true;
-        
-        // Busca na descrição
-        if (system.description.toLowerCase().includes(searchTerm)) return true;
-        
-        // Busca nas tags
-        if (system.tags.some(tag => tag.toLowerCase().includes(searchTerm))) return true;
-        
-        return false;
-    });
-
-    displayResults(results, searchTerm);
-}
-
-// Tema dark/light
-document.getElementById('theme-toggle').addEventListener('click', () => {
-    const body = document.body;
-    const themeToggle = document.getElementById('theme-toggle');
-    const logo = document.getElementById('logo');
-
-    // Alterna o modo escuro
-    body.classList.toggle('dark-mode');
-
-    // Muda o ícone do botão e a logo dependendo do modo
-    if (body.classList.contains('dark-mode')) {
-        themeToggle.textContent = '🌙';
-        if (logo) {
-            logo.src = 'links/img/logo2.png';
-        }
-    } else {
-        themeToggle.textContent = '☀️';
-        if (logo) {
-            logo.src = 'links/img/logo1.png';
-        }
-    }
-    
-    // Salva a preferência no localStorage
-    localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
-});
-
-// Aplica o tema salvo ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    const body = document.body;
-    const themeToggle = document.getElementById('theme-toggle');
-    const logo = document.getElementById('logo');
-    
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        themeToggle.textContent = '🌙';
-        if (logo) {
-            logo.src = 'links/img/logo2.png';
-        }
-    }
-    
-    // Inicializa o sistema de busca
-    initializeSearchResults();
-});
-
-// Sistema de Chat com Senha
+// ========== BALÃO DE FERRAMENTAS E RECADOS ==========
 document.addEventListener('DOMContentLoaded', function() {
-    const chatBubble = document.getElementById('chatBubble');
-    const chatIcon = chatBubble.querySelector('.chat-icon');
-    const chatWindow = document.getElementById('chatWindow');
-    const closeChat = document.getElementById('closeChat');
-    const passwordInput = document.getElementById('passwordInput');
-    const submitPassword = document.getElementById('submitPassword');
-    const errorMessage = document.getElementById('errorMessage');
+    // ===== CONFIGURAÇÃO DO GOOGLE SHEETS =====
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzVd7j35SWxbCTJvK8QBXe8ZE5j_QTDHDxBYfR20pncdI55E2BDgXgB4UOKZk2ZYrZO/exec';
     
-    // Senha correta
-    const CORRECT_PASSWORD = "Gestao2025@";
-    // Link que será acessado após a senha correta
-    const TARGET_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true";
-    
-    // Abrir chat
-    chatIcon.addEventListener('click', function() {
-        chatWindow.classList.add('active');
-        passwordInput.focus();
-    });
-    
-    // Fechar chat
-    closeChat.addEventListener('click', function() {
-        chatWindow.classList.remove('active');
-        resetForm();
-    });
-    
-    // Fechar chat clicando fora
-    document.addEventListener('click', function(event) {
-        if (!chatBubble.contains(event.target) && chatWindow.classList.contains('active')) {
-            chatWindow.classList.remove('active');
-            resetForm();
-        }
-    });
-    
-    // Submeter senha
-    submitPassword.addEventListener('click', validatePassword);
-    
-    // Submeter com Enter
-    passwordInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            validatePassword();
-        }
-    });
-    
-    function validatePassword() {
-        const enteredPassword = passwordInput.value.trim();
+    // ========== BALÃO DE RECADOS ==========
+    function initMuralRecados() {
+        // Elementos do DOM
+        const recadosIcon = document.getElementById('recadosIcon');
+        const recadosPanel = document.getElementById('recadosPanel');
+        const closeRecados = document.getElementById('closeRecados');
+        const recadosList = document.getElementById('recadosList');
+        const novoRecado = document.getElementById('novoRecado');
+        const btnPublicar = document.getElementById('publicarRecado');
+        const chkAnonimo = document.getElementById('recadoAnonimo');
+        const recadosCount = document.getElementById('recadosCount');
         
-        if (enteredPassword === CORRECT_PASSWORD) {
-            // Senha correta - redirecionar para o link
-            window.open(TARGET_LINK, '_blank');
-            resetForm();
-            chatWindow.classList.remove('active');
-        } else {
-            // Senha incorreta
-            errorMessage.textContent = "Senha incorreta. Tente novamente.";
-            errorMessage.classList.add('show');
-            passwordInput.value = '';
-            passwordInput.focus();
+        if (!recadosIcon) {
+            console.log('Elementos do mural não encontrados');
+            return;
+        }
+        
+        let recados = [];
+        let recadosLidos = JSON.parse(localStorage.getItem('recadosLidos') || '[]');
+        
+        // ===== CARREGAR RECADOS DO GOOGLE SHEETS =====
+        async function carregarRecados() {
+            try {
+                const response = await fetch(GOOGLE_SHEETS_URL);
+                recados = await response.json();
+                
+                recados.forEach(recado => {
+                    recado.lido = recadosLidos.includes(recado.id);
+                });
+                
+                renderizarRecados();
+                atualizarContador();
+            } catch (error) {
+                console.error('Erro ao carregar recados:', error);
+                if (recadosList) {
+                    recadosList.innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                            <p style="margin-bottom: 5px;">Não foi possível carregar os recados</p>
+                            <small style="font-size: 12px;">Tente novamente mais tarde</small>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        // ===== PUBLICAR RECADO =====
+        async function publicarRecado() {
+            if (!novoRecado) return;
             
-            // Remover mensagem de erro após 3 segundos
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 3000);
+            const texto = novoRecado.value.trim();
+            if (!texto) {
+                alert('Digite um recado!');
+                return;
+            }
+            
+            const btn = document.getElementById('publicarRecado');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
+            btn.disabled = true;
+            
+            try {
+                let autor = chkAnonimo && chkAnonimo.checked ? 'Anônimo' : localStorage.getItem('userName');
+                
+                if (!autor || autor === 'Anônimo') {
+                    autor = prompt('Digite seu nome:');
+                    if (!autor) {
+                        btn.innerHTML = textoOriginal;
+                        btn.disabled = false;
+                        return;
+                    }
+                    localStorage.setItem('userName', autor);
+                }
+                
+                const novoRecadoObj = {
+                    id: Date.now(),
+                    texto: texto,
+                    autor: autor,
+                    data: new Date().toISOString(),
+                    visualizacoes: 0
+                };
+                
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(novoRecadoObj)
+                });
+                
+                novoRecado.value = '';
+                if (chkAnonimo) chkAnonimo.checked = false;
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Publicado!';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar';
+                    btn.disabled = false;
+                }, 1500);
+                
+                setTimeout(() => {
+                    carregarRecados();
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Erro ao publicar:', error);
+                alert('Erro ao publicar recado. Tente novamente!');
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }
         }
-    }
-    
-    function resetForm() {
-        passwordInput.value = '';
-        errorMessage.classList.remove('show');
-    }
-    
-    // Prevenir que cliques no chat fechem o window
-    chatWindow.addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-});
-
-// Sistema do balão do DeepSeek
-document.addEventListener('DOMContentLoaded', function() {
-    const deepseekIcon = document.getElementById('deepseekIcon');
-    const deepseekTooltip = document.getElementById('deepseekTooltip');
-    
-    // URL do DeepSeek
-    const DEEPSEEK_URL = "https://chat.deepseek.com/";
-    
-    // Adicionar evento de clique para abrir o DeepSeek
-    deepseekIcon.addEventListener('click', function() {
-        window.open(DEEPSEEK_URL, '_blank');
-    });
-    
-    // Tooltip automático ao carregar
-    setTimeout(() => {
-        deepseekTooltip.style.opacity = '1';
-        deepseekTooltip.style.transform = 'translateY(0)';
         
-        setTimeout(() => {
-            deepseekTooltip.style.opacity = '0';
-            deepseekTooltip.style.transform = 'translateY(10px)';
-        }, 3000);
-    }, 1000);
-    
-    // Adicionar efeito de hover para tooltip
-    deepseekIcon.addEventListener('mouseenter', function() {
-        deepseekTooltip.style.opacity = '1';
-        deepseekTooltip.style.transform = 'translateY(0)';
-    });
-    
-    deepseekIcon.addEventListener('mouseleave', function() {
-        deepseekTooltip.style.opacity = '0';
-        deepseekTooltip.style.transform = 'translateY(10px)';
-    });
-});
+        // ===== MARCAR COMO VISTO =====
+        async function marcarComoVisto(id) {
+            const recado = recados.find(r => r.id === id);
+            if (!recado || recado.lido) return;
+            
+            try {
+                recado.visualizacoes = (recado.visualizacoes || 0) + 1;
+                recado.lido = true;
+                
+                if (!recadosLidos.includes(id)) {
+                    recadosLidos.push(id);
+                    localStorage.setItem('recadosLidos', JSON.stringify(recadosLidos));
+                }
+                
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'PUT',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: recado.id,
+                        visualizacoes: recado.visualizacoes
+                    })
+                });
+                
+                renderizarRecados();
+                atualizarContador();
+            } catch (error) {
+                console.error('Erro ao atualizar visualização:', error);
+            }
+        }
+        
+        // ===== ATUALIZAR CONTADOR =====
+        function atualizarContador() {
+            if (!recadosCount) return;
+            const naoLidos = recados.filter(r => !r.lido).length;
+            recadosCount.textContent = naoLidos;
+            recadosCount.style.display = naoLidos > 0 ? 'flex' : 'none';
+        }
+        
+        // ===== FORMATAR DATA =====
+        function formatarData(data) {
+            const hoje = new Date();
+            const ontem = new Date();
+            ontem.setDate(ontem.getDate() - 1);
+            const dataObj = new Date(data);
+            
+            if (dataObj.toDateString() === hoje.toDateString()) {
+                return `Hoje às ${dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+            } else if (dataObj.toDateString() === ontem.toDateString()) {
+                return `Ontem às ${dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+            } else {
+                return dataObj.toLocaleDateString('pt-BR') + ' às ' + 
+                       dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+        
+        // ===== RENDERIZAR RECADOS =====
+        function renderizarRecados() {
+            if (!recadosList) return;
+            
+            if (recados.length === 0) {
+                recadosList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <i class="fas fa-sticky-note" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p style="margin-bottom: 5px;">Nenhum recado ainda</p>
+                        <small style="font-size: 12px;">Seja o primeiro a publicar!</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recadosOrdenados = [...recados].sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            recadosList.innerHTML = recadosOrdenados.map(recado => {
+                const dataFormatada = formatarData(recado.data);
+                const lido = recado.lido || false;
+                
+                return `
+                    <div class="recado-item" data-id="${recado.id}" style="${lido ? 'opacity: 0.8;' : ''}">
+                        <div class="recado-header">
+                            <span class="recado-autor">
+                                <i class="fas fa-user-circle"></i> ${recado.autor}
+                            </span>
+                            <span class="recado-data">
+                                <i class="fas fa-clock"></i> ${dataFormatada}
+                            </span>
+                        </div>
+                        <div class="recado-texto">${recado.texto.replace(/\n/g, '<br>')}</div>
+                        <div class="recado-footer">
+                            <span class="recado-visualizacoes">
+                                <i class="fas fa-eye"></i> ${recado.visualizacoes || 0} visualizações
+                            </span>
+                            <button class="btn-visualizado" data-id="${recado.id}" ${lido ? 'disabled' : ''}>
+                                <i class="fas ${lido ? 'fa-check-circle' : 'fa-check'}"></i> 
+                                ${lido ? 'Visto' : 'Marcar como visto'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.querySelectorAll('.btn-visualizado').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const id = parseInt(this.dataset.id);
+                    marcarComoVisto(id);
+                });
+            });
+            
+            atualizarContador();
+        }
+        
+        // ===== EVENT LISTENERS DO MURAL =====
+        if (recadosIcon) {
+            recadosIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Mural clicado!');
+                recadosPanel.classList.add('active');
+                carregarRecados();
+            });
+        }
+        
+        if (closeRecados) {
+            closeRecados.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                recadosPanel.classList.remove('active');
+            });
+        }
+        
+        if (btnPublicar) {
+            const novoPublicar = btnPublicar.cloneNode(true);
+            btnPublicar.parentNode.replaceChild(novoPublicar, btnPublicar);
+            novoPublicar.addEventListener('click', publicarRecado);
+        }
+        
+        if (novoRecado) {
+            novoRecado.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    publicarRecado();
+                }
+            });
+        }
+        
+        document.addEventListener('click', function(event) {
+            const recadosBubble = document.getElementById('recadosBubble');
+            if (recadosBubble && !recadosBubble.contains(event.target) && recadosPanel && recadosPanel.classList.contains('active')) {
+                recadosPanel.classList.remove('active');
+            }
+        });
+        
+        carregarRecados();
+        setInterval(carregarRecados, 30000);
+    }
 
-// ========== BALÃO DE FERRAMENTAS ==========
-document.addEventListener('DOMContentLoaded', function() {
-    // Base de dados das ferramentas
+    // ========== BASE DE DADOS DAS FERRAMENTAS ==========
     const toolsDatabase = [
         {
             id: 'numero-extenso',
@@ -559,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 'calculo-horas',
             name: 'Calculadora de Horas',
-            description: 'Soma e subtrai horas e minutos',
+            description: 'Calcula horas trabalhadas (entrada/saída/intervalo)',
             icon: 'fas fa-clock',
             category: 'calculo',
             popular: true
@@ -573,25 +302,9 @@ document.addEventListener('DOMContentLoaded', function() {
             popular: true
         },
         {
-            id: 'calculadora-idade',
-            name: 'Calculadora de Idade',
-            description: 'Idade exata em anos, meses e dias',
-            icon: 'fas fa-birthday-cake',
-            category: 'data',
-            popular: true
-        },
-        {
-            id: 'dias-uteis',
-            name: 'Dias Úteis',
-            description: 'Calcula dias úteis entre datas',
-            icon: 'fas fa-calendar-check',
-            category: 'data',
-            popular: false
-        },
-        {
             id: 'porcentagem',
-            name: 'Calculadora de %',
-            description: 'Porcentagem e descontos',
+            name: 'Calculadora % e Regra de 3',
+            description: 'Porcentagem, descontos, aumentos e regra de 3',
             icon: 'fas fa-percent',
             category: 'calculo',
             popular: true
@@ -603,26 +316,10 @@ document.addEventListener('DOMContentLoaded', function() {
             icon: 'fas fa-id-card',
             category: 'conversao',
             popular: false
-        },
-        {
-            id: 'remover-acentos',
-            name: 'Remover Acentos',
-            description: 'Remove acentos e caracteres especiais',
-            icon: 'fas fa-spell-check',
-            category: 'conversao',
-            popular: false
-        },
-        {
-            id: 'validador-email',
-            name: 'Validar E-mail',
-            description: 'Verifica se e-mail é válido',
-            icon: 'fas fa-envelope',
-            category: 'conversao',
-            popular: false
         }
     ];
 
-    // Elementos do DOM
+    // ========== ELEMENTOS DO BALÃO DE FERRAMENTAS ==========
     const toolsIcon = document.getElementById('toolsIcon');
     const toolsPanel = document.getElementById('toolsPanel');
     const closeTools = document.getElementById('closeTools');
@@ -636,12 +333,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Atualizar contador de ferramentas populares
     const popularCount = toolsDatabase.filter(tool => tool.popular).length;
-    toolsCount.textContent = popularCount;
+    if (toolsCount) toolsCount.textContent = popularCount;
 
-    // Renderizar ferramentas
+    // ========== FUNÇÕES DAS FERRAMENTAS ==========
     function renderTools(category = 'todas') {
-        let filteredTools = toolsDatabase;
+        if (!toolsGrid) return;
         
+        let filteredTools = toolsDatabase;
         if (category !== 'todas') {
             filteredTools = toolsDatabase.filter(tool => tool.category === category);
         }
@@ -671,8 +369,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Abrir modal da ferramenta
     function openToolModal(tool) {
+        if (!toolModalTitle || !toolModalBody || !toolModal) return;
+        
         toolModalTitle.innerHTML = `<i class="${tool.icon}"></i> ${tool.name}`;
         toolModalBody.innerHTML = getToolContent(tool.id);
         toolModal.classList.add('active');
@@ -682,7 +381,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 150);
     }
 
-    // Conteúdo das ferramentas
     function getToolContent(toolId) {
         switch(toolId) {
             case 'numero-extenso':
@@ -710,28 +408,52 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'calculo-horas':
                 return `
                     <div class="tool-container">
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-hourglass-start"></i> Hora inicial:</label>
-                            <input type="time" id="horaInicial" class="tool-input" value="08:00">
+                        <h4 style="margin:0 0 15px 0; color:var(--accent-color);">Período Manhã</h4>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <div class="tool-input-group" style="flex:1;">
+                                <label><i class="fas fa-sun"></i> Entrada:</label>
+                                <input type="time" id="entradaManha" class="tool-input" value="08:00">
+                            </div>
+                            <div class="tool-input-group" style="flex:1;">
+                                <label><i class="fas fa-cloud"></i> Saída:</label>
+                                <input type="time" id="saidaManha" class="tool-input" value="12:00">
+                            </div>
                         </div>
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-hourglass-end"></i> Hora final:</label>
-                            <input type="time" id="horaFinal" class="tool-input" value="17:00">
+                        
+                        <h4 style="margin:15px 0; color:var(--accent-color);">Período Tarde</h4>
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            <div class="tool-input-group" style="flex:1;">
+                                <label><i class="fas fa-cloud-sun"></i> Entrada:</label>
+                                <input type="time" id="entradaTarde" class="tool-input" value="13:00">
+                            </div>
+                            <div class="tool-input-group" style="flex:1;">
+                                <label><i class="fas fa-moon"></i> Saída:</label>
+                                <input type="time" id="saidaTarde" class="tool-input" value="18:00">
+                            </div>
                         </div>
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-coffee"></i> Intervalo (minutos):</label>
-                            <input type="number" id="intervaloHoras" class="tool-input" value="60" min="0" step="5">
-                        </div>
+                        
                         <button id="calcularHoras" class="tool-button">
-                            <i class="fas fa-clock"></i> Calcular
+                            <i class="fas fa-calculator"></i> Calcular Horas Trabalhadas
                         </button>
+                        
                         <div id="resultadoHoras" class="tool-result" style="display: none;">
-                            <span id="horasTexto"></span>
-                            <small>Total de horas trabalhadas</small>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>⏰ Manhã:</span>
+                                <span id="horasManha"></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>🌆 Tarde:</span>
+                                <span id="horasTarde"></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 20px; margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--border-color);">
+                                <span><strong>TOTAL:</strong></span>
+                                <span id="horasTotal" style="color: var(--accent-color); font-weight: 700;"></span>
+                            </div>
+                            <small id="horasDecimais" style="display: block; margin-top: 10px;"></small>
                         </div>
                         <div class="tool-actions">
                             <button id="copiarHoras" class="tool-action-btn" style="display: none;">
-                                <i class="fas fa-copy"></i> Copiar
+                                <i class="fas fa-copy"></i> Copiar Horário
                             </button>
                         </div>
                     </div>
@@ -766,68 +488,71 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             
-            case 'calculadora-idade':
-                return `
-                    <div class="tool-container">
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-calendar"></i> Data de Nascimento:</label>
-                            <input type="date" id="dataNascimento" class="tool-input">
-                        </div>
-                        <button id="calcularIdade" class="tool-button">
-                            <i class="fas fa-birthday-cake"></i> Calcular Idade
-                        </button>
-                        <div id="resultadoIdade" class="tool-result" style="display: none;">
-                            <span id="idadeTexto"></span>
-                            <small>Idade completa</small>
-                        </div>
-                    </div>
-                `;
-            
-            case 'dias-uteis':
-                return `
-                    <div class="tool-container">
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-calendar-alt"></i> Data inicial:</label>
-                            <input type="date" id="dataInicial" class="tool-input">
-                        </div>
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-calendar-alt"></i> Data final:</label>
-                            <input type="date" id="dataFinal" class="tool-input">
-                        </div>
-                        <button id="calcularDiasUteis" class="tool-button">
-                            <i class="fas fa-briefcase"></i> Calcular Dias Úteis
-                        </button>
-                        <div id="resultadoDiasUteis" class="tool-result" style="display: none;">
-                            <span id="diasUteisTexto"></span>
-                            <small>Exclui sábados e domingos</small>
-                        </div>
-                    </div>
-                `;
-            
             case 'porcentagem':
                 return `
                     <div class="tool-container">
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-percent"></i> Calcular:</label>
-                            <select id="tipoPorcentagem" class="tool-input">
-                                <option value="quanto-e">Quanto é X% de Y?</option>
-                                <option value="desconto">Desconto - X% de Y</option>
-                                <option value="aumento">Aumento - X% de Y</option>
-                            </select>
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            <button id="tipoPorcentagem" class="tool-button" style="flex:1; background: var(--gradient-primary);" data-tipo="porcentagem">
+                                <i class="fas fa-percent"></i> Porcentagem
+                            </button>
+                            <button id="tipoRegra3" class="tool-button" style="flex:1; background: var(--bg-secondary); color: var(--text-primary);" data-tipo="regra3">
+                                <i class="fas fa-equals"></i> Regra de 3
+                            </button>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <div class="tool-input-group" style="flex: 1;">
-                                <label>Valor %:</label>
-                                <input type="number" id="porcentagemValor" class="tool-input" placeholder="Ex: 10">
+                        
+                        <div id="porcentagemContainer">
+                            <div class="tool-input-group">
+                                <label><i class="fas fa-calculator"></i> Calcular:</label>
+                                <select id="tipoPorcentagemCalc" class="tool-input">
+                                    <option value="quanto-e">Quanto é X% de Y?</option>
+                                    <option value="desconto">Desconto - X% de Y</option>
+                                    <option value="aumento">Aumento - X% de Y</option>
+                                </select>
                             </div>
-                            <div class="tool-input-group" style="flex: 1;">
-                                <label>Total:</label>
-                                <input type="number" id="totalValor" class="tool-input" placeholder="Ex: 200">
+                            <div style="display: flex; gap: 10px;">
+                                <div class="tool-input-group" style="flex: 1;">
+                                    <label>Valor %:</label>
+                                    <input type="number" id="porcentagemValor" class="tool-input" placeholder="Ex: 10">
+                                </div>
+                                <div class="tool-input-group" style="flex: 1;">
+                                    <label>Total:</label>
+                                    <input type="number" id="totalValor" class="tool-input" placeholder="Ex: 200">
+                                </div>
                             </div>
                         </div>
-                        <button id="calcularPorcentagem" class="tool-button">
+                        
+                        <div id="regra3Container" style="display: none;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                                <div class="tool-input-group" style="flex:1;">
+                                    <label>Valor A:</label>
+                                    <input type="number" id="regraA" class="tool-input" placeholder="Ex: 10">
+                                </div>
+                                <div style="font-size: 20px; color: var(--text-primary);">→</div>
+                                <div class="tool-input-group" style="flex:1;">
+                                    <label>Valor B:</label>
+                                    <input type="number" id="regraB" class="tool-input" placeholder="Ex: 20">
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="tool-input-group" style="flex:1;">
+                                    <label>Valor C:</label>
+                                    <input type="number" id="regraC" class="tool-input" placeholder="Ex: 30">
+                                </div>
+                                <div style="font-size: 20px; color: var(--text-primary);">=</div>
+                                <div class="tool-input-group" style="flex:1;">
+                                    <label>Valor D (X):</label>
+                                    <input type="text" id="regraD" class="tool-input" placeholder="Resultado" readonly style="background: var(--bg-accent); font-weight: 700;">
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px;">
+                                <i class="fas fa-info-circle"></i> A → B = C → X
+                            </p>
+                        </div>
+                        
+                        <button id="calcularPorcentagem" class="tool-button" style="margin-top: 20px;">
                             <i class="fas fa-equals"></i> Calcular
                         </button>
+                        
                         <div id="resultadoPorcentagem" class="tool-result" style="display: none;">
                             <span id="porcentagemTexto"></span>
                         </div>
@@ -851,50 +576,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             
-            case 'remover-acentos':
-                return `
-                    <div class="tool-container">
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-spell-check"></i> Texto com acentos:</label>
-                            <textarea id="textoComAcentos" class="tool-textarea" placeholder="Digite aqui..."></textarea>
-                        </div>
-                        <button id="removerAcentosBtn" class="tool-button">
-                            <i class="fas fa-eraser"></i> Remover Acentos
-                        </button>
-                        <div id="resultadoSemAcentos" class="tool-result" style="display: none;">
-                            <span id="textoSemAcentos"></span>
-                        </div>
-                        <div class="tool-actions">
-                            <button id="copiarSemAcentos" class="tool-action-btn" style="display: none;">
-                                <i class="fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                `;
-            
-            case 'validador-email':
-                return `
-                    <div class="tool-container">
-                        <div class="tool-input-group">
-                            <label><i class="fas fa-envelope"></i> Digite o e-mail:</label>
-                            <input type="email" id="emailValidar" class="tool-input" placeholder="exemplo@dominio.com">
-                        </div>
-                        <button id="validarEmailBtn" class="tool-button">
-                            <i class="fas fa-check-circle"></i> Validar
-                        </button>
-                        <div id="resultadoEmail" class="tool-result" style="display: none;">
-                            <span id="emailTexto"></span>
-                            <small id="emailStatus"></small>
-                        </div>
-                    </div>
-                `;
-            
             default:
                 return '<p>Ferramenta em desenvolvimento...</p>';
         }
     }
 
-    // Inicializar ferramenta específica
     function initializeTool(toolId) {
         switch(toolId) {
             case 'numero-extenso':
@@ -906,30 +592,16 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'maiusculo-minusculo':
                 initConversaoTexto();
                 break;
-            case 'calculadora-idade':
-                initCalculadoraIdade();
-                break;
-            case 'dias-uteis':
-                initDiasUteis();
-                break;
             case 'porcentagem':
-                initPorcentagem();
+                initPorcentagemERegra3();
                 break;
             case 'formatar-cnpj':
                 initFormatarDocumento();
-                break;
-            case 'remover-acentos':
-                initRemoverAcentos();
-                break;
-            case 'validador-email':
-                initValidadorEmail();
                 break;
         }
     }
 
     // ========== FUNÇÕES DAS FERRAMENTAS ==========
-
-    // 1. Número por Extenso
     function initNumeroExtenso() {
         const converterBtn = document.getElementById('converterNumero');
         if (!converterBtn) return;
@@ -982,7 +654,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Função de número por extenso
     function numeroPorExtenso(valor) {
         if (valor === 0 || valor === '0') return 'Zero reais';
         
@@ -1097,7 +768,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return extenso.charAt(0).toUpperCase() + extenso.slice(1);
     }
 
-    // 2. Cálculo de Horas
     function initCalculoHoras() {
         const btn = document.getElementById('calcularHoras');
         if (!btn) return;
@@ -1108,35 +778,54 @@ document.addEventListener('DOMContentLoaded', function() {
         novoBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            const horaInicial = document.getElementById('horaInicial').value;
-            const horaFinal = document.getElementById('horaFinal').value;
-            const intervalo = parseInt(document.getElementById('intervaloHoras').value) || 0;
+            const entradaManha = document.getElementById('entradaManha').value;
+            const saidaManha = document.getElementById('saidaManha').value;
+            const entradaTarde = document.getElementById('entradaTarde').value;
+            const saidaTarde = document.getElementById('saidaTarde').value;
+            
             const resultadoDiv = document.getElementById('resultadoHoras');
-            const horasTexto = document.getElementById('horasTexto');
+            const horasManha = document.getElementById('horasManha');
+            const horasTarde = document.getElementById('horasTarde');
+            const horasTotal = document.getElementById('horasTotal');
+            const horasDecimais = document.getElementById('horasDecimais');
             const copiarBtn = document.getElementById('copiarHoras');
             
-            if (!horaInicial || !horaFinal) {
-                alert('Preencha os horários!');
+            if (!entradaManha || !saidaManha || !entradaTarde || !saidaTarde) {
+                alert('Preencha todos os horários!');
                 return;
             }
             
-            const [h1, m1] = horaInicial.split(':').map(Number);
-            const [h2, m2] = horaFinal.split(':').map(Number);
+            function calcularDiferenca(inicio, fim) {
+                const [h1, m1] = inicio.split(':').map(Number);
+                const [h2, m2] = fim.split(':').map(Number);
+                
+                let minutosInicio = h1 * 60 + m1;
+                let minutosFim = h2 * 60 + m2;
+                
+                if (minutosFim < minutosInicio) {
+                    minutosFim += 24 * 60;
+                }
+                
+                return minutosFim - minutosInicio;
+            }
             
-            let minutosInicio = h1 * 60 + m1;
-            let minutosFim = h2 * 60 + m2;
+            const minutosManha = calcularDiferenca(entradaManha, saidaManha);
+            const minutosTarde = calcularDiferenca(entradaTarde, saidaTarde);
+            const totalMinutos = minutosManha + minutosTarde;
             
-            if (minutosFim < minutosInicio) minutosFim += 24 * 60;
+            function formatarHoras(minutos) {
+                const horas = Math.floor(minutos / 60);
+                const mins = minutos % 60;
+                return `${horas}h ${mins}min`;
+            }
             
-            let totalMinutos = minutosFim - minutosInicio - intervalo;
-            if (totalMinutos < 0) totalMinutos = 0;
+            horasManha.textContent = formatarHoras(minutosManha);
+            horasTarde.textContent = formatarHoras(minutosTarde);
+            horasTotal.textContent = formatarHoras(totalMinutos);
+            horasDecimais.innerHTML = `<i class="fas fa-chart-line"></i> Total em horas decimais: ${(totalMinutos / 60).toFixed(2)}h`;
             
-            const horas = Math.floor(totalMinutos / 60);
-            const minutos = totalMinutos % 60;
-            
-            horasTexto.innerHTML = `${horas}h ${minutos}min <br> <small style="font-size: 14px;">${(totalMinutos / 60).toFixed(2)} horas decimais</small>`;
             resultadoDiv.style.display = 'block';
-            if (copiarBtn) copiarBtn.style.display = 'inline-flex';
+            copiarBtn.style.display = 'inline-flex';
         });
         
         const copiarBtn = document.getElementById('copiarHoras');
@@ -1146,15 +835,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             novoCopiar.addEventListener('click', function(e) {
                 e.preventDefault();
-                const horasTexto = document.getElementById('horasTexto');
-                const texto = horasTexto.childNodes[0].nodeValue.trim();
-                navigator.clipboard.writeText(texto);
+                const horasTotal = document.getElementById('horasTotal').textContent;
+                navigator.clipboard.writeText(`Total de horas: ${horasTotal}`);
                 alert('Horário copiado!');
             });
         }
     }
 
-    // 3. Conversão de Texto
     function initConversaoTexto() {
         const paraMaiusculo = document.getElementById('paraMaiusculo');
         const paraMinusculo = document.getElementById('paraMinusculo');
@@ -1209,128 +896,110 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 4. Calculadora de Idade
-    function initCalculadoraIdade() {
-        const btn = document.getElementById('calcularIdade');
-        if (!btn) return;
+    function initPorcentagemERegra3() {
+        const btnPorcentagem = document.getElementById('tipoPorcentagem');
+        const btnRegra3 = document.getElementById('tipoRegra3');
+        const porcentagemContainer = document.getElementById('porcentagemContainer');
+        const regra3Container = document.getElementById('regra3Container');
+        const btnCalcular = document.getElementById('calcularPorcentagem');
         
-        const novoBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(novoBtn, btn);
+        let tipoAtual = 'porcentagem';
         
-        novoBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        if (btnPorcentagem && btnRegra3) {
+            btnPorcentagem.addEventListener('click', function() {
+                tipoAtual = 'porcentagem';
+                btnPorcentagem.style.background = 'var(--gradient-primary)';
+                btnPorcentagem.style.color = 'white';
+                btnRegra3.style.background = 'var(--bg-secondary)';
+                btnRegra3.style.color = 'var(--text-primary)';
+                porcentagemContainer.style.display = 'block';
+                regra3Container.style.display = 'none';
+            });
             
-            const dataNasc = document.getElementById('dataNascimento').value;
-            const resultadoDiv = document.getElementById('resultadoIdade');
-            const idadeTexto = document.getElementById('idadeTexto');
+            btnRegra3.addEventListener('click', function() {
+                tipoAtual = 'regra3';
+                btnRegra3.style.background = 'var(--gradient-primary)';
+                btnRegra3.style.color = 'white';
+                btnPorcentagem.style.background = 'var(--bg-secondary)';
+                btnPorcentagem.style.color = 'var(--text-primary)';
+                porcentagemContainer.style.display = 'none';
+                regra3Container.style.display = 'block';
+                
+                const inputs = ['regraA', 'regraB', 'regraC'];
+                inputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.addEventListener('input', calcularRegra3);
+                    }
+                });
+            });
+        }
+        
+        function calcularRegra3() {
+            const A = parseFloat(document.getElementById('regraA')?.value) || 0;
+            const B = parseFloat(document.getElementById('regraB')?.value) || 0;
+            const C = parseFloat(document.getElementById('regraC')?.value) || 0;
+            const regraD = document.getElementById('regraD');
             
-            if (!dataNasc) {
-                alert('Selecione a data de nascimento!');
-                return;
+            if (regraD && A !== 0 && B !== 0 && C !== 0) {
+                const resultado = (B * C) / A;
+                regraD.value = resultado.toFixed(2);
+            } else if (regraD) {
+                regraD.value = '';
             }
+        }
+        
+        if (btnCalcular) {
+            const novoCalcular = btnCalcular.cloneNode(true);
+            btnCalcular.parentNode.replaceChild(novoCalcular, btnCalcular);
             
-            const hoje = new Date();
-            const nasc = new Date(dataNasc);
-            
-            let idade = hoje.getFullYear() - nasc.getFullYear();
-            const mes = hoje.getMonth() - nasc.getMonth();
-            
-            if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) idade--;
-            
-            let meses = hoje.getMonth() - nasc.getMonth();
-            if (meses < 0) meses += 12;
-            
-            let dias = hoje.getDate() - nasc.getDate();
-            if (dias < 0) {
-                const ultimoMes = new Date(hoje.getFullYear(), hoje.getMonth(), 0);
-                dias = ultimoMes.getDate() - nasc.getDate() + hoje.getDate();
-                meses--;
-                if (meses < 0) meses += 12;
-            }
-            
-            idadeTexto.innerHTML = `${idade} anos, ${meses} meses e ${dias} dias`;
-            resultadoDiv.style.display = 'block';
-        });
+            novoCalcular.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (tipoAtual === 'porcentagem') {
+                    const tipo = document.getElementById('tipoPorcentagemCalc')?.value;
+                    const porcentagem = parseFloat(document.getElementById('porcentagemValor')?.value) || 0;
+                    const total = parseFloat(document.getElementById('totalValor')?.value) || 0;
+                    const resultadoDiv = document.getElementById('resultadoPorcentagem');
+                    const porcentagemTexto = document.getElementById('porcentagemTexto');
+                    
+                    if (porcentagem === 0 || total === 0) {
+                        alert('Preencha todos os valores!');
+                        return;
+                    }
+                    
+                    let resultado = 0;
+                    let texto = '';
+                    
+                    if (tipo === 'quanto-e') {
+                        resultado = (porcentagem * total) / 100;
+                        texto = `${porcentagem}% de R$ ${total.toFixed(2)} = R$ ${resultado.toFixed(2)}`;
+                    } else if (tipo === 'desconto') {
+                        resultado = total - (total * porcentagem / 100);
+                        texto = `${porcentagem}% de desconto: R$ ${resultado.toFixed(2)}`;
+                    } else if (tipo === 'aumento') {
+                        resultado = total + (total * porcentagem / 100);
+                        texto = `${porcentagem}% de aumento: R$ ${resultado.toFixed(2)}`;
+                    }
+                    
+                    if (porcentagemTexto) porcentagemTexto.textContent = texto;
+                    if (resultadoDiv) resultadoDiv.style.display = 'block';
+                    
+                } else {
+                    calcularRegra3();
+                    const resultadoDiv = document.getElementById('resultadoPorcentagem');
+                    const porcentagemTexto = document.getElementById('porcentagemTexto');
+                    const D = document.getElementById('regraD')?.value;
+                    
+                    if (D && porcentagemTexto && resultadoDiv) {
+                        porcentagemTexto.textContent = `Resultado: ${D}`;
+                        resultadoDiv.style.display = 'block';
+                    }
+                }
+            });
+        }
     }
 
-    // 5. Dias Úteis
-    function initDiasUteis() {
-        const btn = document.getElementById('calcularDiasUteis');
-        if (!btn) return;
-        
-        const novoBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(novoBtn, btn);
-        
-        novoBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const dataInicial = document.getElementById('dataInicial').value;
-            const dataFinal = document.getElementById('dataFinal').value;
-            const resultadoDiv = document.getElementById('resultadoDiasUteis');
-            const diasUteisTexto = document.getElementById('diasUteisTexto');
-            
-            if (!dataInicial || !dataFinal) {
-                alert('Selecione as datas!');
-                return;
-            }
-            
-            let inicio = new Date(dataInicial);
-            let fim = new Date(dataFinal);
-            let diasUteis = 0;
-            
-            while (inicio <= fim) {
-                const diaSemana = inicio.getDay();
-                if (diaSemana !== 0 && diaSemana !== 6) diasUteis++;
-                inicio.setDate(inicio.getDate() + 1);
-            }
-            
-            diasUteisTexto.textContent = `${diasUteis} dias úteis`;
-            resultadoDiv.style.display = 'block';
-        });
-    }
-
-    // 6. Porcentagem
-    function initPorcentagem() {
-        const btn = document.getElementById('calcularPorcentagem');
-        if (!btn) return;
-        
-        const novoBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(novoBtn, btn);
-        
-        novoBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const tipo = document.getElementById('tipoPorcentagem').value;
-            const porcentagem = parseFloat(document.getElementById('porcentagemValor').value) || 0;
-            const total = parseFloat(document.getElementById('totalValor').value) || 0;
-            const resultadoDiv = document.getElementById('resultadoPorcentagem');
-            const porcentagemTexto = document.getElementById('porcentagemTexto');
-            
-            if (porcentagem === 0 || total === 0) {
-                alert('Preencha todos os valores!');
-                return;
-            }
-            
-            let resultado = 0;
-            let texto = '';
-            
-            if (tipo === 'quanto-e') {
-                resultado = (porcentagem * total) / 100;
-                texto = `${porcentagem}% de R$ ${total.toFixed(2)} = R$ ${resultado.toFixed(2)}`;
-            } else if (tipo === 'desconto') {
-                resultado = total - (total * porcentagem / 100);
-                texto = `${porcentagem}% de desconto: R$ ${resultado.toFixed(2)}`;
-            } else if (tipo === 'aumento') {
-                resultado = total + (total * porcentagem / 100);
-                texto = `${porcentagem}% de aumento: R$ ${resultado.toFixed(2)}`;
-            }
-            
-            porcentagemTexto.textContent = texto;
-            resultadoDiv.style.display = 'block';
-        });
-    }
-
-    // 7. Formatar CPF/CNPJ
     function initFormatarDocumento() {
         const btn = document.getElementById('formatarDocumento');
         if (!btn) return;
@@ -1341,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', function() {
         novoBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            const doc = document.getElementById('documentoInput').value.replace(/\D/g, '');
+            const doc = document.getElementById('documentoInput')?.value.replace(/\D/g, '') || '';
             const resultadoDiv = document.getElementById('resultadoDocumento');
             const documentoTexto = document.getElementById('documentoTexto');
             const documentoStatus = document.getElementById('documentoStatus');
@@ -1364,92 +1033,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 valido = validarCNPJ(doc);
                 tipo = 'CNPJ';
             } else {
-                documentoTexto.textContent = 'Documento inválido!';
-                documentoStatus.textContent = 'Verifique a quantidade de dígitos';
-                resultadoDiv.style.display = 'block';
+                if (documentoTexto) documentoTexto.textContent = 'Documento inválido!';
+                if (documentoStatus) documentoStatus.textContent = 'Verifique a quantidade de dígitos';
+                if (resultadoDiv) resultadoDiv.style.display = 'block';
                 return;
             }
             
-            documentoTexto.textContent = formatado;
-            documentoStatus.textContent = `${tipo} ${valido ? 'válido ✓' : 'inválido ✗'}`;
-            documentoStatus.style.color = valido ? 'var(--accent-color)' : '#dc3545';
-            resultadoDiv.style.display = 'block';
-        });
-    }
-
-    // 8. Remover Acentos
-    function initRemoverAcentos() {
-        const btn = document.getElementById('removerAcentosBtn');
-        if (!btn) return;
-        
-        const novoBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(novoBtn, btn);
-        
-        novoBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const texto = document.getElementById('textoComAcentos').value;
-            const resultadoDiv = document.getElementById('resultadoSemAcentos');
-            const textoSemAcentos = document.getElementById('textoSemAcentos');
-            const copiarBtn = document.getElementById('copiarSemAcentos');
-            
-            if (!texto) {
-                alert('Digite algum texto!');
-                return;
+            if (documentoTexto) documentoTexto.textContent = formatado;
+            if (documentoStatus) {
+                documentoStatus.textContent = `${tipo} ${valido ? 'válido ✓' : 'inválido ✗'}`;
+                documentoStatus.style.color = valido ? 'var(--accent-color)' : '#dc3545';
             }
-            
-            const semAcentos = texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            textoSemAcentos.textContent = semAcentos;
-            resultadoDiv.style.display = 'block';
-            if (copiarBtn) copiarBtn.style.display = 'inline-flex';
-        });
-        
-        const copiarBtn = document.getElementById('copiarSemAcentos');
-        if (copiarBtn) {
-            const novoCopiar = copiarBtn.cloneNode(true);
-            copiarBtn.parentNode.replaceChild(novoCopiar, copiarBtn);
-            
-            novoCopiar.addEventListener('click', function(e) {
-                e.preventDefault();
-                const texto = document.getElementById('textoSemAcentos').textContent;
-                navigator.clipboard.writeText(texto);
-                alert('Texto copiado!');
-            });
-        }
-    }
-
-    // 9. Validador de E-mail
-    function initValidadorEmail() {
-        const btn = document.getElementById('validarEmailBtn');
-        if (!btn) return;
-        
-        const novoBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(novoBtn, btn);
-        
-        novoBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('emailValidar').value;
-            const resultadoDiv = document.getElementById('resultadoEmail');
-            const emailTexto = document.getElementById('emailTexto');
-            const emailStatus = document.getElementById('emailStatus');
-            
-            if (!email) {
-                alert('Digite um e-mail!');
-                return;
-            }
-            
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const valido = regex.test(email);
-            
-            emailTexto.textContent = email;
-            emailStatus.textContent = valido ? 'E-mail válido ✓' : 'E-mail inválido ✗';
-            emailStatus.style.color = valido ? 'var(--accent-color)' : '#dc3545';
-            resultadoDiv.style.display = 'block';
+            if (resultadoDiv) resultadoDiv.style.display = 'block';
         });
     }
 
-    // ========== FUNÇÕES AUXILIARES ==========
     function validarCPF(cpf) {
         cpf = cpf.replace(/\D/g, '');
         if (cpf.length !== 11) return false;
@@ -1512,37 +1110,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========== EVENT LISTENERS DO BALÃO DE FERRAMENTAS ==========
-    
-    toolsIcon.addEventListener('click', function() {
-        toolsPanel.classList.add('active');
-        renderTools('todas');
-        categoryBtns.forEach(btn => btn.classList.remove('active'));
-        document.querySelector('[data-category="todas"]').classList.add('active');
-    });
+    if (toolsIcon) {
+        toolsIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toolsPanel.classList.add('active');
+            renderTools('todas');
+            categoryBtns.forEach(btn => btn.classList.remove('active'));
+            const todasBtn = document.querySelector('[data-category="todas"]');
+            if (todasBtn) todasBtn.classList.add('active');
+        });
+    }
 
-    closeTools.addEventListener('click', function() {
-        toolsPanel.classList.remove('active');
-    });
+    if (closeTools) {
+        closeTools.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toolsPanel.classList.remove('active');
+        });
+    }
 
     document.addEventListener('click', function(event) {
         const toolsBubble = document.getElementById('toolsBubble');
-        if (!toolsBubble.contains(event.target) && toolsPanel.classList.contains('active')) {
+        if (toolsBubble && !toolsBubble.contains(event.target) && toolsPanel && toolsPanel.classList.contains('active')) {
             toolsPanel.classList.remove('active');
         }
     });
 
-    categoryBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const category = this.dataset.category;
-            categoryBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            renderTools(category);
+    if (categoryBtns.length > 0) {
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.dataset.category;
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderTools(category);
+            });
         });
-    });
+    }
 
-    closeToolModal.addEventListener('click', function() {
-        toolModal.classList.remove('active');
-    });
+    if (closeToolModal) {
+        closeToolModal.addEventListener('click', function() {
+            toolModal.classList.remove('active');
+        });
+    }
 
     window.addEventListener('click', function(event) {
         if (event.target === toolModal) {
@@ -1550,292 +1160,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    toolsPanel.addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-});
+    if (toolsPanel) {
+        toolsPanel.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    }
 
-// ========== BALÃO DE RECADOS COMPARTILHADO ==========
-document.addEventListener('DOMContentLoaded', function() {
-    // ===== URL DO GOOGLE APPS SCRIPT =====
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzVd7j35SWxbCTJvK8QBXe8ZE5j_QTDHDxBYfR20pncdI55E2BDgXgB4UOKZk2ZYrZO/exec';
-    // =======================================
-    
-    // Elementos do DOM
-    const recadosIcon = document.getElementById('recadosIcon');
-    const recadosPanel = document.getElementById('recadosPanel');
-    const closeRecados = document.getElementById('closeRecados');
-    const recadosList = document.getElementById('recadosList');
-    const novoRecado = document.getElementById('novoRecado');
-    const btnPublicar = document.getElementById('publicarRecado');
-    const chkAnonimo = document.getElementById('recadoAnonimo');
-    const recadosCount = document.getElementById('recadosCount');
-    
-    let recados = [];
-    let recadosLidos = JSON.parse(localStorage.getItem('recadosLidos') || '[]');
-    
-    // ===== CARREGAR RECADOS DO GOOGLE SHEETS =====
-    async function carregarRecados() {
-        try {
-            const response = await fetch(GOOGLE_SHEETS_URL);
-            recados = await response.json();
-            
-            // Marcar quais já foram lidos por este usuário
-            recados.forEach(recado => {
-                recado.lido = recadosLidos.includes(recado.id);
-            });
-            
-            renderizarRecados();
-            atualizarContador();
-        } catch (error) {
-            console.error('Erro ao carregar recados:', error);
-            
-            // Fallback: mostrar mensagem de erro amigável
-            if (recadosList) {
-                recadosList.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <p style="margin-bottom: 5px;">Não foi possível carregar os recados</p>
-                        <small style="font-size: 12px;">Tente novamente mais tarde</small>
-                    </div>
-                `;
-            }
-        }
-    }
-    
-    // ===== PUBLICAR RECADO NO GOOGLE SHEETS =====
-    async function publicarRecado() {
-        if (!novoRecado) return;
-        
-        const texto = novoRecado.value.trim();
-        if (!texto) {
-            alert('Digite um recado!');
-            return;
-        }
-        
-        // Desabilitar botão enquanto publica
-        const btn = document.getElementById('publicarRecado');
-        const textoOriginal = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
-        btn.disabled = true;
-        
-        try {
-            // Pegar nome do usuário
-            let autor = chkAnonimo && chkAnonimo.checked ? 'Anônimo' : localStorage.getItem('userName');
-            
-            if (!autor || autor === 'Anônimo') {
-                autor = prompt('Digite seu nome:');
-                if (!autor) {
-                    btn.innerHTML = textoOriginal;
-                    btn.disabled = false;
-                    return;
-                }
-                localStorage.setItem('userName', autor);
-            }
-            
-            const novoRecadoObj = {
-                id: Date.now(),
-                texto: texto,
-                autor: autor,
-                data: new Date().toISOString(),
-                visualizacoes: 0
-            };
-            
-            // Enviar para o Google Sheets
-            const response = await fetch(GOOGLE_SHEETS_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Importante para Apps Script
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(novoRecadoObj)
-            });
-            
-            // Como é no-cors, não podemos verificar response.ok
-            // Então assumimos que deu certo
-            novoRecado.value = '';
-            if (chkAnonimo) chkAnonimo.checked = false;
-            
-            // Feedback visual
-            btn.innerHTML = '<i class="fas fa-check"></i> Publicado!';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar';
-                btn.disabled = false;
-            }, 1500);
-            
-            // Aguarda 1 segundo e recarrega os recados
-            setTimeout(() => {
-                carregarRecados();
-            }, 1000);
-            
-        } catch (error) {
-            console.error('Erro ao publicar:', error);
-            alert('Erro ao publicar recado. Tente novamente!');
-            
-            btn.innerHTML = textoOriginal;
-            btn.disabled = false;
-        }
-    }
-    
-    // ===== MARCAR COMO VISTO =====
-    async function marcarComoVisto(id) {
-        const recado = recados.find(r => r.id === id);
-        if (!recado || recado.lido) return;
-        
-        try {
-            // Atualizar visualizações
-            recado.visualizacoes = (recado.visualizacoes || 0) + 1;
-            recado.lido = true;
-            
-            // Salvar no localStorage que este usuário viu
-            if (!recadosLidos.includes(id)) {
-                recadosLidos.push(id);
-                localStorage.setItem('recadosLidos', JSON.stringify(recadosLidos));
-            }
-            
-            // Atualizar no Google Sheets
-            await fetch(GOOGLE_SHEETS_URL, {
-                method: 'PUT',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: recado.id,
-                    visualizacoes: recado.visualizacoes
-                })
-            });
-            
-            renderizarRecados();
-            atualizarContador();
-        } catch (error) {
-            console.error('Erro ao atualizar visualização:', error);
-        }
-    }
-    
-    // ===== ATUALIZAR CONTADOR =====
-    function atualizarContador() {
-        const naoLidos = recados.filter(r => !r.lido).length;
-        recadosCount.textContent = naoLidos;
-        recadosCount.style.display = naoLidos > 0 ? 'flex' : 'none';
-    }
-    
-    // ===== FORMATAR DATA =====
-    function formatarData(data) {
-        const hoje = new Date();
-        const ontem = new Date();
-        ontem.setDate(ontem.getDate() - 1);
-        const dataObj = new Date(data);
-        
-        if (dataObj.toDateString() === hoje.toDateString()) {
-            return `Hoje às ${dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-        } else if (dataObj.toDateString() === ontem.toDateString()) {
-            return `Ontem às ${dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-        } else {
-            return dataObj.toLocaleDateString('pt-BR') + ' às ' + 
-                   dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        }
-    }
-    
-    // ===== RENDERIZAR RECADOS =====
-    function renderizarRecados() {
-        if (!recadosList) return;
-        
-        if (recados.length === 0) {
-            recadosList.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
-                    <i class="fas fa-sticky-note" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
-                    <p style="margin-bottom: 5px;">Nenhum recado ainda</p>
-                    <small style="font-size: 12px;">Seja o primeiro a publicar!</small>
-                </div>
-            `;
-            return;
-        }
-        
-        // Ordenar por data (mais recente primeiro)
-        const recadosOrdenados = [...recados].sort((a, b) => new Date(b.data) - new Date(a.data));
-        
-        recadosList.innerHTML = recadosOrdenados.map(recado => {
-            const dataFormatada = formatarData(recado.data);
-            const lido = recado.lido || false;
-            
-            return `
-                <div class="recado-item" data-id="${recado.id}" style="${lido ? 'opacity: 0.8;' : ''}">
-                    <div class="recado-header">
-                        <span class="recado-autor">
-                            <i class="fas fa-user-circle"></i> ${recado.autor}
-                        </span>
-                        <span class="recado-data">
-                            <i class="fas fa-clock"></i> ${dataFormatada}
-                        </span>
-                    </div>
-                    <div class="recado-texto">${recado.texto.replace(/\n/g, '<br>')}</div>
-                    <div class="recado-footer">
-                        <span class="recado-visualizacoes">
-                            <i class="fas fa-eye"></i> ${recado.visualizacoes || 0} visualizações
-                        </span>
-                        <button class="btn-visualizado" data-id="${recado.id}" ${lido ? 'disabled' : ''}>
-                            <i class="fas ${lido ? 'fa-check-circle' : 'fa-check'}"></i> 
-                            ${lido ? 'Visto' : 'Marcar como visto'}
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        // Adicionar eventos aos botões de visualização
-        document.querySelectorAll('.btn-visualizado').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const id = parseInt(this.dataset.id);
-                marcarComoVisto(id);
-            });
-        });
-        
-        atualizarContador();
-    }
-    
-    // ===== EVENT LISTENERS =====
-    if (recadosIcon) {
-        recadosIcon.addEventListener('click', function() {
-            recadosPanel.classList.add('active');
-            carregarRecados(); // Recarrega sempre que abrir
-        });
-    }
-    
-    if (closeRecados) {
-        closeRecados.addEventListener('click', function() {
-            recadosPanel.classList.remove('active');
-        });
-    }
-    
-    if (btnPublicar) {
-        const novoPublicar = btnPublicar.cloneNode(true);
-        btnPublicar.parentNode.replaceChild(novoPublicar, btnPublicar);
-        novoPublicar.addEventListener('click', publicarRecado);
-    }
-    
-    if (novoRecado) {
-        novoRecado.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                publicarRecado();
-            }
-        });
-    }
-    
-    // Fechar painel ao clicar fora
-    document.addEventListener('click', function(event) {
-        const recadosBubble = document.getElementById('recadosBubble');
-        if (recadosBubble && !recadosBubble.contains(event.target) && recadosPanel.classList.contains('active')) {
-            recadosPanel.classList.remove('active');
-        }
-    });
-    
-    // Carregar recados ao iniciar
-    carregarRecados();
-    
-    // Recarregar a cada 30 segundos para ver novos recados
-    setInterval(carregarRecados, 30000);
+    // ===== INICIALIZAR TUDO =====
+    renderTools('todas');
+    initMuralRecados();
 });
