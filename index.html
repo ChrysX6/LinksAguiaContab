@@ -199,6 +199,93 @@
         </div>
     </div>
 
+    <!-- Balão de Ferramentas -->
+<div class="tools-bubble" id="toolsBubble">
+    <div class="tools-icon" id="toolsIcon">
+        <i class="fas fa-tools"></i>
+        <span class="tools-count" id="toolsCount">5</span>
+    </div>
+    
+    <!-- Painel de Ferramentas -->
+    <div class="tools-panel" id="toolsPanel">
+        <div class="tools-header">
+            <h3><i class="fas fa-wrench"></i> Ferramentas Rápidas</h3>
+            <button class="close-tools" id="closeTools">&times;</button>
+        </div>
+        
+        <div class="tools-body">
+            <!-- Menu de categorias -->
+            <div class="tools-categories">
+                <button class="category-btn active" data-category="todas">
+                    <i class="fas fa-th-large"></i> Todas
+                </button>
+                <button class="category-btn" data-category="conversao">
+                    <i class="fas fa-exchange-alt"></i> Conversão
+                </button>
+                <button class="category-btn" data-category="data">
+                    <i class="fas fa-calendar"></i> Data/Hora
+                </button>
+                <button class="category-btn" data-category="calculo">
+                    <i class="fas fa-calculator"></i> Cálculo
+                </button>
+            </div>
+            
+            <!-- Container das ferramentas -->
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Ferramentas serão inseridas via JavaScript -->
+            </div>
+        </div>
+        
+        <div class="tools-footer">
+            <small>Clique na ferramenta para usar</small>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para exibir a ferramenta -->
+<div class="tool-modal" id="toolModal">
+    <div class="tool-modal-content">
+        <div class="tool-modal-header">
+            <h3 id="toolModalTitle">Ferramenta</h3>
+            <button class="close-tool-modal" id="closeToolModal">&times;</button>
+        </div>
+        <div class="tool-modal-body" id="toolModalBody">
+            <!-- Conteúdo dinâmico da ferramenta -->
+        </div>
+    </div>
+</div>
+
+<!-- Balão de Recados (agora integrado aos outros balões) -->
+<div class="recados-bubble" id="recadosBubble">
+    <div class="recados-icon" id="recadosIcon">
+        <i class="fas fa-sticky-note"></i>
+        <span class="recados-count" id="recadosCount">0</span>
+    </div>
+    <div class="recados-panel" id="recadosPanel">
+        <div class="recados-header">
+            <h3><i class="fas fa-sticky-note"></i> Mural de Recados</h3>
+            <button class="close-recados" id="closeRecados">&times;</button>
+        </div>
+        <div class="recados-body">
+            <div class="recados-list" id="recadosList"></div>
+            <div class="recado-form">
+                <textarea id="novoRecado" class="recado-input" placeholder="Digite seu recado..."></textarea>
+                <div class="recado-form-footer">
+                    <label class="recado-anonimo">
+                        <input type="checkbox" id="recadoAnonimo"> Postar como anônimo
+                    </label>
+                    <button id="publicarRecado" class="recado-submit">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="recados-footer">
+            <small><i class="fas fa-users"></i> Todos os funcionários podem ver</small>
+        </div>
+    </div>
+</div>
+
     <script src="links/javascript.js"></script>
 </body>
 </html>
