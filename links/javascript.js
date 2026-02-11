@@ -1358,3 +1358,454 @@ window.showMonthSelection = showMonthSelection;
 window.redirectToLink = redirectToLink;
 window.closeModal = closeModal;
 window.filterLinks = filterLinks;
+
+// ========== SISTEMA DE NOTIFICAÇÕES DO MURAL ==========
+const NotificacoesMural = {
+    // Controle
+    ativo: localStorage.getItem('notificacao_ativa') !== 'false',
+    ultimoId: parseInt(localStorage.getItem('ultimo_recado_id') || '0'),
+    audio: null,
+    verificador: null,
+    
+    // Inicializar
+    init() {
+        this.criarAudio();
+        this.criarBotaoFlutuante();
+        this.iniciarVerificador();
+        this.criarEstilos();
+    },
+    
+    // Criar elemento de áudio (SEM precisar de interação)
+    criarAudio() {
+        this.audio = new Audio();
+        
+        // Usando Web Audio API para som independente
+        this.audio.src = 'data:audio/wav;base64,U3RlZmFuJ3MgQXVkaW8gV2F2ZQ==';
+        this.audio.volume = 0.7;
+        this.audio.preload = 'auto';
+        
+        // Fallback: som em base64 (funciona SEMPRE)
+        this.audio.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAASjs4RtMgQAABQeZk1DQTQAAP/7oGQACe1P6t/fYIAAIaA+evNAAEEh5s73gACDE+evNAAEEh5s73gADhAABg3gAD/7oQAD/70U9zAxNgBAAEh5s73gADiA8+a3AAAF2h5c7/gADkA8+a3AAAF2h5c7/gADhAABg3gAD/7oQAD/70U9zAxNgBAAEh5s73gADiA8+a3AAAF2h5c7/gADkA8+a3AAAF2h5c7/gADhAABg3gAD/7oQAD/70U9zAxNgBAAEh5s73gADiA8+a3AAAF2h5c7/gADkA8+a3AAAF2h5c7/gADhAABg3gA=';
+    },
+    
+    // Iniciar verificador automático (a cada 10 segundos)
+    iniciarVerificador() {
+        // Verificar imediatamente
+        setTimeout(() => this.verificarRecados(), 2000);
+        
+        // Verificar a cada 10 segundos
+        this.verificador = setInterval(() => {
+            this.verificarRecados();
+        }, 10000);
+        
+        console.log('🔍 Verificador de recados iniciado (a cada 10s)');
+    },
+    
+    // Verificar se tem recados novos
+    async verificarRecados() {
+        try {
+            const response = await fetch(GOOGLE_SHEETS_URL);
+            const recados = await response.json();
+            
+            if (recados && recados.length > 0) {
+                const maiorId = Math.max(...recados.map(r => r.id));
+                
+                // TEM RECADO NOVO!
+                if (maiorId > this.ultimoId && this.ultimoId !== 0) {
+                    console.log('🆕 RECADO NOVO DETECTADO!', maiorId);
+                    
+                    // Buscar o recado novo
+                    const recadoNovo = recados.find(r => r.id === maiorId);
+                    
+                    // TOCAR SOM
+                    this.tocarSom();
+                    
+                    // MOSTRAR NOTIFICAÇÃO POP-UP
+                    this.mostrarPopup(recadoNovo);
+                    
+                    // NOTIFICAÇÃO DO NAVEGADOR
+                    this.mostrarNotificacaoBrowser(recadoNovo);
+                    
+                    // Atualizar contador no ícone
+                    this.atualizarBadge(recados);
+                }
+                
+                // Atualizar último ID
+                if (maiorId > this.ultimoId) {
+                    this.ultimoId = maiorId;
+                    localStorage.setItem('ultimo_recado_id', this.ultimoId);
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao verificar recados:', error);
+        }
+    },
+    
+    // TOCAR SOM (funciona SEMPRE)
+    tocarSom() {
+        if (!this.ativo) return;
+        
+        // Tentar tocar de todas as formas possíveis
+        try {
+            // Método 1: Audio simples
+            if (this.audio) {
+                this.audio.currentTime = 0;
+                this.audio.play().catch(e => console.log('Audio simples falhou:', e));
+            }
+            
+            // Método 2: Web Audio API (backup)
+            setTimeout(() => {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.value = 880;
+                    gain.gain.value = 0.3;
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.2);
+                    
+                    setTimeout(() => {
+                        const osc2 = ctx.createOscillator();
+                        osc2.frequency.value = 440;
+                        osc2.connect(gain);
+                        osc2.start();
+                        osc2.stop(ctx.currentTime + 0.15);
+                    }, 150);
+                } catch (e) {}
+            }, 50);
+            
+        } catch (e) {
+            console.log('Erro ao tocar som:', e);
+        }
+    },
+    
+    // MOSTRAR POP-UP IGUAL WHATSAPP
+    mostrarPopup(recado) {
+        if (!this.ativo) return;
+        
+        const popup = document.createElement('div');
+        popup.id = 'notificacaoPopup';
+        popup.innerHTML = `
+            <div class="notificacao-icon">
+                <i class="fas fa-sticky-note"></i>
+            </div>
+            <div class="notificacao-content">
+                <div class="notificacao-titulo">
+                    <strong>${recado.autor || 'Funcionário'}</strong>
+                    <span class="notificacao-hora">agora</span>
+                </div>
+                <div class="notificacao-mensagem">
+                    ${recado.texto.length > 50 ? recado.texto.substring(0, 50) + '...' : recado.texto}
+                </div>
+            </div>
+            <button class="notificacao-fechar" onclick="this.parentElement.remove()">×</button>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+            if (popup.parentNode) {
+                popup.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => popup.remove(), 300);
+            }
+        }, 5000);
+        
+        // Adicionar evento de clique para abrir o mural
+        popup.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('notificacao-fechar')) {
+                const panel = document.getElementById('recadosPanel');
+                if (panel) {
+                    panel.classList.add('active');
+                    if (typeof carregarRecados === 'function') {
+                        carregarRecados();
+                    }
+                }
+                popup.remove();
+            }
+        });
+    },
+    
+    // NOTIFICAÇÃO DO NAVEGADOR
+    mostrarNotificacaoBrowser(recado) {
+        if (!this.ativo) return;
+        
+        if (Notification.permission === 'granted') {
+            const notificacao = new Notification('📬 Novo recado no mural!', {
+                body: `${recado.autor}: ${recado.texto.substring(0, 60)}`,
+                icon: 'links/img/logo1.png',
+                silent: true,
+                requireInteraction: false
+            });
+            
+            notificacao.onclick = () => {
+                window.focus();
+                const panel = document.getElementById('recadosPanel');
+                if (panel) panel.classList.add('active');
+            };
+            
+        } else if (Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    },
+    
+    // Atualizar badge no ícone do mural
+    atualizarBadge(recados) {
+        const countEl = document.getElementById('recadosCount');
+        if (!countEl) return;
+        
+        const naoLidos = recados.filter(r => {
+            const lidos = JSON.parse(localStorage.getItem('recadosLidos') || '[]');
+            return !lidos.includes(r.id);
+        }).length;
+        
+        countEl.textContent = naoLidos;
+        countEl.style.display = naoLidos > 0 ? 'flex' : 'none';
+        
+        // Se tem recados não lidos, piscar ícone
+        const icon = document.getElementById('recadosIcon');
+        if (icon) {
+            if (naoLidos > 0) {
+                icon.style.animation = 'piscar 1s infinite';
+            } else {
+                icon.style.animation = 'recados-pulse 2s infinite';
+            }
+        }
+    },
+    
+    // Criar botão flutuante de controle de notificações
+    criarBotaoFlutuante() {
+        const btn = document.createElement('div');
+        btn.id = 'controleNotificacao';
+        btn.className = 'controle-notificacao';
+        btn.innerHTML = this.ativo ? '🔔' : '🔕';
+        btn.title = this.ativo ? 'Notificações ativadas' : 'Notificações desativadas';
+        
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.ativo = !this.ativo;
+            localStorage.setItem('notificacao_ativa', this.ativo);
+            btn.innerHTML = this.ativo ? '🔔' : '🔕';
+            btn.title = this.ativo ? 'Notificações ativadas' : 'Notificações desativadas';
+            
+            // Feedback visual
+            const toast = document.createElement('div');
+            toast.className = 'notificacao-toast';
+            toast.textContent = this.ativo ? '🔔 Notificações ativadas' : '🔕 Notificações desativadas';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        });
+        
+        document.body.appendChild(btn);
+    },
+    
+    // Criar estilos CSS
+    criarEstilos() {
+        const style = document.createElement('style');
+        style.textContent = `
+            /* POP-UP DE NOTIFICAÇÃO (IGUAL WHATSAPP) */
+            #notificacaoPopup {
+                position: fixed;
+                bottom: 280px;
+                right: 80px;
+                width: 320px;
+                background: var(--card-gradient, linear-gradient(to bottom, #ffffff, #f8f9fa));
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                border: 2px solid var(--border-color, #dee2e6);
+                display: flex;
+                align-items: center;
+                padding: 16px;
+                gap: 12px;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            #notificacaoPopup:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+                border-color: var(--accent-color, #6c757d);
+            }
+            
+            .notificacao-icon {
+                width: 45px;
+                height: 45px;
+                background: var(--gradient-primary, linear-gradient(135deg, #8f979e, #6c757d));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            
+            .notificacao-icon i {
+                font-size: 20px;
+                color: white;
+            }
+            
+            .notificacao-content {
+                flex: 1;
+            }
+            
+            .notificacao-titulo {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+            }
+            
+            .notificacao-titulo strong {
+                font-size: 14px;
+                color: var(--text-primary, #212529);
+            }
+            
+            .notificacao-hora {
+                font-size: 11px;
+                color: var(--text-secondary, #6c757d);
+            }
+            
+            .notificacao-mensagem {
+                font-size: 13px;
+                color: var(--text-primary, #212529);
+                line-height: 1.4;
+            }
+            
+            .notificacao-fechar {
+                background: none;
+                border: none;
+                color: var(--text-secondary, #adb5bd);
+                font-size: 24px;
+                cursor: pointer;
+                padding: 0 4px;
+                align-self: flex-start;
+                transition: color 0.3s ease;
+            }
+            
+            .notificacao-fechar:hover {
+                color: #dc3545;
+            }
+            
+            /* BOTÃO FLUTUANTE DE CONTROLE */
+            .controle-notificacao {
+                position: fixed;
+                bottom: 330px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                background: var(--gradient-primary, linear-gradient(135deg, #8f979e, #6c757d));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                color: white;
+                cursor: pointer;
+                box-shadow: 0 6px 15px var(--shadow-color, rgba(0,0,0,0.1));
+                border: 2px solid rgba(255,255,255,0.3);
+                z-index: 9999;
+                transition: all 0.3s ease;
+            }
+            
+            .controle-notificacao:hover {
+                transform: scale(1.1);
+            }
+            
+            /* TOAST DE FEEDBACK */
+            .notificacao-toast {
+                position: fixed;
+                bottom: 280px;
+                right: 80px;
+                background: var(--gradient-primary, linear-gradient(135deg, #8f979e, #6c757d));
+                color: white;
+                padding: 12px 20px;
+                border-radius: 30px;
+                font-size: 14px;
+                font-weight: 600;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                border: 2px solid rgba(255,255,255,0.3);
+            }
+            
+            /* ANIMAÇÕES */
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(50px);
+                }
+            }
+            
+            @keyframes piscar {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); background: #dc3545; }
+                100% { transform: scale(1); }
+            }
+            
+            /* VIBRAÇÃO PARA CELULAR */
+            @keyframes vibrate {
+                0% { transform: translate(1px, 1px); }
+                25% { transform: translate(-1px, -1px); }
+                50% { transform: translate(1px, -1px); }
+                75% { transform: translate(-1px, 1px); }
+                100% { transform: translate(0, 0); }
+            }
+            
+            .vibrar {
+                animation: vibrate 0.1s 3;
+            }
+        `;
+        
+        document.head.appendChild(style);
+    }
+};
+
+// ========== INICIAR SISTEMA DE NOTIFICAÇÕES ==========
+document.addEventListener('DOMContentLoaded', () => {
+    // Iniciar notificações
+    NotificacoesMural.init();
+    
+    // Pedir permissão para notificações do navegador
+    if (Notification && Notification.permission === 'default') {
+        setTimeout(() => Notification.requestPermission(), 3000);
+    }
+});
+
+// ========== MODIFICAR A FUNÇÃO carregarRecados ==========
+async function carregarRecados() {
+    try {
+        const response = await fetch(GOOGLE_SHEETS_URL);
+        const novosRecados = await response.json();
+        
+        // Verificar novos recados (já é feito pelo verificador automático)
+        recados = novosRecados;
+        recados.forEach(r => r.lido = recadosLidos.includes(r.id));
+        renderizarRecados();
+        NotificacoesMural.atualizarBadge(recados);
+        
+    } catch (error) {
+        console.error('Erro ao carregar recados:', error);
+    }
+}
