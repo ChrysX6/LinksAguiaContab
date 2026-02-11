@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="links/style.css">
 </head>
-
 <body>
     <div class="decoration decoration-1"></div>
     <div class="decoration decoration-2"></div>
@@ -20,8 +19,7 @@
     <h1>LINKS AGUIACONTAB TATUAPÉ</h1>
 
     <nav>
-        <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=0#gid=0"
-            target="_blank"><i class="fa fa-clipboard" aria-hidden="true"></i> DADOS EMPRESAS</a>
+        <a href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=0#gid=0" target="_blank"><i class="fa fa-clipboard" aria-hidden="true"></i> DADOS EMPRESAS</a>
         <a href="https://hub.sieg.com/" target="_blank"><i class="fas fa-clipboard"></i> SIEG HUB</a>
         <a href="https://www.dominioweb.com.br/" target="_blank"><i class="fas fa-eye"></i> DOMINIOS</a>
         <a href="https://onvio.com.br/login/#/" target="_blank"><i class="fa fa-comments"></i> MESSENGER</a>
@@ -86,11 +84,8 @@
             </div>
         </div>
 
-        <a href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=237378784#gid=237378784"
-            target="_blank"><i class="fa fa-university" aria-hidden="true"></i>
-            EMPRESAS PREF.</a>
-        <a href="https://email.uolhost.com.br/" target="_blank"><i
-                class="fas fa-envelope"></i> E-MAIL UOL</a>
+        <a href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=237378784#gid=237378784" target="_blank"><i class="fa fa-university" aria-hidden="true"></i> EMPRESAS PREF.</a>
+        <a href="https://email.uolhost.com.br/" target="_blank"><i class="fas fa-envelope"></i> E-MAIL UOL</a>
     </nav>
 
     <!-- Modal para seleção de ano e mês -->
@@ -110,9 +105,7 @@
                 </div>
                 <div id="monthSelection" class="month-selection" style="display: none;">
                     <h4>Selecione o Mês:</h4>
-                    <div class="month-grid" id="monthGrid">
-                        <!-- Os meses serão gerados dinamicamente via JavaScript -->
-                    </div>
+                    <div class="month-grid" id="monthGrid"></div>
                 </div>
             </div>
         </div>
@@ -154,9 +147,7 @@
     <div class="container">
         <div class="category">
             <h2><i class="fas fa-search"></i> Busca de Sistemas e Serviços</h2>
-            <div class="search-results" id="searchResults">
-                <!-- Links serão gerados dinamicamente via JavaScript -->
-            </div>
+            <div class="search-results" id="searchResults"></div>
         </div>
     </div>
 
@@ -165,10 +156,13 @@
         <h4>Criado para facilitar a navegação dos funcionários...</h4>
     </footer>
 
+    <!-- Botões Flutuantes -->
     <button class="floating-btn theme-toggle" id="theme-toggle">☀️</button>
-    <button class="floating-btn aniver" id="aniver"><a href="aniversario/aniversario.html" target="_blank"><i
-                class="fa fa-birthday-cake" aria-hidden="true"></i>
-        </a></button>
+    <button class="floating-btn aniver" id="aniver">
+        <a href="aniversario/aniversario.html" target="_blank">
+            <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+        </a>
+    </button>
 
     <!-- Balão do DeepSeek -->
     <div class="deepseek-bubble" id="deepseekBubble">
@@ -200,91 +194,77 @@
     </div>
 
     <!-- Balão de Ferramentas -->
-<div class="tools-bubble" id="toolsBubble">
-    <div class="tools-icon" id="toolsIcon">
-        <i class="fas fa-tools"></i>
-        <span class="tools-count" id="toolsCount">5</span>
-    </div>
-    
-    <!-- Painel de Ferramentas -->
-    <div class="tools-panel" id="toolsPanel">
-        <div class="tools-header">
-            <h3><i class="fas fa-wrench"></i> Ferramentas Rápidas</h3>
-            <button class="close-tools" id="closeTools">&times;</button>
+    <div class="tools-bubble" id="toolsBubble">
+        <div class="tools-icon" id="toolsIcon">
+            <i class="fas fa-tools"></i>
+            <span class="tools-count" id="toolsCount">5</span>
         </div>
-        
-        <div class="tools-body">
-            <!-- Menu de categorias -->
-            <div class="tools-categories">
-                <button class="category-btn active" data-category="todas">
-                    <i class="fas fa-th-large"></i> Todas
-                </button>
-                <button class="category-btn" data-category="conversao">
-                    <i class="fas fa-exchange-alt"></i> Conversão
-                </button>
-                <button class="category-btn" data-category="data">
-                    <i class="fas fa-calendar"></i> Data/Hora
-                </button>
-                <button class="category-btn" data-category="calculo">
-                    <i class="fas fa-calculator"></i> Cálculo
-                </button>
+        <div class="tools-panel" id="toolsPanel">
+            <div class="tools-header">
+                <h3><i class="fas fa-wrench"></i> Ferramentas Rápidas</h3>
+                <button class="close-tools" id="closeTools">&times;</button>
             </div>
-            
-            <!-- Container das ferramentas -->
-            <div class="tools-grid" id="toolsGrid">
-                <!-- Ferramentas serão inseridas via JavaScript -->
-            </div>
-        </div>
-        
-        <div class="tools-footer">
-            <small>Clique na ferramenta para usar</small>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para exibir a ferramenta -->
-<div class="tool-modal" id="toolModal">
-    <div class="tool-modal-content">
-        <div class="tool-modal-header">
-            <h3 id="toolModalTitle">Ferramenta</h3>
-            <button class="close-tool-modal" id="closeToolModal">&times;</button>
-        </div>
-        <div class="tool-modal-body" id="toolModalBody">
-            <!-- Conteúdo dinâmico da ferramenta -->
-        </div>
-    </div>
-</div>
-
-<!-- Balão de Recados (agora integrado aos outros balões) -->
-<div class="recados-bubble" id="recadosBubble">
-    <div class="recados-icon" id="recadosIcon">
-        <i class="fas fa-sticky-note"></i>
-        <span class="recados-count" id="recadosCount">0</span>
-    </div>
-    <div class="recados-panel" id="recadosPanel">
-        <div class="recados-header">
-            <h3><i class="fas fa-sticky-note"></i> Mural de Recados</h3>
-            <button class="close-recados" id="closeRecados">&times;</button>
-        </div>
-        <div class="recados-body">
-            <div class="recados-list" id="recadosList"></div>
-            <div class="recado-form">
-                <textarea id="novoRecado" class="recado-input" placeholder="Digite seu recado..."></textarea>
-                <div class="recado-form-footer">
-                    <label class="recado-anonimo">
-                        <input type="checkbox" id="recadoAnonimo"> Postar como anônimo
-                    </label>
-                    <button id="publicarRecado" class="recado-submit">
-                        <i class="fas fa-paper-plane"></i> Publicar
+            <div class="tools-body">
+                <div class="tools-categories">
+                    <button class="category-btn active" data-category="todas">
+                        <i class="fas fa-th-large"></i> Todas
+                    </button>
+                    <button class="category-btn" data-category="conversao">
+                        <i class="fas fa-exchange-alt"></i> Conversão
+                    </button>
+                    <button class="category-btn" data-category="calculo">
+                        <i class="fas fa-calculator"></i> Cálculo
                     </button>
                 </div>
+                <div class="tools-grid" id="toolsGrid"></div>
+            </div>
+            <div class="tools-footer">
+                <small>Clique na ferramenta para usar</small>
             </div>
         </div>
-        <div class="recados-footer">
-            <small><i class="fas fa-users"></i> Todos os funcionários podem ver</small>
+    </div>
+
+    <!-- Balão de Recados -->
+    <div class="recados-bubble" id="recadosBubble">
+        <div class="recados-icon" id="recadosIcon">
+            <i class="fas fa-sticky-note"></i>
+            <span class="recados-count" id="recadosCount">0</span>
+        </div>
+        <div class="recados-panel" id="recadosPanel">
+            <div class="recados-header">
+                <h3><i class="fas fa-sticky-note"></i> Mural de Recados</h3>
+                <button class="close-recados" id="closeRecados">&times;</button>
+            </div>
+            <div class="recados-body">
+                <div class="recados-list" id="recadosList"></div>
+                <div class="recado-form">
+                    <textarea id="novoRecado" class="recado-input" placeholder="Digite seu recado..."></textarea>
+                    <div class="recado-form-footer">
+                        <label class="recado-anonimo">
+                            <input type="checkbox" id="recadoAnonimo"> Postar como anônimo
+                        </label>
+                        <button id="publicarRecado" class="recado-submit">
+                            <i class="fas fa-paper-plane"></i> Publicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="recados-footer">
+                <small><i class="fas fa-users"></i> Todos os funcionários podem ver</small>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Modal para exibir a ferramenta -->
+    <div class="tool-modal" id="toolModal">
+        <div class="tool-modal-content">
+            <div class="tool-modal-header">
+                <h3 id="toolModalTitle">Ferramenta</h3>
+                <button class="close-tool-modal" id="closeToolModal">&times;</button>
+            </div>
+            <div class="tool-modal-body" id="toolModalBody"></div>
+        </div>
+    </div>
 
     <script src="links/javascript.js"></script>
 </body>
