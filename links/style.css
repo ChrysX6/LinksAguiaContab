@@ -205,7 +205,7 @@ nav a:hover {
     border-color: var(--accent-hover);
 }
 
-/* Modal */
+/* Modal para seleção de ano/mês */
 .modal {
     display: none;
     position: fixed;
@@ -241,6 +241,125 @@ nav a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.year-selection {
+    margin-bottom: 25px;
+}
+
+.year-selection h4 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    font-size: 16px;
+    text-align: center;
+}
+
+.year-buttons-modal {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.year-btn {
+    padding: 15px 30px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    min-width: 120px;
+}
+
+.year-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--shadow-color);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.month-selection {
+    margin-top: 25px;
+}
+
+.month-selection h4 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    font-size: 16px;
+    text-align: center;
+}
+
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.month-btn {
+    padding: 12px 8px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.month-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .month-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .year-buttons-modal {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .year-btn {
+        width: 100%;
+        max-width: 200px;
+    }
 }
 
 /* Seção de Avisos */
