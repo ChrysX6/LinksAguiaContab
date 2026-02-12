@@ -11,6 +11,13 @@ const systemsDatabase = [
         tags: ["receita federal", "impostos", "declaracoes", "fiscal", "ecac"]
     },
     {
+        name: "DISTRIBUIÇÃO 2025",
+        description: "Distribuição 2025",
+        url: "https://docs.google.com/spreadsheets/d/1KnV2UPIZuCA3rBcubj9-h65jTwY3ypMQ/edit?gid=816413539#gid=816413539",
+        icon: "fas fa-file-invoice-dollar",
+        tags: ["Martins", "Nicoly", "Distribuição"]
+    },
+    {
         name: "CONSULTA OPTANTES SIMPLES NACIONAL",
         description: "Sistema para consultar empresas optantes pelo Simples Nacional",
         url: "https://consopt.www8.receita.fazenda.gov.br/consultaoptantes",
@@ -1809,3 +1816,4 @@ async function carregarRecados() {
         console.error('Erro ao carregar recados:', error);
     }
 }
+
