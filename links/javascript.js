@@ -11,13 +11,6 @@ const systemsDatabase = [
         tags: ["receita federal", "impostos", "declaracoes", "fiscal", "ecac"]
     },
     {
-        name: "DISTRIBUIÇÃO 2025",
-        description: "Distribuição 2025",
-        url: "https://docs.google.com/spreadsheets/d/1KnV2UPIZuCA3rBcubj9-h65jTwY3ypMQ/edit?gid=816413539#gid=816413539",
-        icon: "fas fa-file-invoice-dollar",
-        tags: ["Martins", "Nicoly", "Distribuição"]
-    },
-    {
         name: "CONSULTA OPTANTES SIMPLES NACIONAL",
         description: "Sistema para consultar empresas optantes pelo Simples Nacional",
         url: "https://consopt.www8.receita.fazenda.gov.br/consultaoptantes",
@@ -227,34 +220,56 @@ const monthLinks = {
 function showYearSelection(controlType) {
     currentControlType = controlType;
     const modalTitle = document.getElementById('modalTitle');
-    modalTitle.textContent = controlType === 'lucro-presumido' ? 'Lucro Presumido/Real - Selecionar Período' : 'Simples Nacional - Selecionar Período';
+    
+    if (controlType === 'lucro-presumido') {
+        modalTitle.textContent = 'Lucro Presumido/Real - Selecionar Período';
+    } else {
+        modalTitle.textContent = 'Simples Nacional - Selecionar Período';
+    }
+    
+    // Resetar a seleção de meses
     document.getElementById('monthSelection').style.display = 'none';
     document.getElementById('yearMonthModal').style.display = 'block';
 }
 
 function showMonthSelection(year) {
     const monthGrid = document.getElementById('monthGrid');
+    const monthSelection = document.getElementById('monthSelection');
+    
+    // LIMPAR o grid antes de adicionar novos botões
     monthGrid.innerHTML = '';
     
     const months = monthLinks[currentControlType][year];
+    
+    // Mapeamento dos meses em maiúsculo
     const monthNames = {
-        'janeiro': 'JANEIRO', 'fevereiro': 'FEVEREIRO', 'março': 'MARÇO',
-        'abril': 'ABRIL', 'maio': 'MAIO', 'junho': 'JUNHO',
-        'julho': 'JULHO', 'agosto': 'AGOSTO', 'setembro': 'SETEMBRO',
-        'outubro': 'OUTUBRO', 'novembro': 'NOVEMBRO', 'dezembro': 'DEZEMBRO'
+        'janeiro': 'JANEIRO',
+        'fevereiro': 'FEVEREIRO', 
+        'março': 'MARÇO',
+        'abril': 'ABRIL',
+        'maio': 'MAIO',
+        'junho': 'JUNHO',
+        'julho': 'JULHO',
+        'agosto': 'AGOSTO',
+        'setembro': 'SETEMBRO',
+        'outubro': 'OUTUBRO',
+        'novembro': 'NOVEMBRO',
+        'dezembro': 'DEZEMBRO'
     };
     
+    // CRIAR botões para cada mês com a CLASSE CORRETA
     Object.keys(months).forEach(month => {
         if (month !== 'todos') {
             const monthBtn = document.createElement('button');
-            monthBtn.className = 'month-btn';
+            monthBtn.className = 'month-btn'; // ✅ CLASSE CSS CORRETA!
             monthBtn.textContent = monthNames[month];
             monthBtn.onclick = () => redirectToLink(months[month]);
             monthGrid.appendChild(monthBtn);
         }
     });
     
-    document.getElementById('monthSelection').style.display = 'block';
+    // MOSTRAR a seleção de meses
+    monthSelection.style.display = 'block';
 }
 
 function redirectToLink(url) {
@@ -266,6 +281,20 @@ function closeModal() {
     document.getElementById('yearMonthModal').style.display = 'none';
     currentControlType = '';
 }
+
+// Fechar modal ao clicar fora
+document.getElementById('yearMonthModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
 
 // ========== SISTEMA DE BUSCA ==========
 function initializeSearchResults() {
@@ -1816,4 +1845,3 @@ async function carregarRecados() {
         console.error('Erro ao carregar recados:', error);
     }
 }
-
