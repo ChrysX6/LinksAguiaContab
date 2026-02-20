@@ -32,6 +32,7 @@ body.dark-mode {
 
 * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
 }
 
 body {
@@ -46,6 +47,9 @@ body {
     position: relative;
     overflow-x: hidden;
     min-height: 100vh;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 h1 {
@@ -55,6 +59,11 @@ h1 {
     font-weight: bold;
     text-shadow: 0 0 10px var(--shadow-color);
     position: relative;
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    padding: 0 20px;
+    word-break: break-word;
 }
 
 h1::after {
@@ -68,11 +77,23 @@ h1::after {
     border-radius: 2px;
 }
 
+h2, h3, h4, h5, h6 {
+    word-break: break-word;
+    line-height: 1.4;
+    margin-top: 0;
+}
+
+p, span, div, a, li, button, input, textarea {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
 .logo {
     margin-bottom: 10px;
     width: 400px;
     height: auto;
     transition: transform 0.5s ease;
+    max-width: 90%;
 }
 
 .logo:hover {
@@ -82,7 +103,7 @@ h1::after {
 /* BARRA DE NAVEGAÇÃO */
 nav {
     background: var(--gradient-primary);
-    width: 200px;
+    width: 220px;
     padding: 30px 15px;
     text-align: left;
     position: fixed;
@@ -93,15 +114,16 @@ nav {
     box-shadow: 4px 0 12px var(--shadow-color);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 nav a {
     color: white;
     text-decoration: none;
     margin: 0;
-    font-size: 15px;
+    font-size: 14px;
     padding: 12px 15px;
     border-radius: 8px;
     transition: all 0.3s ease;
@@ -110,13 +132,21 @@ nav a {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
     display: block;
+    line-height: 1.4;
+}
+
+nav a i {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
 }
 
 nav a:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: translateX(8px);
+    transform: translateX(5px);
     border-color: rgba(255, 255, 255, 0.5);
     box-shadow: 0 4px 12px var(--shadow-color);
 }
@@ -130,12 +160,20 @@ nav a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.nav-dropdown-toggle i:first-child {
+    margin-right: 8px;
+    flex-shrink: 0;
 }
 
 .dropdown-arrow {
     font-size: 12px;
     transition: transform 0.3s ease;
     margin-left: 8px;
+    flex-shrink: 0;
 }
 
 .nav-dropdown:hover .dropdown-arrow {
@@ -176,6 +214,9 @@ nav a:hover {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    word-break: break-word;
+    white-space: normal;
+    line-height: 1.4;
 }
 
 .dropdown-option,
@@ -191,10 +232,19 @@ nav a:hover {
     transition: all 0.3s ease;
     margin-bottom: 8px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     font-size: 14px;
     text-decoration: none;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.dropdown-option i,
+.dropdown-link i {
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .dropdown-option:hover,
@@ -246,6 +296,8 @@ nav a:hover {
 .modal-header h3 {
     margin: 0;
     font-size: 18px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .close-modal {
@@ -281,12 +333,15 @@ nav a:hover {
     color: var(--text-primary);
     font-size: 16px;
     text-align: center;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .year-buttons-modal {
     display: flex;
     gap: 15px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .year-btn {
@@ -301,6 +356,8 @@ nav a:hover {
     transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.3);
     min-width: 120px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .year-btn:hover {
@@ -318,6 +375,8 @@ nav a:hover {
     color: var(--text-primary);
     font-size: 16px;
     text-align: center;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .month-grid {
@@ -337,6 +396,8 @@ nav a:hover {
     font-size: 14px;
     text-align: center;
     font-weight: 600;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .month-btn:hover {
@@ -368,7 +429,7 @@ nav a:hover {
     max-width: 1200px;
     margin: 20px auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 20px;
 }
 
@@ -393,18 +454,29 @@ nav a:hover {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .avisos-header i {
     font-size: 24px;
     margin-right: 15px;
     color: var(--accent-color);
+    flex-shrink: 0;
 }
 
 .avisos-header h2 {
     font-size: 22px;
     font-weight: bold;
     color: var(--text-primary);
+    margin: 0;
+    word-break: break-word;
+    line-height: 1.3;
+}
+
+.avisos-list {
+    list-style: none;
+    padding: 0;
     margin: 0;
 }
 
@@ -415,6 +487,29 @@ nav a:hover {
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
     background: var(--bg-accent);
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+.aviso-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.aviso-date {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.aviso-urgente {
+    border-left: 4px solid #dc3545;
 }
 
 /* Search Bar */
@@ -429,6 +524,7 @@ nav a:hover {
     box-shadow: 0 4px 10px var(--shadow-color);
     font-size: 16px;
     transition: all 0.3s ease;
+    max-width: 600px;
 }
 
 .search-bar:focus {
@@ -436,6 +532,11 @@ nav a:hover {
     box-shadow: 0 4px 15px var(--shadow-color);
     transform: scale(1.02);
     border-color: var(--accent-hover);
+}
+
+.search-bar::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
 }
 
 /* Container de Links */
@@ -475,6 +576,8 @@ nav a:hover {
     color: var(--text-primary);
     position: relative;
     padding-bottom: 10px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .category h2::after {
@@ -496,7 +599,7 @@ nav a:hover {
 
 .system-link {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 15px;
     background: var(--bg-secondary);
     border: 2px solid var(--border-color);
@@ -506,6 +609,7 @@ nav a:hover {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    gap: 15px;
 }
 
 .system-link:hover {
@@ -524,7 +628,6 @@ nav a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
     transition: all 0.3s ease;
     flex-shrink: 0;
 }
@@ -534,23 +637,77 @@ nav a:hover {
     color: white;
 }
 
+.system-info {
+    flex: 1;
+    min-width: 0; /* Permite quebra de texto */
+}
+
 .system-name {
     font-weight: bold;
     font-size: 16px;
     margin-bottom: 5px;
     color: var(--text-primary);
     transition: color 0.3s ease;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .system-description {
     font-size: 13px;
     color: var(--text-secondary);
     transition: color 0.3s ease;
+    word-break: break-word;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.system-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.system-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: var(--bg-accent);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    text-transform: lowercase;
+    transition: background-color 0.3s ease;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .system-link:hover .system-name,
-.system-link:hover .system-description {
+.system-link:hover .system-description,
+.system-link:hover .system-tag {
     color: white;
+}
+
+.system-link:hover .system-tag {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.highlight {
+    background-color: #ffd700;
+    color: #000;
+    font-weight: 600;
+    padding: 2px 0;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    word-break: break-word;
+    line-height: 1.6;
+}
+
+.no-results i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
 }
 
 /* Footer */
@@ -563,6 +720,15 @@ footer {
     background-color: var(--bg-accent);
     width: 100%;
     border-top: 1px solid var(--border-color);
+}
+
+footer h2, footer h4 {
+    word-break: break-word;
+    line-height: 1.5;
+    margin: 10px 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* ========== BOTÕES FLUTUANTES ========== */
@@ -582,6 +748,8 @@ footer {
     justify-content: center;
     z-index: 1000;
     border: 2px solid rgba(255, 255, 255, 0.3);
+    width: 50px;
+    height: 50px;
 }
 
 .floating-btn a {
@@ -756,6 +924,8 @@ footer {
     display: flex;
     align-items: center;
     gap: 10px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .close-recados {
@@ -799,12 +969,22 @@ footer {
     border-radius: 12px;
     padding: 15px;
     transition: all 0.3s ease;
+    word-break: break-word;
 }
 
 .recado-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px var(--shadow-color);
     border-color: var(--accent-color);
+}
+
+.recado-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
 .recado-autor {
@@ -814,19 +994,24 @@ footer {
     display: flex;
     align-items: center;
     gap: 5px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .recado-data {
     font-size: 11px;
     color: var(--text-secondary);
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .recado-texto {
     font-size: 14px;
     color: var(--text-primary);
     margin-bottom: 12px;
-    line-height: 1.5;
+    line-height: 1.6;
     word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .recado-footer {
@@ -836,6 +1021,8 @@ footer {
     font-size: 12px;
     padding-top: 8px;
     border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .recado-visualizacoes {
@@ -843,6 +1030,8 @@ footer {
     display: flex;
     align-items: center;
     gap: 5px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .btn-visualizado {
@@ -857,6 +1046,7 @@ footer {
     display: flex;
     align-items: center;
     gap: 5px;
+    white-space: nowrap;
 }
 
 .btn-visualizado:hover {
@@ -878,6 +1068,25 @@ footer {
     border: 1px solid var(--border-color);
 }
 
+.recado-form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.recado-anonimo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
 .recado-input {
     width: 100%;
     padding: 12px;
@@ -891,6 +1100,8 @@ footer {
     margin-bottom: 12px;
     box-sizing: border-box;
     transition: all 0.3s ease;
+    line-height: 1.5;
+    word-break: break-word;
 }
 
 .recado-input:focus {
@@ -913,6 +1124,7 @@ footer {
     align-items: center;
     gap: 8px;
     border: 2px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
 }
 
 .recado-submit:hover {
@@ -925,6 +1137,8 @@ footer {
     border-top: 1px solid var(--border-color);
     text-align: center;
     color: var(--text-secondary);
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 /* ========== BALÕES DA ESQUERDA ========== */
@@ -986,6 +1200,13 @@ footer {
     align-items: center;
 }
 
+.chat-header h3 {
+    margin: 0;
+    font-size: 16px;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
 .close-chat {
     background: none;
     border: none;
@@ -1010,6 +1231,12 @@ footer {
     padding: 20px;
 }
 
+.chat-body p {
+    margin: 0 0 15px 0;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
 .password-input {
     width: 100%;
     padding: 12px;
@@ -1021,6 +1248,7 @@ footer {
     margin-bottom: 15px;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
+    line-height: 1.5;
 }
 
 .password-input:focus {
@@ -1039,6 +1267,8 @@ footer {
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.3);
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .submit-btn:hover {
@@ -1052,6 +1282,8 @@ footer {
     margin-top: 10px;
     text-align: center;
     display: none;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .error-message.show {
@@ -1141,6 +1373,16 @@ footer {
     align-items: center;
 }
 
+.tools-header h3 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
 .close-tools {
     background: none;
     border: none;
@@ -1188,6 +1430,9 @@ footer {
     display: flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .category-btn:hover,
@@ -1217,6 +1462,7 @@ footer {
     text-align: center;
     position: relative;
     overflow: hidden;
+    word-break: break-word;
 }
 
 .tool-item:hover {
@@ -1234,6 +1480,7 @@ footer {
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+    flex-shrink: 0;
 }
 
 .tool-icon i {
@@ -1241,16 +1488,24 @@ footer {
     color: white;
 }
 
+.tool-info {
+    width: 100%;
+}
+
 .tool-name {
     font-weight: 600;
     color: var(--text-primary);
     font-size: 14px;
     margin-bottom: 4px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .tool-description {
     font-size: 11px;
     color: var(--text-secondary);
+    word-break: break-word;
+    line-height: 1.5;
 }
 
 .tool-badge {
@@ -1263,6 +1518,7 @@ footer {
     padding: 2px 8px;
     font-size: 10px;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .tools-footer {
@@ -1270,6 +1526,8 @@ footer {
     border-top: 1px solid var(--border-color);
     text-align: center;
     color: var(--text-secondary);
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 /* Modal das Ferramentas */
@@ -1314,6 +1572,16 @@ footer {
     align-items: center;
 }
 
+.tool-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
 .close-tool-modal {
     background: none;
     border: none;
@@ -1344,6 +1612,13 @@ footer {
     gap: 20px;
 }
 
+.tool-container h4 {
+    margin: 0 0 15px 0;
+    color: var(--accent-color);
+    word-break: break-word;
+    line-height: 1.4;
+}
+
 .tool-input-group {
     display: flex;
     flex-direction: column;
@@ -1357,10 +1632,13 @@ footer {
     display: flex;
     align-items: center;
     gap: 8px;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .tool-input,
-.tool-textarea {
+.tool-textarea,
+.tool-select {
     padding: 12px 15px;
     border: 2px solid var(--border-color);
     border-radius: 10px;
@@ -1368,13 +1646,25 @@ footer {
     color: var(--text-primary);
     font-size: 15px;
     transition: all 0.3s ease;
+    line-height: 1.5;
+    word-break: break-word;
 }
 
 .tool-input:focus,
-.tool-textarea:focus {
+.tool-textarea:focus,
+.tool-select:focus {
     outline: none;
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+}
+
+.tool-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.tool-select {
+    cursor: pointer;
 }
 
 .tool-button {
@@ -1392,6 +1682,8 @@ footer {
     justify-content: center;
     gap: 10px;
     border: 2px solid rgba(255, 255, 255, 0.3);
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .tool-button:hover {
@@ -1409,6 +1701,17 @@ footer {
     font-weight: 600;
     color: var(--text-primary);
     word-break: break-word;
+    line-height: 1.6;
+}
+
+.tool-result small {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    font-weight: normal;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .tool-actions {
@@ -1430,6 +1733,9 @@ footer {
     display: flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
 .tool-action-btn:hover {
@@ -1473,15 +1779,31 @@ footer {
         padding: 15px 10px;
         flex-direction: row;
         overflow-x: auto;
+        gap: 5px;
     }
     
     nav a {
         white-space: nowrap;
         flex-shrink: 0;
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+    
+    .nav-dropdown-menu {
+        position: fixed;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+        width: 90%;
+        max-width: 300px;
+    }
+    
+    .nav-dropdown:hover .nav-dropdown-menu {
+        transform: translateX(-50%) translateY(0);
     }
     
     .search-bar {
-        width: 80%;
+        width: 90%;
     }
     
     .avisos-container {
@@ -1556,5 +1878,18 @@ footer {
     .tools-bubble {
         bottom: 130px;
         left: 10px;
+    }
+    
+    .tool-actions {
+        justify-content: center;
+    }
+    
+    .recado-form-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .recado-submit {
+        justify-content: center;
     }
 }
