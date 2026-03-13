@@ -1173,6 +1173,12 @@ function validarCNPJ(cnpj) {
 let recados = [];
 let recadosLidos = JSON.parse(localStorage.getItem('recadosLidos') || '[]');
 
+// ✅ CORREÇÃO: Função auxiliar para garantir que o texto seja sempre uma string
+function safeText(value) {
+    if (value === null || value === undefined) return '';
+    return String(value);
+}
+
 function initMuralRecados() {
     const recadosIcon = document.getElementById('recadosIcon');
     const recadosPanel = document.getElementById('recadosPanel');
@@ -1189,6 +1195,17 @@ function initMuralRecados() {
         try {
             const response = await fetch(GOOGLE_SHEETS_URL);
             recados = await response.json();
+
+            // ✅ CORREÇÃO: Garantir que cada recado tenha campos válidos (string)
+            recados = recados.map(r => ({
+                ...r,
+                texto: safeText(r.texto),
+                autor: safeText(r.autor) || 'Anônimo',
+                data: r.data || new Date().toISOString(),
+                visualizacoes: r.visualizacoes || 0,
+                id: r.id || 0
+            }));
+
             recados.forEach(r => r.lido = recadosLidos.includes(r.id));
             renderizarRecados();
             atualizarContador();
@@ -1298,7 +1315,6 @@ function initMuralRecados() {
         return `${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
     }
     
-    // ========== FUNÇÃO RENDERIZAR RECADOS CORRIGIDA ==========
     function renderizarRecados() {
         if (!recadosList) return;
         
@@ -1313,28 +1329,22 @@ function initMuralRecados() {
             return;
         }
         
-        recadosList.innerHTML = [...recados]
-            .sort((a, b) => new Date(b.data) - new Date(a.data))
-            .map(r => {
-                // 🟢 CORREÇÃO: Verifica se r.texto existe e converte para string
-                const textoFormatado = r.texto ? String(r.texto).replace(/\n/g, '<br>') : '';
-                
-                return `
-                    <div class="recado-item" data-id="${r.id}" style="${r.lido ? 'opacity: 0.8;' : ''}">
-                        <div class="recado-header">
-                            <span class="recado-autor"><i class="fas fa-user-circle"></i> ${r.autor || 'Anônimo'}</span>
-                            <span class="recado-data"><i class="fas fa-clock"></i> ${formatarData(r.data)}</span>
-                        </div>
-                        <div class="recado-texto">${textoFormatado}</div>
-                        <div class="recado-footer">
-                            <span class="recado-visualizacoes"><i class="fas fa-eye"></i> ${r.visualizacoes || 0} visualizações</span>
-                            <button class="btn-visualizado" data-id="${r.id}" ${r.lido ? 'disabled' : ''}>
-                                <i class="fas ${r.lido ? 'fa-check-circle' : 'fa-check'}"></i> ${r.lido ? 'Visto' : 'Marcar como visto'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+        // ✅ CORREÇÃO: uso de safeText() para garantir que r.texto seja sempre string antes do .replace()
+        recadosList.innerHTML = [...recados].sort((a, b) => new Date(b.data) - new Date(a.data)).map(r => `
+            <div class="recado-item" data-id="${r.id}" style="${r.lido ? 'opacity: 0.8;' : ''}">
+                <div class="recado-header">
+                    <span class="recado-autor"><i class="fas fa-user-circle"></i> ${safeText(r.autor)}</span>
+                    <span class="recado-data"><i class="fas fa-clock"></i> ${formatarData(r.data)}</span>
+                </div>
+                <div class="recado-texto">${safeText(r.texto).replace(/\n/g, '<br>')}</div>
+                <div class="recado-footer">
+                    <span class="recado-visualizacoes"><i class="fas fa-eye"></i> ${r.visualizacoes || 0} visualizações</span>
+                    <button class="btn-visualizado" data-id="${r.id}" ${r.lido ? 'disabled' : ''}>
+                        <i class="fas ${r.lido ? 'fa-check-circle' : 'fa-check'}"></i> ${r.lido ? 'Visto' : 'Marcar como visto'}
+                    </button>
+                </div>
+            </div>
+        `).join('');
         
         document.querySelectorAll('.btn-visualizado').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1467,6 +1477,12 @@ const NotificacoesMural = {
                     
                     // Buscar o recado novo
                     const recadoNovo = recados.find(r => r.id === maiorId);
+
+                    // ✅ CORREÇÃO: Garantir que o recado novo tem texto seguro
+                    if (recadoNovo) {
+                        recadoNovo.texto = safeText(recadoNovo.texto);
+                        recadoNovo.autor = safeText(recadoNovo.autor) || 'Anônimo';
+                    }
                     
                     // TOCAR SOM
                     this.tocarSom();
@@ -1538,7 +1554,11 @@ const NotificacoesMural = {
     
     // MOSTRAR POP-UP IGUAL WHATSAPP
     mostrarPopup(recado) {
-        if (!this.ativo) return;
+        if (!this.ativo || !recado) return;
+
+        // ✅ CORREÇÃO: uso de safeText() para evitar erro no .substring() também
+        const textoSeguro = safeText(recado.texto);
+        const autorSeguro = safeText(recado.autor) || 'Funcionário';
         
         const popup = document.createElement('div');
         popup.id = 'notificacaoPopup';
@@ -1548,11 +1568,11 @@ const NotificacoesMural = {
             </div>
             <div class="notificacao-content">
                 <div class="notificacao-titulo">
-                    <strong>${recado.autor || 'Funcionário'}</strong>
+                    <strong>${autorSeguro}</strong>
                     <span class="notificacao-hora">agora</span>
                 </div>
                 <div class="notificacao-mensagem">
-                    ${recado.texto.length > 50 ? recado.texto.substring(0, 50) + '...' : recado.texto}
+                    ${textoSeguro.length > 50 ? textoSeguro.substring(0, 50) + '...' : textoSeguro}
                 </div>
             </div>
             <button class="notificacao-fechar" onclick="this.parentElement.remove()">×</button>
@@ -1585,11 +1605,15 @@ const NotificacoesMural = {
     
     // NOTIFICAÇÃO DO NAVEGADOR
     mostrarNotificacaoBrowser(recado) {
-        if (!this.ativo) return;
+        if (!this.ativo || !recado) return;
+
+        // ✅ CORREÇÃO: uso de safeText() para evitar erro no .substring() também
+        const textoSeguro = safeText(recado.texto);
+        const autorSeguro = safeText(recado.autor) || 'Alguém';
         
         if (Notification.permission === 'granted') {
             const notificacao = new Notification('📬 Novo recado no mural!', {
-                body: `${recado.autor}: ${recado.texto.substring(0, 60)}`,
+                body: `${autorSeguro}: ${textoSeguro.substring(0, 60)}`,
                 icon: 'links/img/logo1.png',
                 silent: true,
                 requireInteraction: false
@@ -1848,9 +1872,18 @@ document.addEventListener('DOMContentLoaded', () => {
 async function carregarRecados() {
     try {
         const response = await fetch(GOOGLE_SHEETS_URL);
-        const novosRecados = await response.json();
+        let novosRecados = await response.json();
+
+        // ✅ CORREÇÃO: Sanitizar todos os campos antes de usar
+        novosRecados = novosRecados.map(r => ({
+            ...r,
+            texto: safeText(r.texto),
+            autor: safeText(r.autor) || 'Anônimo',
+            data: r.data || new Date().toISOString(),
+            visualizacoes: r.visualizacoes || 0,
+            id: r.id || 0
+        }));
         
-        // Verificar novos recados (já é feito pelo verificador automático)
         recados = novosRecados;
         recados.forEach(r => r.lido = recadosLidos.includes(r.id));
         renderizarRecados();
