@@ -1312,17 +1312,54 @@ function initMuralRecados() {
             return;
         }
         
-        recadosList.innerHTML = [...recados].sort((a, b) => new Date(b.data) - new Date(a.data)).map(r => `
-            <div class="recado-item" data-id="${r.id}" style="${r.lido ? 'opacity: 0.8;' : ''}">
-                <div class="recado-header">
-                    <span class="recado-autor"><i class="fas fa-user-circle"></i> ${r.autor}</span>
-                    <span class="recado-data"><i class="fas fa-clock"></i> ${formatarData(r.data)}</span>
+        function renderizarRecados() {
+    if (!recadosList) return;
+    
+    if (recados.length === 0) {
+        recadosList.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-sticky-note" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>Nenhum recado ainda</p>
+                <small>Seja o primeiro a publicar!</small>
+            </div>
+        `;
+        return;
+    }
+    
+    recadosList.innerHTML = [...recados]
+        .sort((a, b) => new Date(b.data) - new Date(a.data))
+        .map(r => {
+            // 🟢 CORREÇÃO AQUI: Verifica se r.texto existe e é string
+            const textoFormatado = r.texto 
+                ? String(r.texto).replace(/\n/g, '<br>') 
+                : '';
+            
+            return `
+                <div class="recado-item" data-id="${r.id}" style="${r.lido ? 'opacity: 0.8;' : ''}">
+                    <div class="recado-header">
+                        <span class="recado-autor"><i class="fas fa-user-circle"></i> ${r.autor || 'Anônimo'}</span>
+                        <span class="recado-data"><i class="fas fa-clock"></i> ${formatarData(r.data)}</span>
+                    </div>
+                    <div class="recado-texto">${textoFormatado}</div>
+                    <div class="recado-footer">
+                        <span class="recado-visualizacoes"><i class="fas fa-eye"></i> ${r.visualizacoes || 0} visualizações</span>
+                        <button class="btn-visualizado" data-id="${r.id}" ${r.lido ? 'disabled' : ''}>
+                            <i class="fas ${r.lido ? 'fa-check-circle' : 'fa-check'}"></i> ${r.lido ? 'Visto' : 'Marcar como visto'}
+                        </button>
+                    </div>
                 </div>
-                <div class="recado-texto">${r.texto.replace(/\n/g, '<br>')}</div>
-                <div class="recado-footer">
-                    <span class="recado-visualizacoes"><i class="fas fa-eye"></i> ${r.visualizacoes || 0} visualizações</span>
-                    <button class="btn-visualizado" data-id="${r.id}" ${r.lido ? 'disabled' : ''}>
-                        <i class="fas ${r.lido ? 'fa-check-circle' : 'fa-check'}"></i> ${r.lido ? 'Visto' : 'Marcar como visto'}
+            `;
+        }).join('');
+    
+    document.querySelectorAll('.btn-visualizado').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            marcarComoVisto(parseInt(btn.dataset.id));
+        });
+    });
+    
+    atualizarContador();
+}
                     </button>
                 </div>
             </div>
