@@ -139,7 +139,7 @@ const systemsDatabase = [
     {
         name: "IOB ONLINE",
         description: "Plataforma de conteúdos e serviços para profissionais de contabilidade e gestão",
-        url: "https://www.iobonline.com.br/",
+        url: "https://app.iob.com.br/",
         icon: "fas fa-envelope-open-text",
         tags: ["iob", "conteudos", "servicos"]
     },
