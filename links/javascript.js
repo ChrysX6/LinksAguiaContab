@@ -4,7 +4,7 @@
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzVd7j35SWxbCTJvK8QBXe8ZE5j_QTDHDxBYfR20pncdI55E2BDgXgB4UOKZk2ZYrZO/exec';
 const PASS = "Gestao2025@";
 const PASS_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true";
- 
+
 // ==============================
 // SIDEBAR / MOBILE
 // ==============================
@@ -15,7 +15,7 @@ function toggleDD(id) {
     const el = document.getElementById(id);
     el.classList.toggle('open');
 }
- 
+
 // ==============================
 // DATE BADGE
 // ==============================
@@ -28,7 +28,7 @@ function updateDate() {
 }
 setInterval(updateDate, 1000);
 updateDate();
- 
+
 // ==============================
 // THEME
 // ==============================
@@ -37,7 +37,7 @@ function toggleTheme() {
     localStorage.setItem('theme', dark ? 'dark' : 'light');
     document.getElementById('theme-toggle').textContent = dark ? '🌙' : '☀️';
     const logo = document.getElementById('sidebar-logo');
-    if (logo) logo.src = dark ? 'links/img/logo1.png' : 'links/img/logo1.png';
+    if (logo) logo.src = dark ? 'links/img/logo2.png' : 'links/img/logo1.png';
 }
 (function initTheme() {
     const t = localStorage.getItem('theme');
@@ -46,10 +46,10 @@ function toggleTheme() {
         const btn = document.getElementById('theme-toggle');
         if (btn) btn.textContent = '🌙';
         const logo = document.getElementById('sidebar-logo');
-        if (logo) logo.src = 'links/img/logo1.png';
+        if (logo) logo.src = 'links/img/logo2.png';
     }
 })();
- 
+
 // ==============================
 // SEARCH
 // ==============================
@@ -76,16 +76,17 @@ const systemsDB = [
     { name:"IOB ONLINE", desc:"Conteúdos e serviços para profissionais de contabilidade", url:"https://app.iob.com.br/", icon:"fas fa-book-open", tags:["iob","conteudos","legislacao"] },
     { name:"NFSE MEI", desc:"Nota Fiscal de Serviços Eletrônica para MEI", url:"https://www.nfse.gov.br/EmissorNacional/", icon:"fas fa-file-lines", tags:["nfse","mei","nota fiscal"] },
     { name:"DARE ICMS SP", desc:"Documento de Arrecadação de Receitas Estaduais – ICMS SP", url:"https://www4.fazenda.sp.gov.br/DareICMS/DareAvulso", icon:"fas fa-file-invoice-dollar", tags:["dare","icms","sp"] },
+    { name:"DASN SIMEI", desc:"Declaração Anual Simplificada do MEI", url:"https://www4.fazenda.sp.gov.br/DareICMS/DareAvulso", icon:"fas fa-file-invoice-dollar", tags:["dasn","simei","mei"] },
 ];
- 
+
 function safeText(v) { return (v===null||v===undefined)?'':String(v); }
- 
+
 function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 function highlight(text, term) {
     if (!term.trim()) return text;
     return text.replace(new RegExp(`(${esc(term)})`, 'gi'), '<span class="highlight">$1</span>');
 }
- 
+
 function renderSystems(list, term) {
     const el = document.getElementById('search-results');
     if (list.length === 0) {
@@ -102,7 +103,7 @@ function renderSystems(list, term) {
             </div>
         </a>`).join('');
 }
- 
+
 function filterLinks() {
     const q = document.getElementById('search-bar').value.toLowerCase().trim();
     if (!q) { renderSystems(systemsDB, ''); return; }
@@ -113,7 +114,7 @@ function filterLinks() {
     );
     renderSystems(r, q);
 }
- 
+
 // ==============================
 // MODAL ANO/MÊS
 // ==============================
@@ -129,7 +130,7 @@ const monthLinks = {
     }
 };
 const monthNames = { 'janeiro':'JAN','fevereiro':'FEV','março':'MAR','abril':'ABR','maio':'MAI','junho':'JUN','julho':'JUL','agosto':'AGO','setembro':'SET','outubro':'OUT','novembro':'NOV','dezembro':'DEZ' };
- 
+
 function showYearSelection(type) {
     currentType = type;
     document.getElementById('modal-title').textContent = type === 'lucro-presumido' ? 'Lucro Presumido / Real' : 'Simples Nacional';
@@ -156,7 +157,7 @@ function closeModal() {
     currentType = '';
 }
 document.getElementById('year-modal').addEventListener('click', e => { if (e.target === document.getElementById('year-modal')) closeModal(); });
- 
+
 // ==============================
 // CHAT / SENHA
 // ==============================
@@ -179,7 +180,7 @@ function validatePass() {
     }
 }
 document.getElementById('pass-input').addEventListener('keydown', e => { if (e.key === 'Enter') validatePass(); });
- 
+
 // ==============================
 // TOOLS
 // ==============================
@@ -190,7 +191,7 @@ const toolsDB = [
     { id:'porcentagem', name:'Porcentagem / Regra de 3', desc:'Calculadora de % e proporções', icon:'fas fa-percent', cat:'calculo', popular:true },
     { id:'formatar-cnpj', name:'Formatar CNPJ/CPF', desc:'Formata e valida documentos', icon:'fas fa-id-card', cat:'conversao', popular:false },
 ];
- 
+
 function renderTools(cat) {
     const list = cat === 'todas' ? toolsDB : toolsDB.filter(t => t.cat === cat);
     document.getElementById('tools-grid').innerHTML = list.map(t => `
@@ -209,7 +210,7 @@ function filterTools(btn, cat) {
 function toggleToolsPanel() { document.getElementById('tools-panel').classList.toggle('open'); }
 function closeToolsPanel() { document.getElementById('tools-panel').classList.remove('open'); }
 function openToolsPanel() { document.getElementById('tools-panel').classList.add('open'); }
- 
+
 // ==============================
 // TOOL MODAL CONTENT
 // ==============================
@@ -223,7 +224,7 @@ function openToolModal(id) {
 }
 function closeToolModal() { document.getElementById('tool-modal').classList.remove('open'); }
 document.getElementById('tool-modal').addEventListener('click', e => { if (e.target === document.getElementById('tool-modal')) closeToolModal(); });
- 
+
 function getToolHTML(id) {
     if (id === 'numero-extenso') return `
         <div class="tm-label"><i class="fas fa-hashtag"></i> Número</div>
@@ -231,7 +232,7 @@ function getToolHTML(id) {
         <button class="tm-btn" onclick="runNumExtenso()"><i class="fas fa-arrows-rotate"></i> Converter</button>
         <div id="t-num-res" class="tm-result" style="display:none"><span id="t-num-txt"></span><small>Por extenso</small></div>
         <div class="tm-actions"><button class="tm-action-btn" id="t-num-copy" style="display:none" onclick="copyText('t-num-txt')"><i class="fas fa-copy"></i> Copiar</button></div>`;
- 
+
     if (id === 'calculo-horas') return `
         <div style="display:flex;gap:10px;margin-bottom:4px">
             <div style="flex:1"><div class="tm-label"><i class="fas fa-sun"></i> Entrada manhã</div><input type="time" id="t-h-em" class="tm-input" value="08:00"></div>
@@ -249,7 +250,7 @@ function getToolHTML(id) {
             <small id="t-h-dec"></small>
         </div>
         <div class="tm-actions"><button class="tm-action-btn" id="t-h-copy" style="display:none" onclick="copyText('t-h-tot')"><i class="fas fa-copy"></i> Copiar</button></div>`;
- 
+
     if (id === 'maiusculo-minusculo') return `
         <div class="tm-label"><i class="fas fa-pencil"></i> Texto</div>
         <textarea id="t-txt" class="tm-textarea" placeholder="Digite aqui…"></textarea>
@@ -260,7 +261,7 @@ function getToolHTML(id) {
         <button class="tm-btn" onclick="runTexto('T')"><i class="fas fa-font"></i> Primeira Letra Maiúscula</button>
         <div id="t-txt-res" class="tm-result" style="display:none"><span id="t-txt-out"></span></div>
         <div class="tm-actions"><button class="tm-action-btn" id="t-txt-copy" style="display:none" onclick="copyText('t-txt-out')"><i class="fas fa-copy"></i> Copiar</button></div>`;
- 
+
     if (id === 'porcentagem') return `
         <div style="display:flex;gap:8px;margin-bottom:16px">
             <button class="tm-btn" id="btn-porc" style="flex:1;margin:0" onclick="setCalcMode('p')"><i class="fas fa-percent"></i> Porcentagem</button>
@@ -291,7 +292,7 @@ function getToolHTML(id) {
         </div>
         <button class="tm-btn" onclick="runPorc()"><i class="fas fa-equals"></i> Calcular</button>
         <div id="t-p-res" class="tm-result" style="display:none"><span id="t-p-out"></span></div>`;
- 
+
     if (id === 'formatar-cnpj') return `
         <div class="tm-label"><i class="fas fa-id-card"></i> CPF ou CNPJ</div>
         <input type="text" id="t-doc" class="tm-input" placeholder="Ex: 12345678900123">
@@ -300,12 +301,12 @@ function getToolHTML(id) {
             <span id="t-doc-txt"></span>
             <small id="t-doc-status"></small>
         </div>`;
- 
+
     return '<p style="color:var(--text-muted)">Em desenvolvimento…</p>';
 }
- 
+
 function initTool(id) { /* no-op – all tools use inline onclick */ }
- 
+
 // tools logic
 function runNumExtenso() {
     const v = parseFloat(document.getElementById('t-num').value.replace(',','.'));
@@ -377,7 +378,7 @@ function runDoc() {
     s.style.color = ok ? 'var(--teal)' : '#e74c3c';
     document.getElementById('t-doc-res').style.display='block';
 }
- 
+
 function copyText(id) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -386,7 +387,7 @@ function copyText(id) {
         if (orig) { const t=orig.innerHTML; orig.innerHTML='<i class="fas fa-check"></i> Copiado!'; setTimeout(()=>orig.innerHTML=t,1500); }
     });
 }
- 
+
 // numero por extenso
 function numeroPorExtenso(v) {
     if(v===0) return 'Zero reais';
@@ -412,15 +413,15 @@ function numeroPorExtenso(v) {
     if(!R&&C)ext=C===1?'um centavo':conv(C)+' centavos';
     return ext.charAt(0).toUpperCase()+ext.slice(1);
 }
- 
+
 function validCPF(c){c=c.replace(/\D/g,'');if(c.length!==11||/^(\d)\1+$/.test(c))return false;let s=0,r;for(let i=1;i<=9;i++)s+=+c[i-1]*(11-i);r=s*10%11;if(r===10||r===11)r=0;if(r!==+c[9])return false;s=0;for(let i=1;i<=10;i++)s+=+c[i-1]*(12-i);r=s*10%11;if(r===10||r===11)r=0;return r===+c[10];}
 function validCNPJ(c){c=c.replace(/\D/g,'');if(c.length!==14||/^(\d)\1+$/.test(c))return false;let t=c.length-2,n=c.substring(0,t),d=c.substring(t),s=0,p=t-7;for(let i=t;i>=1;i--){s+=+n[t-i]*p--;if(p<2)p=9;}let r=s%11<2?0:11-s%11;if(r!==+d[0])return false;t++;n=c.substring(0,t);s=0;p=t-7;for(let i=t;i>=1;i--){s+=+n[t-i]*p--;if(p<2)p=9;}r=s%11<2?0:11-s%11;return r===+d[1];}
- 
+
 // ==============================
 // RECADOS
 // ==============================
 let recados = [], recadosLidos = JSON.parse(localStorage.getItem('recadosLidos')||'[]');
- 
+
 async function loadRecados() {
     try {
         const r = await fetch(GOOGLE_SHEETS_URL);
@@ -435,14 +436,14 @@ async function loadRecados() {
         document.getElementById('recados-list').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)"><i class="fas fa-triangle-exclamation" style="font-size:32px;opacity:.3;display:block;margin-bottom:10px"></i>Não foi possível carregar os recados</div>';
     }
 }
- 
+
 function fmtDate(d) {
     const dt = new Date(d), now = new Date(), yt = new Date(); yt.setDate(yt.getDate()-1);
     if(dt.toDateString()===now.toDateString()) return `Hoje às ${dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
     if(dt.toDateString()===yt.toDateString()) return `Ontem às ${dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
     return `${dt.toLocaleDateString('pt-BR')} ${dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
 }
- 
+
 function renderRecados() {
     const el = document.getElementById('recados-list');
     if (!recados.length) { el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)"><i class="fas fa-sticky-note" style="font-size:32px;opacity:.3;display:block;margin-bottom:10px"></i>Nenhum recado ainda</div>'; return; }
@@ -461,7 +462,7 @@ function renderRecados() {
             </div>
         </div>`).join('');
 }
- 
+
 async function markSeen(id) {
     const r = recados.find(x=>x.id===id);
     if (!r||r.lido) return;
@@ -471,7 +472,7 @@ async function markSeen(id) {
     try { await fetch(GOOGLE_SHEETS_URL,{method:'PUT',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,visualizacoes:r.visualizacoes})}); } catch(e){}
     renderRecados(); updateRecadosCount();
 }
- 
+
 function updateRecadosCount() {
     const n = recados.filter(r=>!r.lido).length;
     ['recados-badge','recados-count-top'].forEach(id=>{
@@ -481,7 +482,7 @@ function updateRecadosCount() {
         el.style.display = n>0?'flex':'none';
     });
 }
- 
+
 async function sendRecado() {
     const txt = document.getElementById('novo-recado').value.trim();
     if (!txt) return alert('Digite um recado!');
@@ -503,17 +504,17 @@ async function sendRecado() {
         setTimeout(()=>{btn.innerHTML=orig;btn.disabled=false;loadRecados();},1500);
     } catch(e) { alert('Erro ao publicar!'); btn.innerHTML=orig; btn.disabled=false; }
 }
- 
+
 document.getElementById('recado-send-btn').addEventListener('click', sendRecado);
 document.getElementById('novo-recado').addEventListener('keydown', e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendRecado();} });
- 
+
 function toggleRecadosPanel() {
     const p = document.getElementById('recados-panel');
     p.classList.toggle('open');
     if (p.classList.contains('open')) loadRecados();
 }
 function closeRecadosPanel() { document.getElementById('recados-panel').classList.remove('open'); }
- 
+
 // close panels on outside click
 document.addEventListener('click', e => {
     ['chat-panel','tools-panel','recados-panel'].forEach(id => {
@@ -526,20 +527,20 @@ document.addEventListener('click', e => {
         }
     });
 });
- 
+
 // ==============================
 // NOTIFICATIONS
 // ==============================
 let notifActive = localStorage.getItem('notif_active') !== 'false';
 let lastId = parseInt(localStorage.getItem('last_recado_id')||'0');
- 
+
 function toggleNotif() {
     notifActive = !notifActive;
     localStorage.setItem('notif_active', notifActive);
     document.getElementById('notif-bell').textContent = notifActive ? '🔔' : '🔕';
     showToast(notifActive ? '🔔 Notificações ativadas' : '🔕 Notificações desativadas');
 }
- 
+
 function showToast(msg) {
     const t = document.createElement('div');
     t.style.cssText = 'position:fixed;bottom:90px;right:24px;background:var(--navy);color:#fff;padding:10px 18px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;box-shadow:var(--shadow-lg);animation:slideInRight .3s ease';
@@ -547,7 +548,7 @@ function showToast(msg) {
     document.body.appendChild(t);
     setTimeout(()=>t.remove(), 2500);
 }
- 
+
 function playSound() {
     try {
         const ctx = new (window.AudioContext||window.webkitAudioContext)();
@@ -558,7 +559,7 @@ function playSound() {
         setTimeout(()=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=440;g.gain.value=.2;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.12);},180);
     } catch(e) {}
 }
- 
+
 function showNotifPopup(r) {
     if (!notifActive || !r) return;
     const old = document.getElementById('notif-popup');
@@ -570,7 +571,7 @@ function showNotifPopup(r) {
     document.body.appendChild(el);
     setTimeout(()=>{ if(el.parentNode){el.style.animation='slideInRight .3s ease reverse';setTimeout(()=>el.remove(),300);} },5000);
 }
- 
+
 async function checkNewRecados() {
     try {
         const data = await (await fetch(GOOGLE_SHEETS_URL)).json();
@@ -584,27 +585,142 @@ async function checkNewRecados() {
         NotifBadge(data);
     } catch(e) {}
 }
- 
+
 function NotifBadge(data) {
     const lidos = JSON.parse(localStorage.getItem('recadosLidos')||'[]');
     const n = data.filter(r=>!lidos.includes(r.id)).length;
     ['recados-badge','recados-count-top'].forEach(id=>{ const el=document.getElementById(id); if(el){el.textContent=n;el.style.display=n>0?'flex':'none';} });
 }
- 
+
+// ==============================
+// SAUDAÇÃO PERSONALIZADA
+// ==============================
+function getSaudacao() {
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return { texto: 'Bom dia',   emoji: '☀️' };
+    if (h >= 12 && h < 18) return { texto: 'Boa tarde',  emoji: '🌤️' };
+    return                         { texto: 'Boa noite',  emoji: '🌙' };
+}
+
+function renderSaudacao() {
+    const el = document.getElementById('saudacao-text');
+    if (!el) return;
+    const nome = localStorage.getItem('userName');
+    const { texto, emoji } = getSaudacao();
+    if (nome && nome !== 'Anônimo') {
+        el.innerHTML = `${emoji} ${texto}, <span style="color:var(--teal)">${nome}</span>!`;
+    } else {
+        el.innerHTML = `${emoji} ${texto}, colaborador!`;
+    }
+}
+
+// ==============================
+// AVISOS DINÂMICOS (Google Sheets)
+// ==============================
+async function loadAvisos() {
+    const container = document.getElementById('avisos-body');
+    if (!container) return;
+
+    try {
+        const r = await fetch(GOOGLE_SHEETS_URL + '?action=getAvisos');
+        const avisos = await r.json();
+
+        if (!avisos.length) {
+            container.innerHTML = '<div class="aviso-item"><span class="aviso-title">📭 Nenhum aviso no momento.</span></div>';
+            return;
+        }
+
+        container.innerHTML = avisos.map(a => `
+            <div class="aviso-item ${a.urgente ? '' : 'aviso-normal'}">
+                <span class="aviso-title">${a.urgente ? '⚡' : '📌'} ${a.titulo}</span>
+                <span class="aviso-date">📅 Publicado em: ${a.data}</span>
+            </div>
+        `).join('');
+
+    } catch(e) {
+        container.innerHTML = '<div class="aviso-item"><span class="aviso-title">⚠️ Não foi possível carregar os avisos.</span></div>';
+    }
+}
+
+function openAvisoForm() {
+    // Pré-preenche o nome se já tem salvo
+    const nome = localStorage.getItem('userName');
+    const inputAutor = document.getElementById('aviso-autor-input');
+    if (nome && nome !== 'Anônimo' && inputAutor) inputAutor.value = nome;
+    document.getElementById('aviso-modal-overlay').classList.add('open');
+}
+
+function closeAvisoForm() {
+    document.getElementById('aviso-modal-overlay').classList.remove('open');
+    document.getElementById('aviso-titulo-input').value = '';
+    document.getElementById('aviso-urgente-check').checked = false;
+}
+
+async function submitAviso() {
+    const titulo = document.getElementById('aviso-titulo-input').value.trim();
+    const autor  = document.getElementById('aviso-autor-input').value.trim();
+    const urgente = document.getElementById('aviso-urgente-check').checked;
+
+    if (!titulo) return alert('Digite o título do aviso!');
+
+    // Salva nome para próximas vezes
+    if (autor) localStorage.setItem('userName', autor);
+
+    const btn = document.getElementById('aviso-form-btn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando…';
+    btn.disabled = true;
+
+    try {
+        await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'saveAviso',
+                id: Date.now(),
+                titulo,
+                data: new Date().toLocaleDateString('pt-BR'),
+                urgente
+            })
+        });
+
+        btn.innerHTML = '<i class="fas fa-check"></i> Publicado!';
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.disabled = false;
+            closeAvisoForm();
+            setTimeout(loadAvisos, 1000); // recarrega após 1s para pegar do servidor
+        }, 1200);
+
+    } catch(e) {
+        alert('Erro ao publicar aviso!');
+        btn.innerHTML = orig;
+        btn.disabled = false;
+    }
+}
+
+window.openAvisoForm  = openAvisoForm;
+window.closeAvisoForm = closeAvisoForm;
+window.submitAviso    = submitAviso;
+
 // ==============================
 // INIT
 // ==============================
 document.addEventListener('DOMContentLoaded', () => {
     renderSystems(systemsDB, '');
     renderTools('todas');
+    renderSaudacao();
+    loadAvisos();
     loadRecados();
     setInterval(loadRecados, 30000);
+    setInterval(loadAvisos, 60000); // atualiza avisos a cada 1 min
     setTimeout(checkNewRecados, 2000);
     setInterval(checkNewRecados, 10000);
     if (Notification && Notification.permission==='default') setTimeout(()=>Notification.requestPermission(), 3000);
     document.getElementById('notif-bell').textContent = notifActive ? '🔔' : '🔕';
 });
- 
+
 // expose globals for inline HTML
 window.showYearSelection = showYearSelection;
 window.showMonths = showMonths;
