@@ -15,14 +15,14 @@
     <link rel="stylesheet" href="links/style.css">
 </head>
 <body>
- 
+
 <!-- ===== SIDEBAR ===== -->
 <aside id="sidebar">
     <div class="sidebar-logo">
         <img src="links/img/logo1.png" alt="Logo Aguiacontab" id="sidebar-logo">
         <span class="sidebar-logo-title">Portal Interno</span>
     </div>
- 
+
     <div class="sidebar-section-label">Acesso Rápido</div>
     <nav class="nav-links">
         <a class="nav-link" href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=0#gid=0" target="_blank">
@@ -38,7 +38,7 @@
             <i class="fas fa-globe"></i> Domínios
         </a>
         <a class="nav-link" href="https://onvio.com.br/login/#/" target="_blank">
-            <i class="fas fa-comments"></i> Messenger
+            <i class="fas fa-comments"></i> Onvio Messenger
         </a>
         <a class="nav-link" href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=237378784#gid=237378784" target="_blank">
             <i class="fas fa-university"></i> Empresas Pref.
@@ -47,10 +47,10 @@
             <i class="fas fa-envelope"></i> E-mail UOL
         </a>
     </nav>
- 
+
     <div class="sidebar-section-label" style="margin-top:10px;">Departamentos</div>
     <nav class="nav-links">
- 
+
         <!-- DEP. FISCAL -->
         <div class="nav-dropdown" id="dd-fiscal">
             <button class="nav-link nav-dropdown-toggle" onclick="toggleDD('dd-fiscal')">
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
- 
+
         <!-- DEP. PESSOAL -->
         <div class="nav-dropdown" id="dd-pessoal">
             <button class="nav-link nav-dropdown-toggle" onclick="toggleDD('dd-pessoal')">
@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
- 
+
         <!-- DEP. CONTÁBIL -->
         <div class="nav-dropdown" id="dd-contabil">
             <button class="nav-link nav-dropdown-toggle" onclick="toggleDD('dd-contabil')">
@@ -116,17 +116,17 @@
                 </div>
             </div>
         </div>
- 
+
     </nav>
- 
+
     <div class="sidebar-footer">
         Aguiacontab Tatuapé<br>Portal Interno v2.0
     </div>
 </aside>
- 
+
 <!-- ===== MAIN ===== -->
 <div id="main">
- 
+
     <!-- TOPBAR -->
     <header id="topbar">
         <div class="topbar-left">
@@ -147,19 +147,19 @@
             </a>
         </div>
     </header>
- 
+
     <!-- CONTENT -->
     <main id="content">
- 
+
         <!-- Header -->
         <div class="page-header">
             <div class="page-header-text">
-                <h1>Portal Aguiacontab <span style="color:var(--teal)">Tatuapé</span></h1>
+                <h1 id="saudacao-text">☀️ Bom dia, colaborador!</h1>
                 <p>Acesso rápido a sistemas, controles e ferramentas do escritório</p>
             </div>
             <div class="date-badge" id="date-badge">Carregando…</div>
         </div>
- 
+
         <!-- Quick Access -->
         <div class="quick-grid">
             <a class="quick-card" href="https://cav.receita.fazenda.gov.br/" target="_blank">
@@ -195,26 +195,24 @@
                 <span>IOB Online</span><small>Legislação</small>
             </a>
         </div>
- 
+
         <!-- Avisos e Prazos -->
         <div class="info-grid">
             <div class="info-card">
                 <div class="info-card-header avisos">
                     <i class="fas fa-bullhorn"></i>
                     <h2>Avisos Importantes</h2>
+                    <button class="aviso-add-btn" onclick="openAvisoForm()" title="Adicionar aviso">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
-                <div class="info-card-body">
-                    <div class="aviso-item">
-                        <span class="aviso-title">⚡ QUALQUER DÚVIDA CHAMAR O MARTINS</span>
-                        <span class="aviso-date">📅 Publicado em: 28/10/2025</span>
-                    </div>
-                    <div class="aviso-item" style="margin-top:10px;">
-                        <span class="aviso-title">💬 UTILIZEM O CHAT PARA FALAR COM OS COLABORADORES</span>
-                        <span class="aviso-date">📅 Publicado em: 23/02/2026</span>
+                <div class="info-card-body" id="avisos-body">
+                    <div class="avisos-loading">
+                        <i class="fas fa-spinner fa-spin"></i> Carregando avisos…
                     </div>
                 </div>
             </div>
- 
+
             <div class="info-card">
                 <div class="info-card-header prazos">
                     <i class="fas fa-clock"></i>
@@ -228,20 +226,43 @@
                 </div>
             </div>
         </div>
- 
+
+        <!-- Modal novo aviso -->
+        <div class="aviso-modal-overlay" id="aviso-modal-overlay">
+            <div class="aviso-modal">
+                <div class="aviso-modal-head">
+                    <h3><i class="fas fa-bullhorn"></i> Novo Aviso</h3>
+                    <button class="aviso-modal-close" onclick="closeAvisoForm()">×</button>
+                </div>
+                <div class="aviso-modal-body">
+                    <label class="aviso-form-label">Título do aviso</label>
+                    <input type="text" id="aviso-titulo-input" class="aviso-form-input" placeholder="Ex: Reunião amanhã às 10h…" maxlength="120">
+                    <label class="aviso-form-label">Seu nome</label>
+                    <input type="text" id="aviso-autor-input" class="aviso-form-input" placeholder="Ex: Chrys">
+                    <label class="aviso-form-check-label">
+                        <input type="checkbox" id="aviso-urgente-check">
+                        🔴 Marcar como urgente
+                    </label>
+                    <button class="aviso-form-btn" id="aviso-form-btn" onclick="submitAviso()">
+                        <i class="fas fa-paper-plane"></i> Publicar Aviso
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Search Results -->
         <div class="section-title"><i class="fas fa-search"></i> Sistemas e Serviços</div>
         <div class="section-divider"></div>
         <div id="search-results"></div>
- 
+
     </main>
- 
+
     <footer>
         Portal atualizado mensalmente · Criado para facilitar a navegação dos colaboradores ·
         <strong>Aguiacontab Tatuapé</strong>
     </footer>
 </div>
- 
+
 <!-- ===== MODAL ANO/MÊS ===== -->
 <div class="modal-overlay" id="year-modal">
     <div class="modal-box">
@@ -264,7 +285,7 @@
         </div>
     </div>
 </div>
- 
+
 <!-- ===== LEFT PANELS ===== -->
 <div class="left-panel-group">
     <!-- Chat protegido -->
@@ -285,7 +306,7 @@
             </div>
         </div>
     </div>
- 
+
     <!-- Ferramentas -->
     <div style="position:relative">
         <button class="panel-bubble" id="tools-btn" onclick="toggleToolsPanel()" title="Ferramentas">
@@ -306,7 +327,7 @@
             <div class="pw-footer"><i class="fas fa-hand-pointer"></i> Clique na ferramenta para usar</div>
         </div>
     </div>
- 
+
     <!-- Recados -->
     <div style="position:relative">
         <button class="panel-bubble" id="recados-btn" onclick="toggleRecadosPanel()" title="Mural de Recados">
@@ -334,7 +355,7 @@
         </div>
     </div>
 </div>
- 
+
 <!-- ===== FAB GROUP (right) ===== -->
 <div class="fab-group">
     <button class="fab fab-theme" id="theme-toggle" onclick="toggleTheme()" title="Tema">
@@ -350,7 +371,7 @@
         <span class="fab-tooltip">Notificações</span>
     </button>
 </div>
- 
+
 <!-- ===== TOOL MODAL ===== -->
 <div class="tool-modal-overlay" id="tool-modal">
     <div class="tool-modal-box">
@@ -361,9 +382,8 @@
         <div class="tm-body" id="tool-modal-body"></div>
     </div>
 </div>
- 
+
 <!-- ===== SCRIPTS ===== -->
     <script src="links/javascript.js"></script>
 </body>
 </html>
- 
