@@ -3,7 +3,7 @@
 // ==============================
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzVd7j35SWxbCTJvK8QBXe8ZE5j_QTDHDxBYfR20pncdI55E2BDgXgB4UOKZk2ZYrZO/exec';
 const PASS = "Gestao2025@";
-const PASS_LINK = "https://docs.google.com/spreadsheets/d/1fmeTfc1coBy_8LMT8aSjxfh6b9VC1slv/edit?usp=sharing&ouid=104502217953424660775&rtpof=true&sd=true";
+const PASS_LINK = "https://docs.google.com/spreadsheets/d/1Py_kDcDDB4707gU4tIg7IBYXdglOXjEd?rtpof=true&usp=drive_fs";
 
 // ==============================
 // SIDEBAR / MOBILE
