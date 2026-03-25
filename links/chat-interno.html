@@ -107,6 +107,9 @@
     background: var(--danger); color: #fff; font-size: 11px; font-weight: 600;
     padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center;
   }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; margin-right: 4px; }
+  .status-dot.online { background: var(--success); }
+  .status-dot.offline { background: var(--text-muted); }
   .dm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--success); }
   .dm-avatar-mini {
     width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
@@ -185,13 +188,6 @@
   .msg-group:hover { background: rgba(255,255,255,0.02); }
   .msg-group.has-mention { background: var(--mention-bg); border-left: 2px solid var(--mention-border); padding-left: 10px; }
   .msg-group.is-reply { background: var(--reply-bg); }
-
-  .msg-avatar {
-    width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;
-    margin-top: 2px; overflow: hidden; cursor: pointer;
-  }
-  .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
   .msg-body { flex: 1; min-width: 0; }
   .msg-meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
@@ -353,18 +349,6 @@
   .btn-danger:hover { opacity: 0.85; }
 
   /* profile modal */
-  .avatar-preview {
-    width: 72px; height: 72px; border-radius: 16px; margin: 0 auto 16px;
-    display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 600;
-    overflow: hidden; border: 2px solid var(--border-strong);
-  }
-  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-  .avatar-upload-btn {
-    display: block; text-align: center; background: var(--bg-tertiary); border: 1px dashed var(--border-strong);
-    border-radius: 8px; padding: 10px; cursor: pointer; font-size: 13px; color: var(--text-secondary);
-    margin-bottom: 4px;
-  }
-  .avatar-upload-btn:hover { background: var(--bg-hover); }
   .color-row { display: flex; align-items: center; gap: 10px; }
   .color-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
   .swatch {
@@ -411,12 +395,6 @@
 <div class="modal-overlay" id="profile-modal">
   <div class="modal-box">
     <h3>👤 Meu Perfil</h3>
-    <div class="avatar-preview" id="profile-preview"></div>
-    <label class="avatar-upload-btn" for="avatar-file-input">📷 Fazer upload de foto</label>
-    <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
-    <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-bottom:12px;">Ou cole uma URL de imagem abaixo</p>
-    <label>URL da foto (opcional)</label>
-    <input type="url" id="profile-avatar-url" placeholder="https://..." />
     <label>Cor do nome</label>
     <div class="color-row">
       <div class="color-swatches" id="color-swatches"></div>
@@ -477,6 +455,7 @@
           <span id="sheets-label">Local</span>
         </div>
         <button class="icon-btn" onclick="toggleSearch()" title="Buscar mensagens">🔍</button>
+        <button class="icon-btn" onclick="toggleTheme()" title="Alternar tema">🌙</button>
         <button class="icon-btn" onclick="openModal('setup-modal')" title="Configurações">⚙️</button>
       </div>
     </div>
@@ -525,6 +504,14 @@
       <button class="icon-btn" onclick="cancelReply()">✕</button>
     </div>
     <div id="input-area">
+      <div style="display:flex;gap:4px;padding:4px 0;font-size:13px;opacity:0.7;margin-bottom:4px;">
+        <button class="input-action" onclick="insertFormat('**','**')" title="Negrito (⌘+B)"><strong>B</strong></button>
+        <button class="input-action" onclick="insertFormat('_','_')" title="Itálico (⌘+I)"><em>I</em></button>
+        <button class="input-action" onclick="insertFormat('`','`')" title="Código">`code`</button>
+        <button class="input-action" onclick="insertFormat('```\n','```\n')" title="Bloco de código">```</button>
+        <span style="width:1px;background:var(--border);margin:0 2px;"></span>
+        <button class="input-action" onclick="insertFormat('~~','~~')" title="Riscado"><del>S</del></button>
+      </div>
       <div class="input-box" style="position:relative;">
         <textarea id="msg-input" rows="1" placeholder="Mensagem..."></textarea>
         <button class="input-action" onclick="triggerImageUpload()" title="Enviar imagem">🖼️</button>
@@ -577,6 +564,7 @@ let messages = {};
 let sheetsUrl = "";
 let sheetsSynced = false;
 let unreadCounts = {};
+let mutedChannels = {};       // {channelId: bool}
 let pollInterval = null;
 let replyingTo = null;        // {id, author, text}
 let editingMsgId = null;
@@ -584,6 +572,12 @@ let mentionQuery = null;
 let mentionSelectedIdx = 0;
 let typingTimeout = null;
 let lastTypingSent = 0;
+let userStatus = {};          // {userId: {online: bool, lastActive: timestamp}}
+let messageOffset = {};       // {channelId: offset}
+const MSG_PER_PAGE = 50;
+let userActivityInterval = null;
+let pinnedMessages = {};      // {channelId: [msgIds]}
+let selectedTheme = "dark";   // "dark" or "light"
 
 // ============================================================
 // INIT
@@ -663,9 +657,28 @@ function initApp() {
   loadUsers();
   currentUser = { key: currentUser.key, ...USERS[currentUser.key] };
   updateSidebarUser();
+  
+  // Initialize user status
+  Object.keys(USERS).forEach(key => {
+    userStatus[key] = { online: false, lastActive: 0 };
+  });
+  userStatus[currentUser.key] = { online: true, lastActive: Date.now() };
+  
+  // Load pinned messages, theme, and muted channels
+  pinnedMessages = JSON.parse(localStorage.getItem("chat_pinned") || "{}");
+  selectedTheme = localStorage.getItem("chat_theme") || "dark";
+  mutedChannels = JSON.parse(localStorage.getItem("chat_muted") || "{}");
+  applyTheme();
+  
   renderSidebar();
   selectChannel(currentChannel);
   updateSheetsStatus();
+  updateNotificationBadge();
+  
+  // Update user status every 30 seconds
+  clearInterval(userActivityInterval);
+  userActivityInterval = setInterval(updateUserStatus, 30000);
+  
   clearInterval(pollInterval);
   if (sheetsUrl) {
     fetchFromSheets();
@@ -710,9 +723,11 @@ function renderSidebar() {
     const u = USERS[key];
     const dmKey = makeDmKey(currentUser.key, key);
     const ub = unreadCounts[dmKey] || 0;
+    const isOnline = userStatus[key]?.online || false;
+    const statusClass = isOnline ? "online" : "offline";
     const d = document.createElement("div");
     d.className = "channel-item" + (currentChannel === dmKey ? " active" : "");
-    d.innerHTML = `${avatarHtml(u, 20, 5)}
+    d.innerHTML = `<span class="status-dot ${statusClass}"></span>${avatarHtml(u, 20, 5)}
       <span class="ch-name">${u.name}</span>
       ${ub > 0 ? `<span class="unread-badge">${ub}</span>` : ""}`;
     d.onclick = () => selectChannel(dmKey);
@@ -744,20 +759,23 @@ function selectChannel(ch) {
   unreadCounts[ch] = 0;
   cancelReply();
   renderSidebar();
+  const isMuted = mutedChannels[ch] || false;
+  const muteBtn = `<button class="icon-btn" onclick="toggleMute('${ch}')" title="${isMuted ? 'Ativar' : 'Silenciar'} notificações">${isMuted ? '🔇' : '🔔'}</button>`;
   if (isDM(ch)) {
     const other = USERS[dmOtherKey(ch)] || {};
     document.getElementById("header-prefix").textContent = "💬";
     document.getElementById("header-name").textContent = other.name || ch;
-    document.getElementById("members-count").innerHTML = `<span class="tag-dm">DM</span>`;
+    document.getElementById("members-count").innerHTML = `<span class="tag-dm">DM</span>${muteBtn}`;
   } else {
     document.getElementById("header-prefix").textContent = "#";
     document.getElementById("header-name").textContent = ch;
-    document.getElementById("members-count").innerHTML = `👥 ${Object.keys(USERS).length}`;
+    document.getElementById("members-count").innerHTML = `👥 ${Object.keys(USERS).length} ${muteBtn}`;
   }
   const other = isDM(ch) ? USERS[dmOtherKey(ch)] : null;
   document.getElementById("msg-input").placeholder = other ? `Mensagem para ${other.name}...` : `Mensagem em #${ch}...`;
   renderMessages();
   scrollToBottom();
+  updateNotificationBadge();
 }
 
 // ============================================================
@@ -769,14 +787,28 @@ function renderMessages() {
   const area = document.getElementById("messages-area");
   const msgs = getMessages(currentChannel);
   area.innerHTML = "";
+  
   if (!msgs.length) {
     area.innerHTML = `<div style="text-align:center;color:var(--text-muted);margin-top:48px;font-size:14px;">
       ${isDM(currentChannel) ? "Início da conversa." : `Início do canal #${currentChannel}.`}
       <br><span style="font-size:12px;margin-top:6px;display:block;">Diga olá! 👋</span></div>`;
     return;
   }
+  
+  if (!messageOffset[currentChannel]) messageOffset[currentChannel] = 0;
+  const offset = messageOffset[currentChannel];
+  const displayMsgs = msgs.slice(Math.max(0, msgs.length - offset - MSG_PER_PAGE), msgs.length - offset);
+  
+  // Add "Load more" button if there are older messages
+  if (offset > 0 || msgs.length > MSG_PER_PAGE) {
+    const loadBtn = document.createElement("div");
+    loadBtn.style.cssText = "text-align:center;padding:8px;margin:10px 0;";
+    loadBtn.innerHTML = `<button style="background:var(--accent);border:none;color:white;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;" onclick="loadOlderMessages()">Carregar mensagens antigas</button>`;
+    area.appendChild(loadBtn);
+  }
+  
   let lastDate = "";
-  msgs.forEach((msg, idx) => {
+  displayMsgs.forEach((msg, idx) => {
     const d = new Date(msg.time);
     const ds = d.toLocaleDateString("pt-BR");
     if (ds !== lastDate) {
@@ -786,8 +818,17 @@ function renderMessages() {
       div.innerHTML = `<span>${isToday(d) ? "Hoje" : ds}</span>`;
       area.appendChild(div);
     }
-    area.appendChild(buildMsgEl(msg, idx, msgs));
+    area.appendChild(buildMsgEl(msg, msgs.indexOf(msg), msgs));
   });
+}
+
+function loadOlderMessages() {
+  messageOffset[currentChannel] = (messageOffset[currentChannel] || 0) + MSG_PER_PAGE;
+  renderMessages();
+  setTimeout(() => {
+    const area = document.getElementById("messages-area");
+    if (area.children.length > 2) area.children[1].scrollIntoView();
+  }, 100);
 }
 
 function buildMsgEl(msg, idx, msgs) {
@@ -817,9 +858,11 @@ function buildMsgEl(msg, idx, msgs) {
   }
 
   // hover actions
+  const pinned = isPinned(msg.id);
   let actionsHTML = `<div class="msg-actions">
     <button class="msg-action-btn" onclick="startReply('${msg.id}')" title="Responder">↩️</button>
-    <button class="msg-action-btn" onclick="addQuickReaction('${msg.id}')" title="Reagir">😊</button>`;
+    <button class="msg-action-btn" onclick="addQuickReaction('${msg.id}')" title="Reagir">😊</button>
+    <button class="msg-action-btn" onclick="${pinned ? 'unpinMessage' : 'pinMessage'}('${msg.id}')" title="${pinned ? 'Desafixar' : 'Afixar'}">${pinned ? '📌' : '📍'}</button>`;
   if (isMine) {
     actionsHTML += `<button class="msg-action-btn" onclick="startEdit('${msg.id}')" title="Editar">✏️</button>
     <button class="msg-action-btn" onclick="deleteMsg('${msg.id}')" title="Excluir">🗑️</button>`;
@@ -827,7 +870,6 @@ function buildMsgEl(msg, idx, msgs) {
   actionsHTML += "</div>";
 
   group.innerHTML = `
-    ${avatarHtml(u, 36, 8).replace('<div ', `<div style="cursor:pointer;margin-top:2px;" onclick="openDmWith('${msg.author}')" `)}
     <div class="msg-body">
       ${!sameAuthor ? `<div class="msg-meta">
         <span class="msg-author" style="color:${u.color}" onclick="openDmWith('${msg.author}')">${u.name}</span>
@@ -946,6 +988,9 @@ function sendMessage() {
   const input = document.getElementById("msg-input");
   const text = input.value.trim();
   if (!text) return;
+  
+  // Mark user as online
+  userStatus[currentUser.key] = { online: true, lastActive: Date.now() };
 
   const msg = {
     id: Date.now() + "_" + Math.random().toString(36).slice(2,6),
@@ -956,6 +1001,7 @@ function sendMessage() {
     reactions: {},
     replyTo: replyingTo ? replyingTo.id : null,
     edited: false,
+    pinned: false,
   };
 
   addMessage(msg);
@@ -968,6 +1014,7 @@ function sendMessage() {
   if (sheetsUrl) sendToSheets(msg);
   playSound("send");
   broadcastTyping(false);
+  renderSidebar();
 }
 
 function addMessage(msg) {
@@ -981,6 +1028,78 @@ function addMessage(msg) {
     sendBrowserNotif(msg);
   }
   return true;
+}
+
+// ============================================================
+// USER STATUS & THEME
+// ============================================================
+function updateUserStatus() {
+  const now = Date.now();
+  const OFFLINE_AFTER = 5 * 60 * 1000; // 5 minutes
+  let changed = false;
+  Object.keys(userStatus).forEach(key => {
+    const status = userStatus[key];
+    const wasOnline = status.online;
+    status.online = (now - status.lastActive) < OFFLINE_AFTER;
+    if (wasOnline !== status.online) changed = true;
+  });
+  if (changed) renderSidebar();
+}
+
+function applyTheme() {
+  const root = document.documentElement;
+  if (selectedTheme === "light") {
+    root.style.setProperty("--bg-primary", "#f5f5f5");
+    root.style.setProperty("--bg-secondary", "#ffffff");
+    root.style.setProperty("--bg-tertiary", "#efefef");
+    root.style.setProperty("--bg-hover", "#e0e0e0");
+    root.style.setProperty("--bg-active", "#d0d0d0");
+    root.style.setProperty("--text-primary", "#1a1a1a");
+    root.style.setProperty("--text-secondary", "#4a4a4a");
+    root.style.setProperty("--text-muted", "#777777");
+    root.style.setProperty("--border", "rgba(0,0,0,0.08)");
+    root.style.setProperty("--border-strong", "rgba(0,0,0,0.15)");
+  } else {
+    root.style.setProperty("--bg-primary", "#1a1d23");
+    root.style.setProperty("--bg-secondary", "#222630");
+    root.style.setProperty("--bg-tertiary", "#2a2f3d");
+    root.style.setProperty("--bg-hover", "#313749");
+    root.style.setProperty("--bg-active", "#3a4157");
+    root.style.setProperty("--text-primary", "#e8eaf0");
+    root.style.setProperty("--text-secondary", "#9ba3b8");
+    root.style.setProperty("--text-muted", "#6b7280");
+    root.style.setProperty("--border", "rgba(255,255,255,0.07)");
+    root.style.setProperty("--border-strong", "rgba(255,255,255,0.12)");
+  }
+}
+
+function toggleTheme() {
+  selectedTheme = selectedTheme === "dark" ? "light" : "dark";
+  localStorage.setItem("chat_theme", selectedTheme);
+  applyTheme();
+}
+
+// ============================================================
+// PIN MESSAGES
+// ============================================================
+function pinMessage(msgId) {
+  if (!pinnedMessages[currentChannel]) pinnedMessages[currentChannel] = [];
+  if (!pinnedMessages[currentChannel].includes(msgId)) {
+    pinnedMessages[currentChannel].push(msgId);
+    localStorage.setItem("chat_pinned", JSON.stringify(pinnedMessages));
+    renderMessages();
+  }
+}
+
+function unpinMessage(msgId) {
+  if (!pinnedMessages[currentChannel]) return;
+  pinnedMessages[currentChannel] = pinnedMessages[currentChannel].filter(id => id !== msgId);
+  localStorage.setItem("chat_pinned", JSON.stringify(pinnedMessages));
+  renderMessages();
+}
+
+function isPinned(msgId) {
+  return pinnedMessages[currentChannel]?.includes(msgId) || false;
 }
 
 // ============================================================
@@ -1130,6 +1249,21 @@ function buildEmojiPicker() {
 function toggleEmoji() {
   const p = document.getElementById("emoji-popup");
   p.style.display = p.style.display === "none" ? "grid" : "none";
+}
+
+// ============================================================
+// TEXT FORMATTING
+// ============================================================
+function insertFormat(before, after) {
+  const ta = document.getElementById("msg-input");
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const text = ta.value;
+  const selectedText = text.substring(start, end) || "texto";
+  ta.value = text.substring(0, start) + before + selectedText + after + text.substring(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + before.length + selectedText.length;
+  onInputChange();
 }
 
 // ============================================================
@@ -1296,12 +1430,7 @@ function jumpToSearch(ch, msgId) {
 function openProfileModal() {
   loadUsers();
   const u = USERS[currentUser.key];
-  document.getElementById("profile-avatar-url").value = u.avatar || "";
   document.getElementById("profile-color").value = u.color || "#5865f2";
-  // preview
-  const prev = document.getElementById("profile-preview");
-  if (u.avatar) prev.innerHTML = `<img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />`;
-  else { prev.style.background = u.color + "33"; prev.style.color = u.color; prev.textContent = u.name[0]; }
   // mark active swatch
   document.querySelectorAll(".swatch").forEach(s => s.classList.toggle("active", s.dataset.color === u.color));
   openModal("profile-modal");
@@ -1321,22 +1450,9 @@ function buildColorSwatches() {
   });
 }
 
-function handleAvatarUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    document.getElementById("profile-avatar-url").value = ev.target.result;
-    const prev = document.getElementById("profile-preview");
-    prev.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />`;
-  };
-  reader.readAsDataURL(file);
-}
-
 function saveProfile() {
-  const avatarUrl = document.getElementById("profile-avatar-url").value.trim();
   const color = document.getElementById("profile-color").value;
-  const profile = { avatar: avatarUrl, color };
+  const profile = { avatar: "", color };
   localStorage.setItem("chat_profile_" + currentUser.key, JSON.stringify(profile));
   loadUsers();
   currentUser = { key: currentUser.key, ...USERS[currentUser.key] };
@@ -1352,9 +1468,29 @@ function saveProfile() {
 function sendBrowserNotif(msg) {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
   if (document.visibilityState === "visible") return;
+  if (mutedChannels[msg.channel]) return;
   const u = USERS[msg.author] || { name: msg.author };
   const chLabel = isDM(msg.channel) ? `DM de ${u.name}` : `#${msg.channel}`;
   new Notification(chLabel, { body: `${u.name}: ${msg.text.substring(0,80)}`, icon: u.avatar || undefined });
+  updateNotificationBadge();
+}
+
+function updateNotificationBadge() {
+  const unreadTotal = Object.entries(unreadCounts)
+    .filter(([ch]) => !mutedChannels[ch])
+    .reduce((sum, [, count]) => sum + count, 0);
+  if (unreadTotal > 0) {
+    document.title = `💬 (${unreadTotal}) Chat Interno`;
+  } else {
+    document.title = "Chat Interno";
+  }
+}
+
+function toggleMute(channel) {
+  mutedChannels[channel] = !mutedChannels[channel];
+  localStorage.setItem("chat_muted", JSON.stringify(mutedChannels));
+  renderSidebar();
+  updateNotificationBadge();
 }
 
 // ============================================================
