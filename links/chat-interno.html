@@ -24,6 +24,9 @@
     --danger: #ed4245;
     --warn: #faa61a;
     --dm-color: #f0a500;
+    --mention-bg: rgba(88,101,242,0.18);
+    --mention-border: rgba(88,101,242,0.5);
+    --reply-bg: rgba(255,255,255,0.04);
     --font: 'IBM Plex Sans', sans-serif;
     --mono: 'IBM Plex Mono', monospace;
     --sidebar-w: 240px;
@@ -35,7 +38,7 @@
   #login-screen {
     position: fixed; inset: 0; background: var(--bg-primary);
     display: flex; align-items: center; justify-content: center;
-    z-index: 100; flex-direction: column; gap: 0;
+    z-index: 100; flex-direction: column;
   }
   .login-box {
     background: var(--bg-secondary); border: 1px solid var(--border-strong);
@@ -47,10 +50,10 @@
     display: inline-flex; align-items: center; justify-content: center;
     font-size: 26px; margin-bottom: 12px;
   }
-  .login-logo h1 { font-size: 22px; font-weight: 600; color: var(--text-primary); }
+  .login-logo h1 { font-size: 22px; font-weight: 600; }
   .login-logo p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
   .login-box label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; margin-top: 16px; }
-  .login-box input {
+  .login-box input[type=text], .login-box input[type=password] {
     width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-strong);
     border-radius: 8px; padding: 10px 14px; color: var(--text-primary);
     font-family: var(--font); font-size: 14px; outline: none; transition: border 0.2s;
@@ -70,24 +73,17 @@
     flex-direction: column; border-right: 1px solid var(--border); flex-shrink: 0;
   }
   .sidebar-header {
-    padding: 16px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
   }
   .workspace-name { font-size: 15px; font-weight: 600; }
-  .user-status {
-    padding: 12px 16px; border-top: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
+  .sheets-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--text-muted);
   }
-  .user-avatar {
-    width: 32px; height: 32px; border-radius: 8px; display: flex;
-    align-items: center; justify-content: center; font-size: 13px; font-weight: 600;
-    flex-shrink: 0;
-  }
-  .user-info { flex: 1; min-width: 0; }
-  .user-info .name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .user-info .role { font-size: 11px; color: var(--text-muted); }
-  .logout-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 4px; border-radius: 4px; }
-  .logout-btn:hover { color: var(--danger); }
+  .sheets-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); flex-shrink:0; }
+  .sheets-dot.ok { background: var(--success); }
+  .sheets-dot.err { background: var(--danger); }
 
   .sidebar-section { padding: 6px 0; flex: 1; overflow-y: auto; }
   .sidebar-section::-webkit-scrollbar { width: 4px; }
@@ -106,50 +102,138 @@
   }
   .channel-item:hover { background: var(--bg-hover); color: var(--text-primary); }
   .channel-item.active { background: var(--bg-active); color: var(--text-primary); }
-  .channel-item .prefix { font-size: 16px; width: 16px; text-align: center; flex-shrink: 0; }
   .channel-item .ch-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .channel-item .unread-badge {
     background: var(--danger); color: #fff; font-size: 11px; font-weight: 600;
     padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center;
   }
-  .dm-dot {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  .dm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--success); }
+  .dm-avatar-mini {
+    width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;
+    overflow: hidden;
   }
-  .dm-dot.online { background: var(--success); }
-  .dm-dot.offline { background: var(--text-muted); }
+  .dm-avatar-mini img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ---- MAIN AREA ---- */
+  /* ---- USER STATUS BAR ---- */
+  .user-status {
+    padding: 10px 16px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar-bar {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;
+    overflow: hidden; cursor: pointer; position: relative;
+  }
+  .user-avatar-bar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-avatar-bar .edit-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center; font-size: 12px;
+  }
+  .user-avatar-bar:hover .edit-overlay { display: flex; }
+  .user-info { flex: 1; min-width: 0; }
+  .user-info .name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-info .role { font-size: 11px; color: var(--text-muted); }
+  .icon-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 4px; border-radius: 4px; line-height: 1; }
+  .icon-btn:hover { color: var(--text-primary); }
+
+  /* ---- SEARCH BAR ---- */
+  #search-bar {
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    display: none;
+  }
+  #search-bar.show { display: block; }
+  #search-input {
+    width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-strong);
+    border-radius: 7px; padding: 7px 12px; color: var(--text-primary);
+    font-family: var(--font); font-size: 13px; outline: none;
+  }
+  #search-input:focus { border-color: var(--accent); }
+  #search-results { margin-top: 4px; max-height: 260px; overflow-y: auto; }
+  .search-result-item {
+    padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-result-item:hover { background: var(--bg-hover); }
+  .search-result-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+  .search-result-text mark { background: rgba(88,101,242,0.35); color: var(--text-primary); border-radius: 2px; padding: 0 2px; }
+
+  /* ---- MAIN ---- */
   #main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   #chat-header {
-    padding: 0 20px; height: 52px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    padding: 0 16px; height: 52px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
   }
   .chat-header-name { font-size: 15px; font-weight: 600; }
-  .chat-header-desc { font-size: 13px; color: var(--text-muted); margin-left: 6px; }
-  .header-divider { width: 1px; height: 20px; background: var(--border-strong); margin: 0 4px; }
-  #members-count { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+  .header-divider { width: 1px; height: 20px; background: var(--border-strong); }
+  #members-count { font-size: 13px; color: var(--text-muted); }
+  .tag-dm { font-size: 10px; background: rgba(240,165,0,0.15); color: var(--dm-color); border-radius: 4px; padding: 1px 5px; font-weight: 600; }
 
   /* ---- MESSAGES ---- */
   #messages-area {
-    flex: 1; overflow-y: auto; padding: 20px;
-    display: flex; flex-direction: column; gap: 2px;
+    flex: 1; overflow-y: auto; padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 1px;
   }
   #messages-area::-webkit-scrollbar { width: 6px; }
   #messages-area::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-  .msg-group { display: flex; gap: 12px; padding: 4px 0; }
-  .msg-group:hover { background: rgba(255,255,255,0.015); border-radius: 6px; margin: 0 -8px; padding: 4px 8px; }
+
+  .day-divider { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
+  .day-divider span { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .day-divider::before, .day-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .msg-group { display: flex; gap: 12px; padding: 3px 6px; border-radius: 6px; position: relative; }
+  .msg-group:hover { background: rgba(255,255,255,0.02); }
+  .msg-group.has-mention { background: var(--mention-bg); border-left: 2px solid var(--mention-border); padding-left: 10px; }
+  .msg-group.is-reply { background: var(--reply-bg); }
+
   .msg-avatar {
     width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;
-    margin-top: 2px;
+    margin-top: 2px; overflow: hidden; cursor: pointer;
   }
+  .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
   .msg-body { flex: 1; min-width: 0; }
-  .msg-meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; }
-  .msg-author { font-size: 14px; font-weight: 600; }
+  .msg-meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+  .msg-author { font-size: 14px; font-weight: 600; cursor: pointer; }
+  .msg-author:hover { text-decoration: underline; }
   .msg-time { font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
+  .msg-edited { font-size: 11px; color: var(--text-muted); font-style: italic; }
   .msg-text { font-size: 14px; line-height: 1.55; color: var(--text-primary); word-break: break-word; }
   .msg-text.system { color: var(--text-muted); font-style: italic; font-size: 13px; }
-  .msg-reactions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+  .msg-text strong { font-weight: 600; }
+  .msg-text em { font-style: italic; }
+  .msg-text code { font-family: var(--mono); font-size: 12px; background: var(--bg-tertiary); padding: 1px 5px; border-radius: 4px; color: #e8b86d; }
+  .mention-tag { background: var(--mention-bg); color: #a5b4fc; border-radius: 4px; padding: 0 4px; font-weight: 500; }
+  .mention-tag.self { background: rgba(88,101,242,0.3); color: #c7d2fe; }
+
+  /* reply preview */
+  .reply-preview {
+    display: flex; align-items: center; gap: 6px; padding: 4px 8px;
+    background: var(--bg-tertiary); border-left: 3px solid var(--border-strong);
+    border-radius: 0 6px 6px 0; margin-bottom: 4px; cursor: pointer;
+    font-size: 12px; color: var(--text-muted); max-width: 100%;
+  }
+  .reply-preview:hover { background: var(--bg-hover); }
+  .reply-preview .reply-author { font-weight: 600; margin-right: 4px; }
+  .reply-preview .reply-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+
+  /* hover actions */
+  .msg-actions {
+    position: absolute; right: 8px; top: -2px;
+    background: var(--bg-tertiary); border: 1px solid var(--border-strong);
+    border-radius: 8px; display: none; gap: 2px; padding: 3px;
+  }
+  .msg-group:hover .msg-actions { display: flex; }
+  .msg-action-btn {
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    width: 28px; height: 28px; border-radius: 5px; display: flex;
+    align-items: center; justify-content: center; font-size: 14px; transition: background 0.12s, color 0.12s;
+  }
+  .msg-action-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+  /* reactions */
+  .msg-reactions { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
   .reaction-btn {
     background: var(--bg-tertiary); border: 1px solid var(--border);
     border-radius: 12px; padding: 2px 8px; font-size: 13px; cursor: pointer;
@@ -160,12 +244,31 @@
   .reaction-btn.mine { background: var(--accent-light); border-color: var(--accent); color: var(--text-primary); }
   .reaction-count { font-size: 12px; font-family: var(--mono); }
 
+  /* inline edit */
+  .inline-edit-area {
+    width: 100%; background: var(--bg-tertiary); border: 1px solid var(--accent);
+    border-radius: 6px; padding: 6px 10px; color: var(--text-primary);
+    font-family: var(--font); font-size: 14px; outline: none; resize: none;
+    line-height: 1.5; margin-top: 2px;
+  }
+  .inline-edit-hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ---- REPLY BAR ---- */
+  #reply-bar {
+    display: none; padding: 6px 16px;
+    background: var(--bg-tertiary); border-top: 1px solid var(--border);
+    align-items: center; gap: 10px; font-size: 13px;
+  }
+  #reply-bar.show { display: flex; }
+  #reply-bar .reply-info { flex: 1; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #reply-bar .reply-info strong { color: var(--text-primary); }
+
   /* ---- EMOJI PICKER ---- */
   .emoji-popup {
-    position: absolute; bottom: 60px; right: 16px;
+    position: absolute; bottom: 60px; right: 46px;
     background: var(--bg-tertiary); border: 1px solid var(--border-strong);
     border-radius: 12px; padding: 10px; display: grid; grid-template-columns: repeat(8,36px);
-    gap: 4px; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    gap: 4px; z-index: 50;
   }
   .emoji-popup button {
     width: 36px; height: 36px; background: none; border: none; cursor: pointer;
@@ -173,13 +276,29 @@
   }
   .emoji-popup button:hover { background: var(--bg-hover); }
 
-  /* ---- INPUT ---- */
-  #input-area {
-    padding: 12px 20px 16px; flex-shrink: 0;
+  /* ---- MENTION AUTOCOMPLETE ---- */
+  #mention-popup {
+    position: absolute; bottom: 70px; left: 14px;
+    background: var(--bg-tertiary); border: 1px solid var(--border-strong);
+    border-radius: 8px; z-index: 60; min-width: 180px; overflow: hidden;
   }
+  .mention-item {
+    padding: 8px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    font-size: 13px; transition: background 0.12s;
+  }
+  .mention-item:hover, .mention-item.selected { background: var(--bg-active); }
+  .mention-avatar {
+    width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;
+    overflow: hidden;
+  }
+  .mention-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ---- INPUT ---- */
+  #input-area { padding: 8px 20px 14px; flex-shrink: 0; }
   .input-box {
     background: var(--bg-tertiary); border: 1px solid var(--border-strong);
-    border-radius: 10px; display: flex; align-items: flex-end; gap: 8px;
+    border-radius: 10px; display: flex; align-items: flex-end; gap: 6px;
     padding: 8px 8px 8px 14px; position: relative;
   }
   .input-box:focus-within { border-color: rgba(88,101,242,0.5); }
@@ -191,128 +310,84 @@
   #msg-input::placeholder { color: var(--text-muted); }
   .input-action {
     background: none; border: none; color: var(--text-muted); cursor: pointer;
-    width: 32px; height: 32px; border-radius: 6px; display: flex;
-    align-items: center; justify-content: center; font-size: 18px; transition: color 0.15s, background 0.15s;
-    flex-shrink: 0;
+    width: 30px; height: 30px; border-radius: 6px; display: flex;
+    align-items: center; justify-content: center; font-size: 17px;
+    transition: color 0.15s, background 0.15s; flex-shrink: 0;
   }
   .input-action:hover { color: var(--text-primary); background: var(--bg-hover); }
   #send-btn {
     background: var(--accent); border: none; color: #fff; cursor: pointer;
-    width: 32px; height: 32px; border-radius: 6px; display: flex;
-    align-items: center; justify-content: center; transition: background 0.15s;
-    flex-shrink: 0; font-size: 16px;
+    width: 30px; height: 30px; border-radius: 6px; display: flex;
+    align-items: center; justify-content: center; font-size: 15px;
+    transition: background 0.15s; flex-shrink: 0;
   }
   #send-btn:hover { background: var(--accent-hover); }
-  #send-btn:disabled { background: var(--bg-active); cursor: not-allowed; }
+  #typing-indicator { font-size: 12px; color: var(--text-muted); min-height: 17px; padding: 2px 20px 0; font-style: italic; }
 
-  /* ---- SHEETS STATUS ---- */
-  .sheets-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; color: var(--text-muted); margin-left: auto;
-  }
-  .sheets-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
-  .sheets-dot.ok { background: var(--success); }
-  .sheets-dot.err { background: var(--danger); }
-
-  /* ---- SETUP MODAL ---- */
-  #setup-modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .setup-box {
-    background: var(--bg-secondary); border: 1px solid var(--border-strong);
-    border-radius: 16px; padding: 32px 36px; width: 480px; max-width: 96vw; max-height: 90vh; overflow-y: auto;
-  }
-  .setup-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-  .setup-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
-  .setup-box ol { font-size: 13px; color: var(--text-secondary); padding-left: 20px; line-height: 2; margin-bottom: 20px; }
-  .setup-box input {
-    width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-strong);
-    border-radius: 8px; padding: 10px 14px; color: var(--text-primary);
-    font-family: var(--font); font-size: 13px; font-family: var(--mono); outline: none; margin-bottom: 10px;
-  }
-  .setup-box input:focus { border-color: var(--accent); }
-  .setup-btn {
-    background: var(--accent); border: none; border-radius: 8px; padding: 10px 20px;
-    color: #fff; font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; margin-right: 8px;
-  }
-  .setup-btn:hover { background: var(--accent-hover); }
-  .setup-btn.secondary { background: var(--bg-tertiary); color: var(--text-secondary); }
-  .setup-btn.secondary:hover { background: var(--bg-hover); }
-  code { font-family: var(--mono); font-size: 12px; background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
-
-  /* ---- NEW CHANNEL MODAL ---- */
-  #newchan-modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200;
+  /* ---- MODALS ---- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 200;
     display: none; align-items: center; justify-content: center;
   }
-  #newchan-modal.show { display: flex; }
-  .newchan-box {
+  .modal-overlay.show { display: flex; }
+  .modal-box {
     background: var(--bg-secondary); border: 1px solid var(--border-strong);
-    border-radius: 12px; padding: 24px 28px; width: 360px; max-width: 95vw;
+    border-radius: 14px; padding: 28px 32px; width: 420px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
   }
-  .newchan-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
-  .newchan-box input {
+  .modal-box h3 { font-size: 17px; font-weight: 600; margin-bottom: 18px; }
+  .modal-box label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; margin-top: 14px; }
+  .modal-box input[type=text], .modal-box input[type=url], .modal-box input[type=color] {
     width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-strong);
     border-radius: 8px; padding: 9px 12px; color: var(--text-primary);
-    font-family: var(--font); font-size: 14px; outline: none; margin-bottom: 12px;
+    font-family: var(--font); font-size: 14px; outline: none;
   }
-  .newchan-box input:focus { border-color: var(--accent); }
-  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
-  .btn-cancel { background: none; border: 1px solid var(--border-strong); border-radius: 8px; padding: 8px 16px; color: var(--text-secondary); cursor: pointer; font-family: var(--font); font-size: 13px; }
+  .modal-box input:focus { border-color: var(--accent); }
+  .modal-box input[type=color] { height: 40px; padding: 4px 6px; cursor: pointer; }
+  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+  .btn-cancel { background: none; border: 1px solid var(--border-strong); border-radius: 8px; padding: 8px 18px; color: var(--text-secondary); cursor: pointer; font-family: var(--font); font-size: 13px; }
   .btn-cancel:hover { background: var(--bg-hover); }
-  .btn-confirm { background: var(--accent); border: none; border-radius: 8px; padding: 8px 16px; color: #fff; cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 600; }
+  .btn-confirm { background: var(--accent); border: none; border-radius: 8px; padding: 8px 18px; color: #fff; cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 600; }
   .btn-confirm:hover { background: var(--accent-hover); }
+  .btn-danger { background: var(--danger); border: none; border-radius: 8px; padding: 8px 18px; color: #fff; cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 600; }
+  .btn-danger:hover { opacity: 0.85; }
 
-  .day-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
-  .day-divider span { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-  .day-divider::before, .day-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  /* profile modal */
+  .avatar-preview {
+    width: 72px; height: 72px; border-radius: 16px; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 600;
+    overflow: hidden; border: 2px solid var(--border-strong);
+  }
+  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-upload-btn {
+    display: block; text-align: center; background: var(--bg-tertiary); border: 1px dashed var(--border-strong);
+    border-radius: 8px; padding: 10px; cursor: pointer; font-size: 13px; color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .avatar-upload-btn:hover { background: var(--bg-hover); }
+  .color-row { display: flex; align-items: center; gap: 10px; }
+  .color-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+  .swatch {
+    width: 26px; height: 26px; border-radius: 6px; cursor: pointer;
+    border: 2px solid transparent; transition: border 0.15s, transform 0.1s;
+  }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch.active { border-color: #fff; }
 
-  #typing-indicator { font-size: 12px; color: var(--text-muted); min-height: 18px; padding: 0 20px 4px; font-style: italic; }
+  /* setup modal */
+  .setup-box { width: 500px; }
+  .setup-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+  .setup-box ol { font-size: 13px; color: var(--text-secondary); padding-left: 20px; line-height: 2.2; margin-bottom: 16px; }
+  code { font-family: var(--mono); font-size: 12px; background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
 
-  .tag-dm { font-size: 10px; background: rgba(240,165,0,0.15); color: var(--dm-color); border-radius: 4px; padding: 1px 5px; font-weight: 600; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
   .msg-group { animation: fadeIn 0.15s ease; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .loading-dot { animation: pulse 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .typing-dot { display: inline-block; animation: blink 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 </style>
 </head>
 <body>
-
-<!-- SETUP MODAL -->
-<div id="setup-modal">
-  <div class="setup-box">
-    <h2>⚙️ Configuração do Google Sheets</h2>
-    <p>Para salvar as mensagens na sua planilha, siga os passos abaixo:</p>
-    <ol>
-      <li>Crie uma planilha no <strong>Google Sheets</strong></li>
-      <li>Nomeie a aba de <code>mensagens</code></li>
-      <li>Crie um <strong>Google Apps Script</strong> com o código abaixo (botão)</li>
-      <li>Publique como Web App (qualquer pessoa, acesso anônimo)</li>
-      <li>Cole a URL gerada aqui abaixo</li>
-    </ol>
-    <div style="margin-bottom:12px;">
-      <button class="setup-btn" onclick="copyAppsScript()" style="font-size:12px;padding:7px 14px;">📋 Copiar código Apps Script</button>
-    </div>
-    <input id="sheets-url-input" type="url" placeholder="https://script.google.com/macros/s/SEU_ID/exec" />
-    <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;margin-top:-4px;">Deixe em branco para usar somente modo local (sem persistência).</p>
-    <button class="setup-btn" onclick="saveSetup()">Salvar e continuar</button>
-    <button class="setup-btn secondary" onclick="skipSetup()">Pular (modo local)</button>
-  </div>
-</div>
-
-<!-- NEW CHANNEL MODAL -->
-<div id="newchan-modal">
-  <div class="newchan-box">
-    <h3>➕ Novo Canal</h3>
-    <input id="newchan-input" placeholder="nome-do-canal" maxlength="32" />
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeNewChan()">Cancelar</button>
-      <button class="btn-confirm" onclick="createChannel()">Criar</button>
-    </div>
-  </div>
-</div>
 
 <!-- LOGIN -->
 <div id="login-screen">
@@ -331,6 +406,63 @@
   </div>
 </div>
 
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-box">
+    <h3>👤 Meu Perfil</h3>
+    <div class="avatar-preview" id="profile-preview"></div>
+    <label class="avatar-upload-btn" for="avatar-file-input">📷 Fazer upload de foto</label>
+    <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
+    <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-bottom:12px;">Ou cole uma URL de imagem abaixo</p>
+    <label>URL da foto (opcional)</label>
+    <input type="url" id="profile-avatar-url" placeholder="https://..." />
+    <label>Cor do nome</label>
+    <div class="color-row">
+      <div class="color-swatches" id="color-swatches"></div>
+      <input type="color" id="profile-color" style="width:40px;flex-shrink:0;" />
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('profile-modal')">Cancelar</button>
+      <button class="btn-confirm" onclick="saveProfile()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CHANNEL MODAL -->
+<div class="modal-overlay" id="newchan-modal">
+  <div class="modal-box" style="width:340px;">
+    <h3>➕ Novo Canal</h3>
+    <label>Nome do canal</label>
+    <input type="text" id="newchan-input" placeholder="nome-do-canal" maxlength="32" />
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('newchan-modal')">Cancelar</button>
+      <button class="btn-confirm" onclick="createChannel()">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setup-modal">
+  <div class="modal-box setup-box">
+    <h3>⚙️ Configuração do Google Sheets</h3>
+    <p>Para sincronizar mensagens entre os computadores via planilha:</p>
+    <ol>
+      <li>Crie uma planilha no <strong>Google Sheets</strong> com uma aba chamada <code>mensagens</code></li>
+      <li>Abra <strong>Extensões → Apps Script</strong> e cole o código</li>
+      <li>Publique como <strong>Web App</strong> (acesso: qualquer pessoa)</li>
+      <li>Cole a URL gerada abaixo</li>
+    </ol>
+    <button class="btn-confirm" onclick="copyAppsScript()" style="font-size:12px;padding:7px 14px;margin-bottom:14px;">📋 Copiar código Apps Script</button>
+    <label>URL do Web App</label>
+    <input type="url" id="sheets-url-input" placeholder="https://script.google.com/macros/s/SEU_ID/exec" />
+    <p style="font-size:12px;color:var(--text-muted);margin-top:6px;">Deixe em branco para modo local apenas.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('setup-modal')">Fechar</button>
+      <button class="btn-confirm" onclick="saveSetup()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MAIN APP -->
 <div id="app" style="display:none;flex:1;overflow:hidden;flex-direction:row;width:100%;">
 
@@ -338,35 +470,40 @@
   <div id="sidebar">
     <div class="sidebar-header">
       <span class="workspace-name">🏢 Equipe</span>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="sheets-badge" id="sheets-badge">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="sheets-badge">
           <div class="sheets-dot" id="sheets-dot"></div>
-          <span id="sheets-label">Sheets</span>
+          <span id="sheets-label">Local</span>
         </div>
-        <button class="logout-btn" style="font-size:12px;padding:4px 8px;" onclick="clearChatHistory()" title="Limpar histórico local">🗑️</button>
+        <button class="icon-btn" onclick="toggleSearch()" title="Buscar mensagens">🔍</button>
+        <button class="icon-btn" onclick="openModal('setup-modal')" title="Configurações">⚙️</button>
       </div>
+    </div>
+
+    <div id="search-bar">
+      <input type="text" id="search-input" placeholder="Buscar mensagens..." oninput="doSearch()" />
+      <div id="search-results"></div>
     </div>
 
     <div class="sidebar-section">
       <div class="section-label">
         Canais
-        <button onclick="openNewChan()" title="Novo canal">+</button>
+        <button onclick="openModal('newchan-modal')" title="Novo canal">+</button>
       </div>
       <div id="channels-list"></div>
-
-      <div class="section-label" style="margin-top:8px;">
-        Mensagens Diretas
-      </div>
+      <div class="section-label" style="margin-top:8px;">Mensagens Diretas</div>
       <div id="dm-list"></div>
     </div>
 
-    <div class="user-status" id="user-status-bar">
-      <div class="user-avatar" id="sidebar-avatar"></div>
+    <div class="user-status">
+      <div class="user-avatar-bar" id="sidebar-avatar" onclick="openProfileModal()" title="Editar perfil">
+        <div class="edit-overlay">✏️</div>
+      </div>
       <div class="user-info">
         <div class="name" id="sidebar-name"></div>
         <div class="role" id="sidebar-role"></div>
       </div>
-      <button class="logout-btn" onclick="doLogout()" title="Sair">⏏</button>
+      <button class="icon-btn" onclick="doLogout()" title="Sair">⏏</button>
     </div>
   </div>
 
@@ -377,118 +514,125 @@
       <span class="chat-header-name" id="header-name"></span>
       <div class="header-divider"></div>
       <div id="members-count"></div>
-      <button class="input-action" onclick="openSetupModal()" title="Configurações do Sheets" style="margin-left:auto;font-size:15px;">⚙️</button>
     </div>
 
     <div id="messages-area"></div>
     <div id="typing-indicator"></div>
-
+    <div id="reply-bar">
+      <span>↩️</span>
+      <span class="reply-info" id="reply-info"></span>
+      <button class="icon-btn" onclick="cancelReply()">✕</button>
+    </div>
     <div id="input-area">
       <div class="input-box" style="position:relative;">
         <textarea id="msg-input" rows="1" placeholder="Mensagem..."></textarea>
         <button class="input-action" onclick="toggleEmoji()" title="Emoji">😊</button>
         <button id="send-btn" onclick="sendMessage()" title="Enviar (Enter)">➤</button>
         <div class="emoji-popup" id="emoji-popup" style="display:none;"></div>
+        <div id="mention-popup" style="display:none;"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ===================== CONFIG =====================
-const USERS = {
-  "Chrys":    { pass: "123",  name: "Chrys",      role: "Administrador", color: "#5865f2" },
-  "Ryan":      { pass: "123",    name: "Ryan",   role: "Fiscal",        color: "#f0a500" },
-  "Lucas":   { pass: "123", name: "Lucas", role: "Societário",       color: "#3ba55d" },
-  "Jessica":  { pass: "123",    name: "Jessica",     role: "DP",    color: "#ed4245" },
-  "Martins":   { pass: "123", name: "Martins",      role: "Gestor",       color: "#9b59b6" },
+// ============================================================
+// CONFIG — edite aqui os usuários e a URL do Sheets
+// ============================================================
+const USERS_CONFIG = {
+  "Chrys":   { pass: "123", name: "Chrys",   role: "Administrador", color: "#5865f2" },
+  "Ryan":    { pass: "123", name: "Ryan",    role: "Fiscal",        color: "#f0a500" },
+  "Lucas":   { pass: "123", name: "Lucas",   role: "Societário",    color: "#3ba55d" },
+  "Jessica": { pass: "123", name: "Jessica", role: "DP",            color: "#ed4245" },
+  "Martins": { pass: "123", name: "Martins", role: "Gestor",        color: "#9b59b6" },
 };
-
-const DEFAULT_CHANNELS = ["geral", "avisos", "vendas", "suporte"];
-// Coloque aqui sua URL do Google Apps Script para não precisar digitar sempre.
-// Ex: https://script.google.com/macros/s/SEU_ID/exec
-const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyX9UIhU5ys-JXO99LNJjAvnh84ULwByNpPXqvB_CA0oDPl-1xqAZrseEYMq5EUUcFj/exec"; // <-- Cole sua URL aqui
+const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyX9UIhU5ys-JXO99LNJjAvnh84ULwByNpPXqvB_CA0oDPl-1xqAZrseEYMq5EUUcFj/exec";
+const DEFAULT_CHANNELS = ["geral", "avisos", "fiscal", "societario", "dp"];
 const EMOJIS = ["👍","❤️","😂","😮","😢","🎉","🔥","✅","❌","👀","💯","🙌","😎","🚀","💡","⚠️","📌","🙏","👋","💬","📦","🕐","✔️","❓"];
+const COLOR_SWATCHES_LIST = ["#5865f2","#f0a500","#3ba55d","#ed4245","#9b59b6","#e91e8c","#00bcd4","#ff7043","#26c6da","#8bc34a"];
+const STORAGE_USER_KEY = "chat_currentUser";
 
-// ===================== STATE ====
+// ============================================================
+// RUNTIME USERS — merges config with saved profile overrides
+// ============================================================
+let USERS = {};
+function loadUsers() {
+  USERS = {};
+  Object.keys(USERS_CONFIG).forEach(key => {
+    const saved = JSON.parse(localStorage.getItem("chat_profile_" + key) || "null");
+    USERS[key] = { ...USERS_CONFIG[key], avatar: "", ...(saved || {}) };
+  });
+}
+
+// ============================================================
+// STATE
+// ============================================================
 let currentUser = null;
 let currentChannel = "geral";
 let channels = [...DEFAULT_CHANNELS];
-let messages = {}; // {channel: [{id,author,text,time,reactions}]}
+let messages = {};
 let sheetsUrl = "";
 let sheetsSynced = false;
 let unreadCounts = {};
 let pollInterval = null;
-let lastSeen = {}; // {channel: lastMsgId}
-const STORAGE_USER_KEY = "chat_currentUser";
+let replyingTo = null;        // {id, author, text}
+let editingMsgId = null;
+let mentionQuery = null;
+let mentionSelectedIdx = 0;
+let typingTimeout = null;
+let lastTypingSent = 0;
 
-// ===================== INIT =====================
+// ============================================================
+// INIT
+// ============================================================
 window.onload = () => {
-  const saved = localStorage.getItem("chat_sheetsUrl");
-  if (saved) {
-    sheetsUrl = saved;
-  } else if (DEFAULT_SHEETS_URL) {
-    sheetsUrl = DEFAULT_SHEETS_URL;
-    localStorage.setItem("chat_sheetsUrl", sheetsUrl);
-  }
+  loadUsers();
+  const savedUrl = localStorage.getItem("chat_sheetsUrl");
+  sheetsUrl = savedUrl || DEFAULT_SHEETS_URL || "";
+  if (!savedUrl && sheetsUrl) localStorage.setItem("chat_sheetsUrl", sheetsUrl);
 
   const savedChannels = localStorage.getItem("chat_channels");
   if (savedChannels) channels = JSON.parse(savedChannels);
   loadLocalMessages();
   buildEmojiPicker();
+  buildColorSwatches();
+  document.getElementById("sheets-url-input").value = sheetsUrl;
 
-  const sheetInput = document.getElementById("sheets-url-input");
-  if (sheetInput) sheetInput.value = sheetsUrl;
-
-  // Enter to login
-  document.getElementById("login-pass").addEventListener("keydown", e => {
-    if (e.key === "Enter") doLogin();
-  });
-  // Enter to send
-  document.getElementById("msg-input").addEventListener("keydown", e => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-  // Auto-resize textarea
-  document.getElementById("msg-input").addEventListener("input", function() {
-    this.style.height = "auto";
-    this.style.height = Math.min(this.scrollHeight, 120) + "px";
-  });
-
-  // Close emoji on outside click
+  document.getElementById("login-pass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+  document.getElementById("msg-input").addEventListener("keydown", onInputKeydown);
+  document.getElementById("msg-input").addEventListener("input", onInputChange);
+  document.getElementById("newchan-input").addEventListener("keydown", e => { if (e.key === "Enter") createChannel(); });
   document.addEventListener("click", e => {
     if (!e.target.closest(".input-box")) {
       document.getElementById("emoji-popup").style.display = "none";
+      hideMentionPopup();
     }
   });
 
-  const storedUser = localStorage.getItem(STORAGE_USER_KEY);
-  if (storedUser) {
-    const parsed = JSON.parse(storedUser);
-    if (parsed && parsed.key && USERS[parsed.key]) {
+  // Auto-login
+  const stored = localStorage.getItem(STORAGE_USER_KEY);
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    if (parsed && USERS[parsed.key]) {
       currentUser = { key: parsed.key, ...USERS[parsed.key] };
       document.getElementById("login-screen").style.display = "none";
       document.getElementById("app").style.display = "flex";
       initApp();
     }
   }
-
-  if (!sheetsUrl) {
-    // Show setup on first load
-    // document.getElementById("setup-modal").style.display = "flex";
-  }
 };
 
-// ===================== LOGIN =====================
+// ============================================================
+// LOGIN / LOGOUT
+// ============================================================
 function doLogin() {
-  const rawUser = document.getElementById("login-user").value.trim();
-  const u = rawUser.toLowerCase();
-  const p = document.getElementById("login-pass").value.trim();
+  const raw = document.getElementById("login-user").value.trim();
+  const p   = document.getElementById("login-pass").value.trim();
   const err = document.getElementById("login-error");
-
-  const matchedKey = Object.keys(USERS).find(key => key.toLowerCase() === u);
-  if (matchedKey && USERS[matchedKey].pass === p) {
-    currentUser = { key: matchedKey, ...USERS[matchedKey] };
-    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify({ key: matchedKey }));
+  const key = Object.keys(USERS).find(k => k.toLowerCase() === raw.toLowerCase());
+  if (key && USERS[key].pass === p) {
+    currentUser = { key, ...USERS[key] };
+    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify({ key }));
     err.textContent = "";
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("app").style.display = "flex";
@@ -500,58 +644,60 @@ function doLogin() {
 }
 
 function doLogout() {
-  currentUser = null;
   clearInterval(pollInterval);
   localStorage.removeItem(STORAGE_USER_KEY);
+  currentUser = null;
   document.getElementById("login-screen").style.display = "flex";
   document.getElementById("app").style.display = "none";
   document.getElementById("login-user").value = "";
   document.getElementById("login-pass").value = "";
 }
 
-function clearChatHistory() {
-  if (!confirm("Tem certeza que deseja apagar o histórico local do chat?")) return;
-  localStorage.removeItem("chat_messages");
-  messages = {};
-  unreadCounts = {};
-  renderMessages();
-  scrollToBottom();
-  alert("Histórico local apagado. Se quiser, recarregue a página.");
-}
-
-// ===================== APP INIT =====================
+// ============================================================
+// APP INIT
+// ============================================================
 function initApp() {
-  // Sidebar user info
-  document.getElementById("sidebar-name").textContent = currentUser.name;
-  document.getElementById("sidebar-role").textContent = currentUser.role;
-  const av = document.getElementById("sidebar-avatar");
-  av.textContent = currentUser.name[0];
-  av.style.background = currentUser.color + "33";
-  av.style.color = currentUser.color;
-
+  loadUsers();
+  currentUser = { key: currentUser.key, ...USERS[currentUser.key] };
+  updateSidebarUser();
   renderSidebar();
-  selectChannel("geral");
+  selectChannel(currentChannel);
   updateSheetsStatus();
-
-  // Poll every 3s if sheets connected
   clearInterval(pollInterval);
   if (sheetsUrl) {
-    pollInterval = setInterval(fetchFromSheets, 3000);
     fetchFromSheets();
+    pollInterval = setInterval(fetchFromSheets, 3000);
+  }
+  // Request notification permission
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
   }
 }
 
-// ===================== SIDEBAR =====================
+function updateSidebarUser() {
+  document.getElementById("sidebar-name").textContent = currentUser.name;
+  document.getElementById("sidebar-role").textContent = currentUser.role;
+  const av = document.getElementById("sidebar-avatar");
+  if (currentUser.avatar) {
+    av.innerHTML = `<img src="${currentUser.avatar}" onerror="this.parentElement.textContent='${currentUser.name[0]}'" /><div class="edit-overlay">✏️</div>`;
+  } else {
+    av.innerHTML = `<span style="color:${currentUser.color};background:${currentUser.color}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:14px;font-weight:600;">${currentUser.name[0]}</span><div class="edit-overlay">✏️</div>`;
+  }
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
 function renderSidebar() {
   const cl = document.getElementById("channels-list");
   cl.innerHTML = "";
   channels.forEach(ch => {
-    const div = document.createElement("div");
-    div.className = "channel-item" + (ch === currentChannel ? " active" : "");
-    const ub = (unreadCounts[ch] || 0);
-    div.innerHTML = `<span class="prefix">#</span><span class="ch-name">${ch}</span>${ub > 0 ? `<span class="unread-badge">${ub}</span>` : ""}`;
-    div.onclick = () => selectChannel(ch);
-    cl.appendChild(div);
+    const ub = unreadCounts[ch] || 0;
+    const d = document.createElement("div");
+    d.className = "channel-item" + (ch === currentChannel ? " active" : "");
+    d.innerHTML = `<span style="font-size:15px;width:16px;text-align:center;">#</span><span class="ch-name">${ch}</span>${ub > 0 ? `<span class="unread-badge">${ub}</span>` : ""}`;
+    d.onclick = () => selectChannel(ch);
+    cl.appendChild(d);
   });
 
   const dl = document.getElementById("dm-list");
@@ -559,140 +705,214 @@ function renderSidebar() {
   Object.keys(USERS).forEach(key => {
     if (key === currentUser.key) return;
     const u = USERS[key];
-    const dmKey = dmChannel(currentUser.key, key);
-    const ub = (unreadCounts[dmKey] || 0);
-    const div = document.createElement("div");
-    div.className = "channel-item" + (currentChannel === dmKey ? " active" : "");
-    div.innerHTML = `
-      <span class="dm-dot online"></span>
+    const dmKey = makeDmKey(currentUser.key, key);
+    const ub = unreadCounts[dmKey] || 0;
+    const d = document.createElement("div");
+    d.className = "channel-item" + (currentChannel === dmKey ? " active" : "");
+    d.innerHTML = `${avatarHtml(u, 20, 5)}
       <span class="ch-name">${u.name}</span>
-      ${ub > 0 ? `<span class="unread-badge">${ub}</span>` : ""}
-    `;
-    div.onclick = () => selectChannel(dmKey);
-    dl.appendChild(div);
+      ${ub > 0 ? `<span class="unread-badge">${ub}</span>` : ""}`;
+    d.onclick = () => selectChannel(dmKey);
+    dl.appendChild(d);
   });
 }
 
-function dmChannel(a, b) {
-  return "dm_" + [a, b].sort().join("_");
+function avatarHtml(u, size=36, radius=8) {
+  if (u.avatar) {
+    return `<div style="width:${size}px;height:${size}px;border-radius:${radius}px;overflow:hidden;flex-shrink:0;">
+      <img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:${u.color};background:${u.color}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:${Math.floor(size*0.4)}px;font-weight:600;\\'>${u.name[0]}</span>'" />
+    </div>`;
+  }
+  return `<div style="width:${size}px;height:${size}px;border-radius:${radius}px;background:${u.color}22;color:${u.color};display:flex;align-items:center;justify-content:center;font-size:${Math.floor(size*0.4)}px;font-weight:600;flex-shrink:0;">${u.name[0]}</div>`;
 }
 
+function makeDmKey(a, b) { return "dm_" + [a, b].sort().join("__"); }
 function isDM(ch) { return ch.startsWith("dm_"); }
-
-function dmOtherUser(ch) {
-  const parts = ch.replace("dm_", "").split("_");
+function dmOtherKey(ch) {
+  const parts = ch.replace("dm_", "").split("__");
   return parts.find(k => k !== currentUser.key);
 }
 
-// ===================== CHANNEL SELECT =====================
+// ============================================================
+// CHANNEL SELECT
+// ============================================================
 function selectChannel(ch) {
   currentChannel = ch;
   unreadCounts[ch] = 0;
+  cancelReply();
   renderSidebar();
-
-  // Header
   if (isDM(ch)) {
-    const other = dmOtherUser(ch);
-    const u = USERS[other] || {};
+    const other = USERS[dmOtherKey(ch)] || {};
     document.getElementById("header-prefix").textContent = "💬";
-    document.getElementById("header-name").textContent = u.name || ch;
+    document.getElementById("header-name").textContent = other.name || ch;
     document.getElementById("members-count").innerHTML = `<span class="tag-dm">DM</span>`;
   } else {
     document.getElementById("header-prefix").textContent = "#";
     document.getElementById("header-name").textContent = ch;
-    document.getElementById("members-count").innerHTML = `👥 ${Object.keys(USERS).length} membros`;
+    document.getElementById("members-count").innerHTML = `👥 ${Object.keys(USERS).length}`;
   }
-  document.getElementById("msg-input").placeholder = isDM(ch) ? `Mensagem para ${USERS[dmOtherUser(ch)]?.name || ch}...` : `Mensagem em #${ch}...`;
-
+  const other = isDM(ch) ? USERS[dmOtherKey(ch)] : null;
+  document.getElementById("msg-input").placeholder = other ? `Mensagem para ${other.name}...` : `Mensagem em #${ch}...`;
   renderMessages();
   scrollToBottom();
 }
 
-// ===================== MESSAGES =====================
-function getMessages(ch) {
-  return messages[ch] || [];
-}
+// ============================================================
+// MESSAGES — RENDER
+// ============================================================
+function getMessages(ch) { return messages[ch] || []; }
 
 function renderMessages() {
   const area = document.getElementById("messages-area");
   const msgs = getMessages(currentChannel);
   area.innerHTML = "";
-
-  if (msgs.length === 0) {
-    area.innerHTML = `<div style="text-align:center;color:var(--text-muted);margin-top:40px;font-size:14px;">
-      ${isDM(currentChannel) ? "Início da conversa privada." : `Início do canal #${currentChannel}.`}
-      <br><span style="font-size:12px;margin-top:8px;display:block;">Diga olá! 👋</span>
-    </div>`;
+  if (!msgs.length) {
+    area.innerHTML = `<div style="text-align:center;color:var(--text-muted);margin-top:48px;font-size:14px;">
+      ${isDM(currentChannel) ? "Início da conversa." : `Início do canal #${currentChannel}.`}
+      <br><span style="font-size:12px;margin-top:6px;display:block;">Diga olá! 👋</span></div>`;
     return;
   }
-
   let lastDate = "";
   msgs.forEach((msg, idx) => {
     const d = new Date(msg.time);
-    const dateStr = d.toLocaleDateString("pt-BR");
-    if (dateStr !== lastDate) {
-      lastDate = dateStr;
+    const ds = d.toLocaleDateString("pt-BR");
+    if (ds !== lastDate) {
+      lastDate = ds;
       const div = document.createElement("div");
       div.className = "day-divider";
-      div.innerHTML = `<span>${isToday(d) ? "Hoje" : dateStr}</span>`;
+      div.innerHTML = `<span>${isToday(d) ? "Hoje" : ds}</span>`;
       area.appendChild(div);
     }
-
-    const prevMsg = msgs[idx - 1];
-    const sameAuthor = prevMsg && prevMsg.author === msg.author && (d - new Date(prevMsg.time)) < 300000;
-
-    const group = document.createElement("div");
-    group.className = "msg-group";
-    group.dataset.msgId = msg.id;
-
-    const user = USERS[msg.author] || { name: msg.author, color: "#888" };
-    const timeStr = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-
-    const reactionsHTML = buildReactions(msg);
-
-    group.innerHTML = `
-      <div class="msg-avatar" style="background:${user.color}22;color:${user.color};${sameAuthor ? "opacity:0;pointer-events:none;" : ""}">
-        ${user.name[0]}
-      </div>
-      <div class="msg-body">
-        ${!sameAuthor ? `<div class="msg-meta"><span class="msg-author" style="color:${user.color}">${user.name}</span><span class="msg-time">${timeStr}</span></div>` : ""}
-        <div class="msg-text${msg.isSystem ? " system" : ""}">${escHtml(msg.text)}</div>
-        ${reactionsHTML}
-      </div>
-    `;
-    area.appendChild(group);
+    area.appendChild(buildMsgEl(msg, idx, msgs));
   });
 }
 
-function buildReactions(msg) {
-  if (!msg.reactions || Object.keys(msg.reactions).length === 0) return "";
+function buildMsgEl(msg, idx, msgs) {
+  const prev = msgs[idx - 1];
+  const d = new Date(msg.time);
+  const sameAuthor = prev && prev.author === msg.author && !msg.replyTo && (d - new Date(prev.time)) < 300000;
+  const u = USERS[msg.author] || { name: msg.author, color: "#888", avatar: "" };
+  const timeStr = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const isMine = msg.author === currentUser.key;
+  const hasMention = msg.text && msg.text.includes("@" + currentUser.name);
+
+  const group = document.createElement("div");
+  group.className = "msg-group" + (hasMention ? " has-mention" : "") + (msg.replyTo ? " is-reply" : "");
+  group.dataset.msgId = msg.id;
+
+  // reply preview
+  let replyHTML = "";
+  if (msg.replyTo) {
+    const original = findMsgById(msg.replyTo);
+    if (original) {
+      const ou = USERS[original.author] || { name: original.author, color: "#888" };
+      replyHTML = `<div class="reply-preview" onclick="scrollToMsg('${original.id}')">
+        <span class="reply-author" style="color:${ou.color}">${ou.name}</span>
+        <span class="reply-text">${stripHtml(formatText(original.text)).substring(0,80)}</span>
+      </div>`;
+    }
+  }
+
+  // hover actions
+  let actionsHTML = `<div class="msg-actions">
+    <button class="msg-action-btn" onclick="startReply('${msg.id}')" title="Responder">↩️</button>
+    <button class="msg-action-btn" onclick="addQuickReaction('${msg.id}')" title="Reagir">😊</button>`;
+  if (isMine) {
+    actionsHTML += `<button class="msg-action-btn" onclick="startEdit('${msg.id}')" title="Editar">✏️</button>
+    <button class="msg-action-btn" onclick="deleteMsg('${msg.id}')" title="Excluir">🗑️</button>`;
+  }
+  actionsHTML += "</div>";
+
+  group.innerHTML = `
+    ${avatarHtml(u, 36, 8).replace('<div ', `<div style="cursor:pointer;margin-top:2px;" onclick="openDmWith('${msg.author}')" `)}
+    <div class="msg-body">
+      ${!sameAuthor ? `<div class="msg-meta">
+        <span class="msg-author" style="color:${u.color}" onclick="openDmWith('${msg.author}')">${u.name}</span>
+        <span class="msg-time">${timeStr}</span>
+        ${msg.edited ? `<span class="msg-edited">(editado)</span>` : ""}
+      </div>` : ""}
+      ${replyHTML}
+      <div class="msg-text${msg.isSystem ? " system" : ""}" id="msgtext_${msg.id}">${formatText(msg.text)}</div>
+      ${buildReactionsHTML(msg)}
+    </div>
+    ${actionsHTML}
+  `;
+  return group;
+}
+
+function findMsgById(id) {
+  for (const ch of Object.keys(messages)) {
+    const m = messages[ch].find(m => m.id === id);
+    if (m) return m;
+  }
+  return null;
+}
+
+function scrollToMsg(id) {
+  const el = document.querySelector(`[data-msg-id="${id}"]`);
+  if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.style.outline = "1px solid var(--accent)"; setTimeout(() => el.style.outline = "", 1500); }
+}
+
+function formatText(text) {
+  if (!text) return "";
+  let t = text
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g,"<strong>$1</strong>")
+    .replace(/_(.+?)_/g,"<em>$1</em>")
+    .replace(/`(.+?)`/g,"<code>$1</code>")
+    .replace(/\n/g,"<br>");
+  // mentions
+  Object.values(USERS).forEach(u => {
+    const cls = u.name === currentUser.name ? "mention-tag self" : "mention-tag";
+    t = t.replace(new RegExp("@" + escapeRegex(u.name), "g"), `<span class="${cls}" style="color:${u.color};">@${u.name}</span>`);
+  });
+  return t;
+}
+
+function stripHtml(html) { const d = document.createElement("div"); d.innerHTML = html; return d.textContent; }
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+function buildReactionsHTML(msg) {
+  if (!msg.reactions || !Object.keys(msg.reactions).length) return "";
   let html = '<div class="msg-reactions">';
-  Object.entries(msg.reactions).forEach(([emoji, users]) => {
-    if (users.length === 0) return;
+  Object.entries(msg.reactions).forEach(([em, users]) => {
+    if (!users.length) return;
     const mine = users.includes(currentUser.key) ? " mine" : "";
-    html += `<button class="reaction-btn${mine}" onclick="toggleReaction('${msg.id}','${emoji}')">
-      ${emoji} <span class="reaction-count">${users.length}</span>
-    </button>`;
+    html += `<button class="reaction-btn${mine}" onclick="toggleReaction('${msg.id}','${em}')" title="${users.map(k => USERS[k]?.name || k).join(", ")}">
+      ${em}<span class="reaction-count">${users.length}</span></button>`;
   });
-  html += "</div>";
-  return html;
+  return html + "</div>";
 }
 
-function isToday(d) {
-  const t = new Date();
-  return d.toDateString() === t.toDateString();
+// quick reaction picker
+function addQuickReaction(msgId) {
+  const quickEmojis = ["👍","❤️","😂","🎉","🔥","✅"];
+  const existing = document.getElementById("qr_" + msgId);
+  if (existing) { existing.remove(); return; }
+  const el = document.createElement("div");
+  el.id = "qr_" + msgId;
+  el.style.cssText = "position:absolute;right:8px;top:28px;background:var(--bg-tertiary);border:1px solid var(--border-strong);border-radius:10px;padding:6px;display:flex;gap:4px;z-index:40;";
+  quickEmojis.forEach(em => {
+    const btn = document.createElement("button");
+    btn.textContent = em; btn.style.cssText = "background:none;border:none;cursor:pointer;font-size:18px;border-radius:5px;padding:2px 4px;";
+    btn.onclick = (e) => { e.stopPropagation(); toggleReaction(msgId, em); el.remove(); };
+    el.appendChild(btn);
+  });
+  const group = document.querySelector(`[data-msg-id="${msgId}"]`);
+  if (group) { group.style.position = "relative"; group.appendChild(el); }
 }
 
-function escHtml(text) {
-  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
-}
+function isToday(d) { return d.toDateString() === new Date().toDateString(); }
 
 function scrollToBottom() {
   const area = document.getElementById("messages-area");
-  setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
+  setTimeout(() => { area.scrollTop = area.scrollHeight; }, 60);
 }
 
-// ===================== SEND =====================
+// ============================================================
+// SEND
+// ============================================================
 function sendMessage() {
   const input = document.getElementById("msg-input");
   const text = input.value.trim();
@@ -702,64 +922,135 @@ function sendMessage() {
     id: Date.now() + "_" + Math.random().toString(36).slice(2,6),
     channel: currentChannel,
     author: currentUser.key,
-    text: text,
+    text,
     time: new Date().toISOString(),
-    reactions: {}
+    reactions: {},
+    replyTo: replyingTo ? replyingTo.id : null,
+    edited: false,
   };
 
   addMessage(msg);
   input.value = "";
   input.style.height = "auto";
+  cancelReply();
   renderMessages();
   scrollToBottom();
   saveLocalMessages();
-
   if (sheetsUrl) sendToSheets(msg);
-
   playSound("send");
+  broadcastTyping(false);
 }
 
 function addMessage(msg) {
   if (!messages[msg.channel]) messages[msg.channel] = [];
-  // Avoid duplicates
   if (messages[msg.channel].find(m => m.id === msg.id)) return false;
   messages[msg.channel].push(msg);
-  // Unread for other channels
   if (msg.channel !== currentChannel && msg.author !== currentUser.key) {
     unreadCounts[msg.channel] = (unreadCounts[msg.channel] || 0) + 1;
     renderSidebar();
     playSound("receive");
+    sendBrowserNotif(msg);
   }
   return true;
 }
 
-// ===================== REACTIONS =====================
+// ============================================================
+// EDIT / DELETE
+// ============================================================
+function startEdit(msgId) {
+  const textEl = document.getElementById("msgtext_" + msgId);
+  if (!textEl) return;
+  const msg = findMsgById(msgId);
+  if (!msg) return;
+  editingMsgId = msgId;
+  const ta = document.createElement("textarea");
+  ta.className = "inline-edit-area"; ta.value = msg.text;
+  ta.rows = Math.max(1, (msg.text.match(/\n/g)||[]).length + 1);
+  const hint = document.createElement("div");
+  hint.className = "inline-edit-hint"; hint.textContent = "Enter para salvar · Esc para cancelar";
+  ta.onkeydown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); confirmEdit(msgId, ta.value.trim()); }
+    if (e.key === "Escape") { cancelEdit(msgId, textEl); }
+  };
+  textEl.replaceWith(ta);
+  ta.after(hint);
+  ta.focus();
+  ta.dataset.hintEl = "yes";
+  ta._hintEl = hint;
+}
+
+function confirmEdit(msgId, newText) {
+  if (!newText) return;
+  const msg = findMsgById(msgId);
+  if (!msg) return;
+  msg.text = newText; msg.edited = true;
+  saveLocalMessages();
+  if (sheetsUrl) sendToSheets({ ...msg, action: "editMessage" });
+  renderMessages();
+  scrollToBottom();
+  editingMsgId = null;
+}
+
+function cancelEdit(msgId, originalEl) {
+  const ta = document.querySelector(`[data-msg-id="${msgId}"] textarea.inline-edit-area`);
+  if (ta) {
+    if (ta._hintEl) ta._hintEl.remove();
+    ta.replaceWith(originalEl);
+  }
+  editingMsgId = null;
+}
+
+function deleteMsg(msgId) {
+  if (!confirm("Excluir esta mensagem?")) return;
+  messages[currentChannel] = (messages[currentChannel] || []).filter(m => m.id !== msgId);
+  saveLocalMessages();
+  if (sheetsUrl) fetch(sheetsUrl, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ action:"deleteMessage", id: msgId }) });
+  renderMessages();
+}
+
+// ============================================================
+// REPLY
+// ============================================================
+function startReply(msgId) {
+  const msg = findMsgById(msgId);
+  if (!msg) return;
+  replyingTo = msg;
+  const u = USERS[msg.author] || { name: msg.author };
+  const bar = document.getElementById("reply-bar");
+  document.getElementById("reply-info").innerHTML = `Respondendo a <strong style="color:${u.color || 'inherit'}">${u.name}</strong>: ${stripHtml(formatText(msg.text)).substring(0,60)}`;
+  bar.classList.add("show");
+  document.getElementById("msg-input").focus();
+}
+
+function cancelReply() {
+  replyingTo = null;
+  document.getElementById("reply-bar").classList.remove("show");
+}
+
+// ============================================================
+// REACTIONS
+// ============================================================
 function toggleReaction(msgId, emoji) {
-  const msgs = getMessages(currentChannel);
-  const msg = msgs.find(m => m.id === msgId);
+  const msg = findMsgById(msgId);
   if (!msg) return;
   if (!msg.reactions) msg.reactions = {};
   if (!msg.reactions[emoji]) msg.reactions[emoji] = [];
   const idx = msg.reactions[emoji].indexOf(currentUser.key);
   if (idx >= 0) msg.reactions[emoji].splice(idx, 1);
   else msg.reactions[emoji].push(currentUser.key);
-  renderMessages();
-  scrollToBottom();
   saveLocalMessages();
+  renderMessages();
 }
 
-// ===================== EMOJI =====================
+// ============================================================
+// EMOJI PICKER
+// ============================================================
 function buildEmojiPicker() {
   const picker = document.getElementById("emoji-popup");
   EMOJIS.forEach(em => {
     const btn = document.createElement("button");
     btn.textContent = em;
-    btn.onclick = () => {
-      const input = document.getElementById("msg-input");
-      input.value += em;
-      input.focus();
-      picker.style.display = "none";
-    };
+    btn.onclick = () => { document.getElementById("msg-input").value += em; document.getElementById("msg-input").focus(); picker.style.display = "none"; };
     picker.appendChild(btn);
   });
 }
@@ -769,7 +1060,234 @@ function toggleEmoji() {
   p.style.display = p.style.display === "none" ? "grid" : "none";
 }
 
-// ===================== SOUND =====================
+// ============================================================
+// MENTION AUTOCOMPLETE
+// ============================================================
+function onInputChange() {
+  // auto-resize
+  const ta = document.getElementById("msg-input");
+  ta.style.height = "auto";
+  ta.style.height = Math.min(ta.scrollHeight, 120) + "px";
+  // typing indicator
+  broadcastTyping(ta.value.length > 0);
+  // mention
+  const val = ta.value;
+  const cursor = ta.selectionStart;
+  const before = val.substring(0, cursor);
+  const match = before.match(/@(\w*)$/);
+  if (match) {
+    mentionQuery = match[1].toLowerCase();
+    showMentionPopup(mentionQuery);
+  } else {
+    hideMentionPopup();
+  }
+}
+
+function onInputKeydown(e) {
+  if (mentionQuery !== null) {
+    const items = getMentionCandidates(mentionQuery);
+    if (e.key === "ArrowDown") { e.preventDefault(); mentionSelectedIdx = Math.min(mentionSelectedIdx + 1, items.length - 1); renderMentionPopup(items); return; }
+    if (e.key === "ArrowUp")   { e.preventDefault(); mentionSelectedIdx = Math.max(mentionSelectedIdx - 1, 0); renderMentionPopup(items); return; }
+    if (e.key === "Enter" || e.key === "Tab") {
+      if (items.length) { e.preventDefault(); insertMention(items[mentionSelectedIdx]); return; }
+    }
+    if (e.key === "Escape") { hideMentionPopup(); return; }
+  }
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function getMentionCandidates(q) {
+  return Object.values(USERS).filter(u => u.name.toLowerCase().startsWith(q) && u.name !== currentUser.name);
+}
+
+function showMentionPopup(q) {
+  mentionSelectedIdx = 0;
+  const items = getMentionCandidates(q);
+  if (!items.length) { hideMentionPopup(); return; }
+  renderMentionPopup(items);
+  document.getElementById("mention-popup").style.display = "block";
+}
+
+function renderMentionPopup(items) {
+  const pop = document.getElementById("mention-popup");
+  pop.innerHTML = "";
+  items.forEach((u, i) => {
+    const d = document.createElement("div");
+    d.className = "mention-item" + (i === mentionSelectedIdx ? " selected" : "");
+    d.innerHTML = `${avatarHtml(u, 24, 6)}<span style="color:${u.color};font-weight:500;">${u.name}</span><span style="font-size:11px;color:var(--text-muted);margin-left:4px;">${u.role}</span>`;
+    d.onclick = () => insertMention(u);
+    pop.appendChild(d);
+  });
+}
+
+function hideMentionPopup() {
+  mentionQuery = null;
+  document.getElementById("mention-popup").style.display = "none";
+}
+
+function insertMention(u) {
+  const ta = document.getElementById("msg-input");
+  const val = ta.value;
+  const cursor = ta.selectionStart;
+  const before = val.substring(0, cursor);
+  const newBefore = before.replace(/@\w*$/, "@" + u.name + " ");
+  ta.value = newBefore + val.substring(cursor);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = newBefore.length;
+  hideMentionPopup();
+}
+
+// ============================================================
+// TYPING INDICATOR
+// ============================================================
+function broadcastTyping(isTyping) {
+  if (!sheetsUrl) return;
+  const now = Date.now();
+  if (isTyping && now - lastTypingSent < 2000) return;
+  lastTypingSent = now;
+  fetch(sheetsUrl, {
+    method: "POST", mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "typing", user: currentUser.key, userName: currentUser.name, channel: currentChannel, isTyping, ts: now })
+  }).catch(() => {});
+}
+
+function updateTypingIndicator(typingUsers) {
+  const el = document.getElementById("typing-indicator");
+  const names = typingUsers.filter(u => u !== currentUser.key);
+  if (!names.length) { el.innerHTML = ""; return; }
+  const displayNames = names.map(k => USERS[k]?.name || k);
+  el.innerHTML = displayNames.join(", ") + (names.length === 1 ? " está digitando" : " estão digitando") +
+    ` <span class="typing-dot">•</span><span class="typing-dot">•</span><span class="typing-dot">•</span>`;
+}
+
+// ============================================================
+// CHANNELS
+// ============================================================
+function createChannel() {
+  const name = document.getElementById("newchan-input").value.trim().toLowerCase().replace(/[^a-z0-9\-]/g,"");
+  if (!name || channels.includes(name)) { closeModal("newchan-modal"); return; }
+  channels.push(name);
+  localStorage.setItem("chat_channels", JSON.stringify(channels));
+  closeModal("newchan-modal");
+  renderSidebar();
+  selectChannel(name);
+}
+
+function openDmWith(userKey) {
+  if (userKey === currentUser.key) return;
+  selectChannel(makeDmKey(currentUser.key, userKey));
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function toggleSearch() {
+  const bar = document.getElementById("search-bar");
+  bar.classList.toggle("show");
+  if (bar.classList.contains("show")) document.getElementById("search-input").focus();
+  else document.getElementById("search-results").innerHTML = "";
+}
+
+function doSearch() {
+  const q = document.getElementById("search-input").value.trim().toLowerCase();
+  const res = document.getElementById("search-results");
+  if (!q) { res.innerHTML = ""; return; }
+  let results = [];
+  Object.entries(messages).forEach(([ch, msgs]) => {
+    msgs.forEach(m => {
+      if (m.text && m.text.toLowerCase().includes(q)) results.push({ ch, msg: m });
+    });
+  });
+  results = results.slice(-30).reverse();
+  if (!results.length) { res.innerHTML = `<div style="padding:8px;font-size:12px;color:var(--text-muted);">Nenhum resultado.</div>`; return; }
+  res.innerHTML = results.map(({ ch, msg }) => {
+    const u = USERS[msg.author] || { name: msg.author, color: "#888" };
+    const t = msg.text.replace(new RegExp(escapeRegex(q), "gi"), m => `<mark>${m}</mark>`);
+    const chLabel = isDM(ch) ? "DM" : "#" + ch;
+    return `<div class="search-result-item" onclick="jumpToSearch('${ch}','${msg.id}')">
+      <div class="search-result-meta" style="color:${u.color}">${u.name} · ${chLabel}</div>
+      <div class="search-result-text">${t.substring(0,120)}</div>
+    </div>`;
+  }).join("");
+}
+
+function jumpToSearch(ch, msgId) {
+  selectChannel(ch);
+  setTimeout(() => scrollToMsg(msgId), 150);
+  toggleSearch();
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+function openProfileModal() {
+  loadUsers();
+  const u = USERS[currentUser.key];
+  document.getElementById("profile-avatar-url").value = u.avatar || "";
+  document.getElementById("profile-color").value = u.color || "#5865f2";
+  // preview
+  const prev = document.getElementById("profile-preview");
+  if (u.avatar) prev.innerHTML = `<img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />`;
+  else { prev.style.background = u.color + "33"; prev.style.color = u.color; prev.textContent = u.name[0]; }
+  // mark active swatch
+  document.querySelectorAll(".swatch").forEach(s => s.classList.toggle("active", s.dataset.color === u.color));
+  openModal("profile-modal");
+}
+
+function buildColorSwatches() {
+  const container = document.getElementById("color-swatches");
+  COLOR_SWATCHES_LIST.forEach(c => {
+    const s = document.createElement("div");
+    s.className = "swatch"; s.dataset.color = c;
+    s.style.background = c;
+    s.onclick = () => {
+      document.getElementById("profile-color").value = c;
+      document.querySelectorAll(".swatch").forEach(x => x.classList.toggle("active", x.dataset.color === c));
+    };
+    container.appendChild(s);
+  });
+}
+
+function handleAvatarUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById("profile-avatar-url").value = ev.target.result;
+    const prev = document.getElementById("profile-preview");
+    prev.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveProfile() {
+  const avatarUrl = document.getElementById("profile-avatar-url").value.trim();
+  const color = document.getElementById("profile-color").value;
+  const profile = { avatar: avatarUrl, color };
+  localStorage.setItem("chat_profile_" + currentUser.key, JSON.stringify(profile));
+  loadUsers();
+  currentUser = { key: currentUser.key, ...USERS[currentUser.key] };
+  updateSidebarUser();
+  closeModal("profile-modal");
+  renderSidebar();
+  renderMessages();
+}
+
+// ============================================================
+// BROWSER NOTIFICATIONS
+// ============================================================
+function sendBrowserNotif(msg) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  if (document.visibilityState === "visible") return;
+  const u = USERS[msg.author] || { name: msg.author };
+  const chLabel = isDM(msg.channel) ? `DM de ${u.name}` : `#${msg.channel}`;
+  new Notification(chLabel, { body: `${u.name}: ${msg.text.substring(0,80)}`, icon: u.avatar || undefined });
+}
+
+// ============================================================
+// SOUND
+// ============================================================
 function playSound(type) {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -777,60 +1295,39 @@ function playSound(type) {
     const gain = ctx.createGain();
     osc.connect(gain); gain.connect(ctx.destination);
     if (type === "send") {
-      osc.frequency.value = 880; gain.gain.value = 0.05;
-      osc.start(); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-      osc.stop(ctx.currentTime + 0.15);
+      osc.frequency.value = 880; gain.gain.value = 0.04;
+      osc.start(); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.stop(ctx.currentTime + 0.12);
     } else {
-      osc.frequency.value = 660; gain.gain.value = 0.07;
+      osc.frequency.value = 660; gain.gain.value = 0.06;
       osc.start(); osc.frequency.setValueAtTime(880, ctx.currentTime + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-      osc.stop(ctx.currentTime + 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+      osc.stop(ctx.currentTime + 0.22);
     }
   } catch(e) {}
 }
 
-// ===================== CHANNELS =====================
-function openNewChan() { document.getElementById("newchan-modal").classList.add("show"); document.getElementById("newchan-input").value = ""; document.getElementById("newchan-input").focus(); }
-function closeNewChan() { document.getElementById("newchan-modal").classList.remove("show"); }
-function createChannel() {
-  const name = document.getElementById("newchan-input").value.trim().toLowerCase().replace(/[^a-z0-9\-]/g,"");
-  if (!name || channels.includes(name)) { closeNewChan(); return; }
-  channels.push(name);
-  localStorage.setItem("chat_channels", JSON.stringify(channels));
-  closeNewChan();
-  renderSidebar();
-  selectChannel(name);
-}
-document.getElementById("newchan-input") && document.getElementById("newchan-input").addEventListener("keydown", e => { if (e.key === "Enter") createChannel(); });
+// ============================================================
+// LOCAL STORAGE
+// ============================================================
+function saveLocalMessages() { localStorage.setItem("chat_messages", JSON.stringify(messages)); }
+function loadLocalMessages() { const s = localStorage.getItem("chat_messages"); if (s) messages = JSON.parse(s); }
 
-// ===================== LOCAL STORAGE =====================
-function saveLocalMessages() {
-  localStorage.setItem("chat_messages", JSON.stringify(messages));
-}
-
-function loadLocalMessages() {
-  const saved = localStorage.getItem("chat_messages");
-  if (saved) messages = JSON.parse(saved);
-}
-
-// ===================== GOOGLE SHEETS =====================
+// ============================================================
+// GOOGLE SHEETS
+// ============================================================
 function updateSheetsStatus() {
   const dot = document.getElementById("sheets-dot");
-  const label = document.getElementById("sheets-label");
-  if (!sheetsUrl) { dot.className = "sheets-dot"; label.textContent = "Local"; return; }
-  if (sheetsSynced) { dot.className = "sheets-dot ok"; label.textContent = "Sincronizado"; }
-  else { dot.className = "sheets-dot err"; label.textContent = "Sheets offline"; }
+  const lbl = document.getElementById("sheets-label");
+  if (!sheetsUrl) { dot.className = "sheets-dot"; lbl.textContent = "Local"; return; }
+  dot.className = "sheets-dot " + (sheetsSynced ? "ok" : "err");
+  lbl.textContent = sheetsSynced ? "Sync" : "Offline";
 }
 
 async function sendToSheets(msg) {
   if (!sheetsUrl) return;
   try {
-    await fetch(sheetsUrl, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "addMessage", ...msg })
-    });
+    await fetch(sheetsUrl, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ action:"addMessage", ...msg }) });
     sheetsSynced = true; updateSheetsStatus();
   } catch(e) { sheetsSynced = false; updateSheetsStatus(); }
 }
@@ -838,84 +1335,99 @@ async function sendToSheets(msg) {
 async function fetchFromSheets() {
   if (!sheetsUrl) return;
   try {
-    const res = await fetch(sheetsUrl + "?action=getMessages");
+    const res = await fetch(sheetsUrl + "?action=getMessages&t=" + Date.now());
     const data = await res.json();
     if (data && data.messages) {
       let hasNew = false;
-      data.messages.forEach(msg => {
-        if (addMessage(msg)) hasNew = true;
-      });
-      if (hasNew) {
-        saveLocalMessages();
-        renderMessages();
-        renderSidebar();
-        scrollToBottom();
-      }
+      data.messages.forEach(msg => { if (addMessage(msg)) hasNew = true; });
+      if (hasNew) { saveLocalMessages(); renderMessages(); renderSidebar(); scrollToBottom(); }
+      // typing
+      if (data.typing) updateTypingIndicator(data.typing.filter(t => t.channel === currentChannel && t.user !== currentUser.key && Date.now() - t.ts < 4000).map(t => t.user));
       sheetsSynced = true; updateSheetsStatus();
     }
   } catch(e) { sheetsSynced = false; updateSheetsStatus(); }
 }
 
-// ===================== SETUP MODAL =====================
-function openSetupModal() { document.getElementById("setup-modal").style.display = "flex"; }
-
+// ============================================================
+// SETUP
+// ============================================================
 function saveSetup() {
   sheetsUrl = document.getElementById("sheets-url-input").value.trim();
   localStorage.setItem("chat_sheetsUrl", sheetsUrl);
-  document.getElementById("setup-modal").style.display = "none";
+  closeModal("setup-modal");
   updateSheetsStatus();
-  if (sheetsUrl) {
-    clearInterval(pollInterval);
-    pollInterval = setInterval(fetchFromSheets, 3000);
-    fetchFromSheets();
-  }
-}
-
-function skipSetup() {
-  document.getElementById("setup-modal").style.display = "none";
-  updateSheetsStatus();
+  clearInterval(pollInterval);
+  if (sheetsUrl) { fetchFromSheets(); pollInterval = setInterval(fetchFromSheets, 3000); }
 }
 
 function copyAppsScript() {
-  const code = `// Cole este código no Google Apps Script e publique como Web App
-// Planilha deve ter uma aba chamada "mensagens"
+  const code = `// Google Apps Script — cole e publique como Web App
+// A planilha deve ter abas: "mensagens" e "typing"
 
 function doGet(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("mensagens");
-  const data = sheet.getDataRange().getValues();
-  const messages = [];
-  for (let i = 1; i < data.length; i++) {
-    if (!data[i][0]) continue;
-    let reactions = {};
-    try { reactions = JSON.parse(data[i][5] || "{}"); } catch(e) {}
-    messages.push({
-      id: data[i][0], channel: data[i][1], author: data[i][2],
-      text: data[i][3], time: data[i][4], reactions: reactions
-    });
+  const action = e.parameter.action;
+  if (action === 'getMessages') {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName('mensagens');
+    const data = sheet.getDataRange().getValues();
+    const messages = [];
+    for (let i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      let reactions = {}; try { reactions = JSON.parse(data[i][5] || '{}'); } catch(e) {}
+      messages.push({ id:data[i][0], channel:data[i][1], author:data[i][2], text:data[i][3], time:data[i][4], reactions, replyTo:data[i][6]||null, edited:data[i][7]||false });
+    }
+    let typing = [];
+    try {
+      const ts = ss.getSheetByName('typing');
+      const td = ts.getDataRange().getValues();
+      for (let i = 1; i < td.length; i++) {
+        if (td[i][0] && td[i][3] && Date.now() - parseInt(td[i][3]) < 5000) {
+          typing.push({ user:td[i][0], userName:td[i][1], channel:td[i][2], ts:parseInt(td[i][3]) });
+        }
+      }
+    } catch(e) {}
+    return ContentService.createTextOutput(JSON.stringify({messages, typing})).setMimeType(ContentService.MimeType.JSON);
   }
-  return ContentService.createTextOutput(JSON.stringify({messages}))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput('{}').setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
-  const payload = JSON.parse(e.postData.contents);
-  if (payload.action === "addMessage") {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("mensagens");
+  const p = JSON.parse(e.postData.contents);
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (p.action === 'addMessage') {
+    const sheet = ss.getSheetByName('mensagens');
     const rows = sheet.getDataRange().getValues();
-    for (let i = 1; i < rows.length; i++) {
-      if (rows[i][0] === payload.id) return ContentService.createTextOutput("duplicate");
-    }
-    sheet.appendRow([
-      payload.id, payload.channel, payload.author,
-      payload.text, payload.time, JSON.stringify(payload.reactions || {})
-    ]);
+    for (let i = 1; i < rows.length; i++) { if (rows[i][0] === p.id) return ok(); }
+    sheet.appendRow([p.id, p.channel, p.author, p.text, p.time, JSON.stringify(p.reactions||{}), p.replyTo||'', p.edited||false]);
   }
-  return ContentService.createTextOutput("ok");
-}`;
-  navigator.clipboard.writeText(code).then(() => {
-    alert("Código copiado! Cole no Google Apps Script.");
-  });
+  if (p.action === 'editMessage') {
+    const sheet = ss.getSheetByName('mensagens');
+    const rows = sheet.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) { if (rows[i][0] === p.id) { sheet.getRange(i+1,4).setValue(p.text); sheet.getRange(i+1,8).setValue(true); break; } }
+  }
+  if (p.action === 'deleteMessage') {
+    const sheet = ss.getSheetByName('mensagens');
+    const rows = sheet.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) { if (rows[i][0] === p.id) { sheet.deleteRow(i+1); break; } }
+  }
+  if (p.action === 'typing') {
+    const ts = ss.getSheetByName('typing');
+    const rows = ts.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) { if (rows[i][0] === p.user) { ts.getRange(i+1,1,1,4).setValues([[p.user, p.userName, p.channel, p.ts]]); return ok(); } }
+    ts.appendRow([p.user, p.userName, p.channel, p.ts]);
+  }
+  return ok();
 }
+function ok() { return ContentService.createTextOutput('ok'); }`;
+  navigator.clipboard.writeText(code).then(() => alert("Código copiado! Cole no Apps Script.\n\nLembre-se de criar também a aba 'typing' na planilha."));
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add("show"); }
+function closeModal(id) { document.getElementById(id).classList.remove("show"); }
+document.addEventListener("keydown", e => { if (e.key === "Escape") document.querySelectorAll(".modal-overlay.show").forEach(m => m.classList.remove("show")); });
 </script>
 </body>
 </html>
