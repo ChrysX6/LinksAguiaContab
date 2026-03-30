@@ -1520,8 +1520,17 @@ function handleAvatarUpload(e) {
 
 function saveProfile() {
   const avatar = document.getElementById("profile-avatar-url").value.trim();
-  const color = document.getElementById("profile-color").value;
+  const color  = document.getElementById("profile-color").value;
+  // 1. Salvar localmente
   localStorage.setItem("chat_profile_" + currentUser.key, JSON.stringify({ avatar, color }));
+  // 2. Sincronizar no Sheets para todos verem
+  if (sheetsUrl) {
+    fetch(sheetsUrl, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "saveProfile", user: currentUser.key, color, avatar })
+    }).catch(() => {});
+  }
   loadUsers();
   currentUser = { key: currentUser.key, ...USERS[currentUser.key] };
   updateSidebarUser();
@@ -1657,6 +1666,19 @@ async function fetchFromSheets() {
       if (data.online) {
         Object.entries(data.online).forEach(([key, ts]) => { onlineUsers[key] = ts; });
         renderSidebar();
+      }
+      // Sincronizar perfis de outros usuários (cor e foto)
+      if (data.profiles) {
+        let profilesChanged = false;
+        Object.entries(data.profiles).forEach(([key, profile]) => {
+          if (key === currentUser.key) return; // não sobrescreve perfil local próprio
+          const local = JSON.parse(localStorage.getItem("chat_profile_" + key) || "null");
+          if (!local || local.color !== profile.color || local.avatar !== profile.avatar) {
+            localStorage.setItem("chat_profile_" + key, JSON.stringify({ color: profile.color, avatar: profile.avatar }));
+            profilesChanged = true;
+          }
+        });
+        if (profilesChanged) { loadUsers(); renderSidebar(); renderMessages(); }
       }
       sheetsSynced = true; updateSheetsStatus();
     }
