@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chat Interno</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="shortcut icon" href="img/lulinha.PNG" type="image/x-icon">
 <style>
   :root {
     --bg-primary: #1a1d23;
@@ -1178,7 +1177,7 @@ function deleteMsg(msgId) {
     localStorage.setItem("chat_pinned", JSON.stringify(pinnedMessages));
   }
   saveLocalMessages();
-  if (sheetsUrl) fetch(sheetsUrl, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ action:"deleteMessage", id: msgId }) }).catch(()=>{});
+  if (sheetsUrl) fetch(sheetsUrl, { method:"POST", headers:{"Content-Type":"text/plain"}, redirect:"follow", body: JSON.stringify({ action:"deleteMessage", id: msgId }) }).catch(()=>{});
   renderMessages();
   updatePinnedBar();
 }
@@ -1437,8 +1436,8 @@ function broadcastTyping(isTyping) {
   if (isTyping && now - lastTypingSent < 2000) return;
   lastTypingSent = now;
   fetch(sheetsUrl, {
-    method: "POST", mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
+    method: "POST", redirect: "follow",
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({ action:"typing", user:currentUser.key, userName:currentUser.name, channel:currentChannel, isTyping, ts:now })
   }).catch(()=>{});
 }
@@ -1512,9 +1511,25 @@ function handleAvatarUpload(e) {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    const url = ev.target.result;
-    document.getElementById("profile-avatar-url").value = url;
-    document.getElementById("profile-preview").innerHTML = `<img src="${url}" style="width:72px;height:72px;object-fit:cover;border-radius:14px;">`;
+    const img = new Image();
+    img.onload = () => {
+      // Redimensiona para 80x80px máximo — suficiente para avatar, cabe no Sheets (~8kb)
+      const SIZE = 80;
+      const canvas = document.createElement("canvas");
+      canvas.width = SIZE; canvas.height = SIZE;
+      const ctx = canvas.getContext("2d");
+      // Recorte centralizado (crop quadrado)
+      const side = Math.min(img.width, img.height);
+      const sx = (img.width  - side) / 2;
+      const sy = (img.height - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+      // Qualidade 0.7 → ~6-10kb
+      const compressed = canvas.toDataURL("image/jpeg", 0.7);
+      document.getElementById("profile-avatar-url").value = compressed;
+      document.getElementById("profile-preview").innerHTML =
+        `<img src="${compressed}" style="width:72px;height:72px;object-fit:cover;border-radius:14px;">`;
+    };
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -1522,16 +1537,25 @@ function handleAvatarUpload(e) {
 function saveProfile() {
   const avatar = document.getElementById("profile-avatar-url").value.trim();
   const color  = document.getElementById("profile-color").value;
+
+  // Aviso se a foto ainda for grande demais (ex: URL externa muito longa ou base64 antigo)
+  if (avatar.length > 50000) {
+    alert("⚠️ A foto é grande demais para sincronizar com o Sheets.\nUse uma URL externa (ex: link do Google Drive/Imgur) ou faça upload de uma imagem pelo botão acima.");
+    return;
+  }
+
   // 1. Salvar localmente
   localStorage.setItem("chat_profile_" + currentUser.key, JSON.stringify({ avatar, color }));
+
   // 2. Sincronizar no Sheets para todos verem
   if (sheetsUrl) {
     fetch(sheetsUrl, {
-      method: "POST", mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
+      method: "POST", redirect: "follow",
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ action: "saveProfile", user: currentUser.key, color, avatar })
     }).catch(() => {});
   }
+
   loadUsers();
   currentUser = { key: currentUser.key, ...USERS[currentUser.key] };
   updateSidebarUser();
@@ -1645,7 +1669,7 @@ function updateSheetsStatus() {
 async function sendToSheets(msg) {
   if (!sheetsUrl) return;
   try {
-    await fetch(sheetsUrl, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ action:"addMessage", ...msg }) });
+    await fetch(sheetsUrl, { method:"POST", headers:{"Content-Type":"text/plain"}, redirect:"follow", body: JSON.stringify({ action:"addMessage", ...msg }) });
     sheetsSynced = true; updateSheetsStatus();
   } catch(e) { sheetsSynced = false; updateSheetsStatus(); }
 }
@@ -1653,7 +1677,8 @@ async function sendToSheets(msg) {
 async function fetchFromSheets() {
   if (!sheetsUrl) return;
   try {
-    const res = await fetch(sheetsUrl + "?action=getMessages&t=" + Date.now());
+    const res = await fetch(sheetsUrl + "?action=getMessages&t=" + Date.now(), { redirect: "follow", cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     if (data && data.messages) {
       let hasNew = false;
@@ -1699,11 +1724,13 @@ function saveSetup() {
 // APPS SCRIPT CODE
 // ============================================================
 function copyAppsScript() {
-  const code = `// Google Apps Script para Chat Interno
-// Crie abas na planilha: "mensagens" e "typing"
+  const code = `// Google Apps Script — Chat Interno (versão completa)
+// Crie 3 abas na planilha: "mensagens", "typing", "profiles"
 
 function doGet(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // Mensagens
   const sheet = ss.getSheetByName('mensagens');
   const data = sheet.getDataRange().getValues();
   const messages = [];
@@ -1717,6 +1744,8 @@ function doGet(e) {
       replyTo: data[i][6] || null, edited: data[i][7] || false
     });
   }
+
+  // Typing
   let typing = [];
   try {
     const ts = ss.getSheetByName('typing');
@@ -1729,14 +1758,27 @@ function doGet(e) {
       }
     }
   } catch(e) {}
+
+  // Profiles (foto + cor de cada usuário)
+  let profiles = {};
+  try {
+    const ps = ss.getSheetByName('profiles');
+    const pd = ps.getDataRange().getValues();
+    for (let i = 1; i < pd.length; i++) {
+      if (!pd[i][0]) continue;
+      profiles[pd[i][0]] = { color: pd[i][1] || '', avatar: pd[i][2] || '' };
+    }
+  } catch(e) {}
+
   return ContentService
-    .createTextOutput(JSON.stringify({ messages, typing }))
+    .createTextOutput(JSON.stringify({ messages, typing, profiles }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
   const p = JSON.parse(e.postData.contents);
   const ss = SpreadsheetApp.getActiveSpreadsheet();
+
   if (p.action === 'addMessage') {
     const sheet = ss.getSheetByName('mensagens');
     const rows = sheet.getDataRange().getValues();
@@ -1746,6 +1788,7 @@ function doPost(e) {
     sheet.appendRow([p.id, p.channel, p.author, p.text, p.time,
       JSON.stringify(p.reactions || {}), p.replyTo || '', p.edited || false]);
   }
+
   if (p.action === 'editMessage') {
     const sheet = ss.getSheetByName('mensagens');
     const rows = sheet.getDataRange().getValues();
@@ -1757,6 +1800,7 @@ function doPost(e) {
       }
     }
   }
+
   if (p.action === 'deleteMessage') {
     const sheet = ss.getSheetByName('mensagens');
     const rows = sheet.getDataRange().getValues();
@@ -1764,6 +1808,7 @@ function doPost(e) {
       if (rows[i][0] === p.id) { sheet.deleteRow(i + 1); break; }
     }
   }
+
   if (p.action === 'typing') {
     const ts = ss.getSheetByName('typing');
     const rows = ts.getDataRange().getValues();
@@ -1775,12 +1820,27 @@ function doPost(e) {
     }
     ts.appendRow([p.user, p.userName, p.channel, p.ts]);
   }
+
+  // Salvar perfil (foto comprimida + cor)
+  if (p.action === 'saveProfile') {
+    const ps = ss.getSheetByName('profiles');
+    const rows = ps.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) {
+      if (rows[i][0] === p.user) {
+        ps.getRange(i+1, 2).setValue(p.color || '');
+        ps.getRange(i+1, 3).setValue(p.avatar || '');
+        return ok();
+      }
+    }
+    ps.appendRow([p.user, p.color || '', p.avatar || '']);
+  }
+
   return ok();
 }
 
 function ok() { return ContentService.createTextOutput('ok'); }`;
   navigator.clipboard.writeText(code).then(() =>
-    alert("Código copiado!\n\nLembre-se de criar as abas 'mensagens' e 'typing' na planilha antes de publicar.")
+    alert("Código copiado!\n\n✅ Próximos passos:\n1. Apague o código antigo do Apps Script\n2. Cole este novo código\n3. Clique em Implantar → Nova implantação\n4. Tipo: Web App, acesso: Qualquer pessoa\n5. Crie a aba 'profiles' na planilha (além de 'mensagens' e 'typing')")
   );
 }
 
