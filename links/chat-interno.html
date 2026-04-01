@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chat Interno</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="shortcut icon" href="img/lulinha.PNG" type="image/x-icon">
 <style>
   :root {
     --bg-primary: #1a1d23;
@@ -1675,20 +1674,13 @@ async function sendToSheets(msg) {
   } catch(e) { sheetsSynced = false; updateSheetsStatus(); }
 }
 
-// JSONP — único método 100% confiável para Apps Script sem CORS
-function fetchFromSheets() {
+async function fetchFromSheets() {
   if (!sheetsUrl) return;
-  const cbName = "gsCallback_" + Date.now();
-  const script = document.createElement("script");
-  const timeout = setTimeout(() => {
-    script.remove(); delete window[cbName];
-    sheetsSynced = false; updateSheetsStatus();
-  }, 8000);
-
-  window[cbName] = (data) => {
-    clearTimeout(timeout); script.remove(); delete window[cbName];
-    try {
-      if (!data || !data.messages) return;
+  try {
+    const res = await fetch(sheetsUrl + "?action=getMessages&t=" + Date.now(), { redirect: "follow", cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (data && data.messages) {
       let hasNew = false;
       data.messages.forEach(msg => { if (addMessage(msg)) hasNew = true; });
       if (hasNew) { saveLocalMessages(); renderMessages(); renderSidebar(); }
@@ -1697,10 +1689,15 @@ function fetchFromSheets() {
           data.typing.filter(t => t.channel === currentChannel && t.user !== currentUser.key && Date.now() - t.ts < 4000).map(t => t.user)
         );
       }
+      if (data.online) {
+        Object.entries(data.online).forEach(([key, ts]) => { onlineUsers[key] = ts; });
+        renderSidebar();
+      }
+      // Sincronizar perfis de outros usuários (cor e foto)
       if (data.profiles) {
         let profilesChanged = false;
         Object.entries(data.profiles).forEach(([key, profile]) => {
-          if (key === currentUser.key) return;
+          if (key === currentUser.key) return; // não sobrescreve perfil local próprio
           const local = JSON.parse(localStorage.getItem("chat_profile_" + key) || "null");
           if (!local || local.color !== profile.color || local.avatar !== profile.avatar) {
             localStorage.setItem("chat_profile_" + key, JSON.stringify({ color: profile.color, avatar: profile.avatar }));
@@ -1710,12 +1707,8 @@ function fetchFromSheets() {
         if (profilesChanged) { loadUsers(); renderSidebar(); renderMessages(); }
       }
       sheetsSynced = true; updateSheetsStatus();
-    } catch(e) { sheetsSynced = false; updateSheetsStatus(); }
-  };
-
-  script.src = sheetsUrl + "?action=getMessages&callback=" + cbName + "&t=" + Date.now();
-  script.onerror = () => { clearTimeout(timeout); script.remove(); delete window[cbName]; sheetsSynced = false; updateSheetsStatus(); };
-  document.head.appendChild(script);
+    }
+  } catch(e) { sheetsSynced = false; updateSheetsStatus(); }
 }
 
 function saveSetup() {
@@ -1736,7 +1729,6 @@ function copyAppsScript() {
 
 function doGet(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const callback = e.parameter && e.parameter.callback;
 
   // Mensagens
   const sheet = ss.getSheetByName('mensagens');
@@ -1778,14 +1770,8 @@ function doGet(e) {
     }
   } catch(e) {}
 
-  const json = JSON.stringify({ messages, typing, profiles });
-  if (callback) {
-    return ContentService
-      .createTextOutput(callback + "(" + json + ")")
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
-  }
   return ContentService
-    .createTextOutput(json)
+    .createTextOutput(JSON.stringify({ messages, typing, profiles }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
