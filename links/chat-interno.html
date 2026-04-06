@@ -600,6 +600,14 @@ const DEFAULT_CHANNELS = ["geral", "avisos", "fiscal", "societario", "dp"];
 const EMOJIS = ["👍","❤️","😂","😮","😢","🎉","🔥","✅","❌","👀","💯","🙌","😎","🚀","💡","⚠️","📌","🙏","👋","💬","📦","🕐","✔️","❓"];
 const COLOR_SWATCHES = ["#5865f2","#f0a500","#3ba55d","#ed4245","#9b59b6","#e91e8c","#00bcd4","#ff7043","#26c6da","#8bc34a"];
 const STORAGE_USER_KEY = "chat_currentUser";
+const MAX_MSG_LENGTH = 4000;
+const MAX_B64_LENGTH = 40000;
+const MAX_IMG_SIZE_KB = 150;
+const MAX_IMG_PIXELS = 480;
+if (text.length > MAX_MSG_LENGTH && !text.startsWith("data:image/")) {
+  alert("Mensagem muito longa! Limite: " + MAX_MSG_LENGTH + " caracteres.");
+  return;
+}
 const MSG_PER_PAGE = 50;
 
 // ============================================================
@@ -1340,11 +1348,15 @@ function triggerImageUpload() { document.getElementById("image-input").click(); 
 function handleImageUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
+  if (file.size > MAX_IMG_SIZE_KB * 1024) {
+  alert("Imagem muito grande! Máx: " + MAX_IMG_SIZE_KB + "KB");
+  e.target.value = ""; return;
+}
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      const maxW = 600, maxH = 600;
+      const maxW = 480, maxH = 480;
       let w = img.width, h = img.height;
       if (w > maxW) { h = h * maxW / w; w = maxW; }
       if (h > maxH) { w = w * maxH / h; h = maxH; }
@@ -1682,9 +1694,8 @@ async function fetchFromSheets() {
     const data = await res.json();
     if (data && data.messages) {
       let hasNew = false;
-      data.messages.forEach(msg => { if (addMessage(msg)) hasNew = true; });
-      if (hasNew) { saveLocalMessages(); renderMessages(); renderSidebar(); }
-      if (data.typing) {
+      const safe = data.messages.filter(m => m && String(m.text||'').length <= MAX_B64_LENGTH);
+      safe.forEach(msg => { if (addMessage(msg)) hasNew = true; });
         updateTypingIndicator(
           data.typing.filter(t => t.channel === currentChannel && t.user !== currentUser.key && Date.now() - t.ts < 4000).map(t => t.user)
         );
