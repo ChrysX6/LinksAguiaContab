@@ -1811,14 +1811,14 @@ async function callBotCommand() {
   input.value = "";
 }
 
-async function askGemini(pergunta) {
+async function askGemini(pergunta, tentativa = 1) {
   let geminiKey = localStorage.getItem("chat_gemini_key");
   if (!geminiKey) {
-    geminiKey = prompt("🔑 Configure sua chave da API Google Gemini (grátis em https://aistudio.google.com/apikey):");
+    geminiKey = prompt("🔑 Configure sua chave da API Google Gemini:");
     if (geminiKey) {
       localStorage.setItem("chat_gemini_key", geminiKey);
     } else {
-      throw new Error("Chave não configurada. Vá em Configurações ⚙️ e cole sua chave Gemini.");
+      throw new Error("Chave não configurada.");
     }
   }
   
@@ -1826,7 +1826,7 @@ async function askGemini(pergunta) {
   
   const prompt = `Você é um assistente profissional chamado "ChatBot" que ajuda uma equipe de escritório. 
 Contexto: Os usuários são colaboradores de um escritório (Administrador, Fiscal, Societário, DP, Gestor).
-Seja direto, útil e amigável. Responda em português de forma concisa (máximo 3 parágrafos).
+Seja direto, útil e amigável. Responda em português de forma concisa.
 Pergunta: ${pergunta}`;
   
   try {
@@ -1840,11 +1840,19 @@ Pergunta: ${pergunta}`;
     });
     
     if (response.status === 429) {
-      throw new Error("Limite de requisições excedido (429). Aguarde 1 minuto e tente novamente. O plano gratuito do Gemini tem limite de 60 req/minuto.");
+      if (tentativa <= 3) {
+        // Tenta novamente após esperar mais tempo
+        const tempoEspera = tentativa * 3000; // 3s, 6s, 9s
+        addSystemMessage(`⏳ Limite da API atingido. Tentando novamente em ${tempoEspera/1000} segundos... (tentativa ${tentativa}/3)`);
+        await new Promise(resolve => setTimeout(resolve, tempoEspera));
+        return askGemini(pergunta, tentativa + 1);
+      } else {
+        throw new Error("API Gemini está com limite excedido. Tente novamente em alguns minutos.");
+      }
     }
     
     if (response.status === 403) {
-      throw new Error("Chave inválida ou não autorizada (403). Crie uma nova chave em https://aistudio.google.com/apikey");
+      throw new Error("Chave inválida. Crie uma nova chave em aistudio.google.com/apikey");
     }
     
     if (!response.ok) {
@@ -1852,17 +1860,14 @@ Pergunta: ${pergunta}`;
     }
     
     const data = await response.json();
-    const resposta = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
-    return resposta;
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
     
   } catch (error) {
-    if (error.message.includes("429")) {
-      throw new Error("⏳ Muitas requisições! Aguarde 1 minuto e tente novamente.");
-    }
+    if (error.message.includes("429")) throw error;
     throw error;
   }
 }
-
+  
 function addSystemMessage(text) {
   const msg = {
     id: "sys_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
