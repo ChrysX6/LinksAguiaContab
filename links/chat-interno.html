@@ -399,6 +399,17 @@
   }
   #pinned-bar.show { display: flex; }
   #pinned-bar:hover { background: rgba(240,165,0,0.1); }
+
+  .bot-thinking {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--bg-tertiary); padding: 2px 8px; border-radius: 12px;
+  font-size: 11px; color: var(--text-muted);
+  }
+  .bot-thinking span { animation: blink 1.2s infinite; }
+  .bot-thinking span:nth-child(2) { animation-delay: 0.2s; }
+  .bot-thinking span:nth-child(3) { animation-delay: 0.4s; }
+  .msg-group.bot-msg { background: rgba(59,165,93,0.08); border-left: 2px solid var(--success); padding-left: 10px; }
+  .bot-badge { font-size: 10px; color: var(--success); background: rgba(59,165,93,0.15); padding: 1px 5px; border-radius: 4px; margin-left: 6px; };
 </style>
 </head>
 <body>
@@ -1079,6 +1090,10 @@ function addQuickReaction(msgId) {
 // SEND
 // ============================================================
 function sendMessage() {
+  if (text.startsWith("/ia")) {
+    callBotCommand();
+    return;
+  }
   const input = document.getElementById("msg-input");
   const text = input.value.trim();
   if (!text) return;
@@ -1872,6 +1887,131 @@ function ok() { return ContentService.createTextOutput('ok'); }`;
 // ============================================================
 function openModal(id) { document.getElementById(id).classList.add("show"); }
 function closeModal(id) { document.getElementById(id).classList.remove("show"); }
+
+// ============================================================
+// 🤖 CHATBOT COM GEMINI
+// ============================================================
+
+async function callBotCommand() {
+  const input = document.getElementById("msg-input");
+  let text = input.value.trim();
+  
+  if (!text) {
+    input.value = "/ia ";
+    input.focus();
+    return;
+  }
+  
+  let pergunta = text;
+  if (text.startsWith("/ia ")) {
+    pergunta = text.substring(4).trim();
+  } else if (text.startsWith("/ia")) {
+    pergunta = text.substring(3).trim();
+  }
+  
+  if (!pergunta) {
+    addSystemMessage("🤖 Comandos disponíveis:\n• `/ia pergunta` - Pergunte algo para a IA\n• Exemplo: `/ia o que é CRM?`");
+    input.value = "";
+    return;
+  }
+  
+  const thinkingId = "bot_thinking_" + Date.now();
+  addTempMessage(thinkingId, "🤖 **IA está pensando** <span class='bot-thinking'><span>●</span><span>●</span><span>●</span></span>");
+  
+  try {
+    const resposta = await askGemini(pergunta);
+    removeTempMessage(thinkingId);
+    
+    const botMsg = {
+      id: "bot_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+      channel: currentChannel,
+      author: "🤖 Assistente IA",
+      text: `**🤖 Assistente IA:**\n\n${resposta}`,
+      time: new Date().toISOString(),
+      reactions: {},
+      replyTo: null,
+      edited: false,
+      isBot: true
+    };
+    addMessage(botMsg);
+    saveLocalMessages();
+    renderMessages();
+    scrollToBottom();
+    
+  } catch (error) {
+    removeTempMessage(thinkingId);
+    addSystemMessage(`❌ Erro na IA: ${error.message}`);
+  }
+  
+  input.value = "";
+}
+
+async function askGemini(pergunta) {
+  let geminiKey = localStorage.getItem("chat_gemini_key");
+  if (!geminiKey) {
+    geminiKey = prompt("🔑 Configure sua chave da API Google Gemini (grátis em https://aistudio.google.com/apikey):");
+    if (geminiKey) localStorage.setItem("chat_gemini_key", geminiKey);
+    else throw new Error("Chave não configurada");
+  }
+  
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`;
+  
+  const prompt = `Você é um assistente profissional chamado "ChatBot" que ajuda uma equipe de escritório. 
+Contexto: Os usuários são colaboradores de um escritório (Administrador, Fiscal, Societário, DP, Gestor).
+Seja direto, útil e amigável. Responda em português.
+Pergunta: ${pergunta}`;
+  
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+    })
+  });
+  
+  if (!response.ok) throw new Error(`API Gemini: ${response.status}`);
+  
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
+}
+
+function addSystemMessage(text) {
+  const msg = {
+    id: "sys_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+    channel: currentChannel,
+    author: "system",
+    text,
+    time: new Date().toISOString(),
+    reactions: {},
+    isSystem: true
+  };
+  addMessage(msg);
+  renderMessages();
+  scrollToBottom();
+}
+
+function addTempMessage(id, html) {
+  const area = document.getElementById("messages-area");
+  const div = document.createElement("div");
+  div.id = id;
+  div.className = "msg-group bot-msg";
+  div.innerHTML = `<div style="width:36px;flex-shrink:0;"></div>
+    <div class="msg-body">
+      <div class="msg-meta">
+        <span class="msg-author" style="color:var(--success)">🤖 Assistente IA</span>
+        <span class="msg-time">${new Date().toLocaleTimeString()}</span>
+      </div>
+      <div class="msg-text">${html}</div>
+    </div>`;
+  area.appendChild(div);
+  scrollToBottom();
+}
+
+function removeTempMessage(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
 </script>
 </body>
 </html>
