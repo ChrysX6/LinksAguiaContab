@@ -600,15 +600,13 @@ const DEFAULT_CHANNELS = ["geral", "avisos", "fiscal", "societario", "dp"];
 const EMOJIS = ["👍","❤️","😂","😮","😢","🎉","🔥","✅","❌","👀","💯","🙌","😎","🚀","💡","⚠️","📌","🙏","👋","💬","📦","🕐","✔️","❓"];
 const COLOR_SWATCHES = ["#5865f2","#f0a500","#3ba55d","#ed4245","#9b59b6","#e91e8c","#00bcd4","#ff7043","#26c6da","#8bc34a"];
 const STORAGE_USER_KEY = "chat_currentUser";
+const MSG_PER_PAGE = 50;
+
+// ① Constantes de limite — adicionadas conforme solicitado
 const MAX_MSG_LENGTH = 4000;
 const MAX_B64_LENGTH = 40000;
 const MAX_IMG_SIZE_KB = 150;
 const MAX_IMG_PIXELS = 480;
-if (text.length > MAX_MSG_LENGTH && !text.startsWith("data:image/")) {
-  alert("Mensagem muito longa! Limite: " + MAX_MSG_LENGTH + " caracteres.");
-  return;
-}
-const MSG_PER_PAGE = 50;
 
 // ============================================================
 // STATE
@@ -1085,6 +1083,12 @@ function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
+  // ② Validação de tamanho máximo da mensagem
+  if (text.length > MAX_MSG_LENGTH && !text.startsWith("data:image/")) {
+    alert("Mensagem muito longa! Limite: " + MAX_MSG_LENGTH + " caracteres.");
+    return;
+  }
+
   const msg = {
     id: Date.now() + "_" + Math.random().toString(36).slice(2, 6),
     channel: currentChannel,
@@ -1348,22 +1352,27 @@ function triggerImageUpload() { document.getElementById("image-input").click(); 
 function handleImageUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
+
+  // ③ Validação de tamanho do arquivo antes do upload
   if (file.size > MAX_IMG_SIZE_KB * 1024) {
-  alert("Imagem muito grande! Máx: " + MAX_IMG_SIZE_KB + "KB");
-  e.target.value = ""; return;
-}
+    alert("Imagem muito grande! Máx: " + MAX_IMG_SIZE_KB + "KB");
+    e.target.value = "";
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      const maxW = 480, maxH = 480;
+      // ③ Dimensões máximas reduzidas de 600 para 480px, qualidade de 0.8 para 0.72
+      const maxW = MAX_IMG_PIXELS, maxH = MAX_IMG_PIXELS;
       let w = img.width, h = img.height;
       if (w > maxW) { h = h * maxW / w; w = maxW; }
       if (h > maxH) { w = w * maxH / h; h = maxH; }
       const canvas = document.createElement("canvas");
       canvas.width = w; canvas.height = h;
       canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.72);
       const input = document.getElementById("msg-input");
       if (input.value.trim()) input.value += "\n";
       input.value += dataUrl;
@@ -1694,8 +1703,11 @@ async function fetchFromSheets() {
     const data = await res.json();
     if (data && data.messages) {
       let hasNew = false;
-      const safe = data.messages.filter(m => m && String(m.text||'').length <= MAX_B64_LENGTH);
+      // ④ Filtrar mensagens com texto muito grande antes de processar
+      const safe = data.messages.filter(m => m && String(m.text || '').length <= MAX_B64_LENGTH);
       safe.forEach(msg => { if (addMessage(msg)) hasNew = true; });
+      if (hasNew) { saveLocalMessages(); renderMessages(); renderSidebar(); }
+      if (data.typing) {
         updateTypingIndicator(
           data.typing.filter(t => t.channel === currentChannel && t.user !== currentUser.key && Date.now() - t.ts < 4000).map(t => t.user)
         );
