@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat Interno + IA 🤖</title>
+<title>Chat Interno + IA Groq 🚀</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -413,9 +413,9 @@
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
-      <div class="logo-icon">🤖</div>
-      <h1>Chat Interno + IA</h1>
-      <p>Com assistente inteligente integrado</p>
+      <div class="logo-icon">🚀</div>
+      <h1>Chat Interno + IA Groq</h1>
+      <p>Assistente ultrarrápido integrado</p>
     </div>
     <label>Usuário</label>
     <input id="login-user" type="text" placeholder="seu.nome" autocomplete="off" />
@@ -480,9 +480,9 @@
 
     <hr class="setup-section-divider" />
 
-    <label>🤖 Google Gemini API (grátis)</label>
-    <input type="password" id="gemini-api-key" placeholder="AIzaSy..." style="font-family:monospace;" />
-    <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">Pegue sua chave em: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent);">aistudio.google.com/apikey</a></p>
+    <label>🚀 Groq API (ultrarrápida - recomendada)</label>
+    <input type="password" id="groq-api-key" placeholder="gsk_..." style="font-family:monospace;" value="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" />
+    <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">Pegue sua chave em: <a href="https://console.groq.com/keys" target="_blank" style="color:var(--accent);">console.groq.com/keys</a> (grátis)</p>
 
     <hr class="setup-section-divider" />
 
@@ -511,7 +511,7 @@
   <!-- SIDEBAR -->
   <div id="sidebar">
     <div class="sidebar-header">
-      <span class="workspace-name">🤖 Equipe + IA</span>
+      <span class="workspace-name">🚀 Equipe + IA Groq</span>
       <div style="display:flex;align-items:center;gap:5px;">
         <div class="sheets-badge">
           <div class="sheets-dot" id="sheets-dot"></div>
@@ -580,7 +580,7 @@
         <button class="fmt-btn" onclick="insertFormat('`','`')" title="Código inline">&lt;/&gt;</button>
         <button class="fmt-btn" onclick="insertFormat('```\n','\n```')" title="Bloco de código">```</button>
         <div class="fmt-sep"></div>
-        <button class="fmt-btn" style="color:var(--success);" onclick="callBotCommand()" title="IA Assistente">🤖 IA</button>
+        <button class="fmt-btn" style="color:var(--success);" onclick="callGroqCommand()" title="IA Groq (ultrarrápida)">⚡ IA Groq</button>
       </div>
       <div class="input-box" style="position:relative;">
         <textarea id="msg-input" rows="1" placeholder="Mensagem... (/ia pergunta ou @ para mencionar)"></textarea>
@@ -627,7 +627,7 @@ let currentChannel = "geral";
 let channels = [...DEFAULT_CHANNELS];
 let messages = {};
 let sheetsUrl = "";
-let geminiApiKey = "";
+let groqApiKey = "";
 let sheetsSynced = false;
 let unreadCounts = {};
 let mutedChannels = {};
@@ -661,9 +661,9 @@ window.onload = () => {
   sheetsUrl = savedUrl || DEFAULT_SHEETS_URL || "";
   if (!savedUrl && sheetsUrl) localStorage.setItem("chat_sheetsUrl", sheetsUrl);
   
-  geminiApiKey = localStorage.getItem("chat_gemini_key") || "";
-  if (document.getElementById("gemini-api-key")) {
-    document.getElementById("gemini-api-key").value = geminiApiKey;
+  groqApiKey = localStorage.getItem("chat_groq_key") || "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";
+  if (document.getElementById("groq-api-key")) {
+    document.getElementById("groq-api-key").value = groqApiKey;
   }
 
   channels = JSON.parse(localStorage.getItem("chat_channels") || JSON.stringify(DEFAULT_CHANNELS));
@@ -945,7 +945,7 @@ function buildMsgEl(msg, idx, msgs) {
   const isMine = msg.author === currentUser.key;
   const hasMention = msg.text && msg.text.includes("@" + currentUser.name);
   const pinned = isPinned(msg.id);
-  const isBot = msg.author === "🤖 Assistente IA" || msg.isBot;
+  const isBot = msg.author === "🚀 Assistente Groq" || msg.isBot;
 
   const group = document.createElement("div");
   group.className = "msg-group"
@@ -982,17 +982,17 @@ function buildMsgEl(msg, idx, msgs) {
   // avatar
   const avatarEl = sameAuthor
     ? `<div style="width:36px;flex-shrink:0;"></div>`
-    : `<div class="msg-avatar" style="background:${u.color}22;color:${u.color};" onclick="openDmWith('${msg.author}')">${u.avatar ? `<img src="${u.avatar}" />` : (isBot ? "🤖" : u.name[0])}</div>`;
+    : `<div class="msg-avatar" style="background:${u.color}22;color:${u.color};" onclick="openDmWith('${msg.author}')">${u.avatar ? `<img src="${u.avatar}" />` : (isBot ? "🚀" : u.name[0])}</div>`;
 
   group.innerHTML = `
     ${avatarEl}
     <div class="msg-body">
       ${!sameAuthor ? `<div class="msg-meta">
-        <span class="msg-author" style="color:${isBot ? "var(--success)" : u.color}" onclick="openDmWith('${msg.author}')">${isBot ? "🤖 Assistente IA" : u.name}</span>
+        <span class="msg-author" style="color:${isBot ? "var(--success)" : u.color}" onclick="openDmWith('${msg.author}')">${isBot ? "🚀 Assistente Groq" : u.name}</span>
         <span class="msg-time">${timeStr}</span>
         ${msg.edited ? `<span class="msg-edited">(editado)</span>` : ""}
         ${pinned ? `<span class="pin-badge">📌 fixado</span>` : ""}
-        ${isBot ? `<span class="bot-badge">🤖 IA</span>` : ""}
+        ${isBot ? `<span class="bot-badge">⚡ Groq</span>` : ""}
       </div>` : ""}
       ${replyHTML}
       <div class="msg-text${msg.isSystem ? " system" : ""}" id="msgtext_${msg.id}">${formatText(msg.text)}</div>
@@ -1104,9 +1104,9 @@ function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
-  // Comando da IA
+  // Comando da IA Groq
   if (text.startsWith("/ia")) {
-    callBotCommand();
+    callGroqCommand();
     return;
   }
 
@@ -1649,7 +1649,7 @@ function updateTitle() {
   const total = Object.entries(unreadCounts)
     .filter(([ch]) => !mutedChannels[ch])
     .reduce((sum, [, c]) => sum + c, 0);
-  document.title = total > 0 ? `(${total}) Chat + IA 🤖` : "Chat + IA 🤖";
+  document.title = total > 0 ? `(${total}) Chat + Groq 🚀` : "Chat + Groq 🚀";
 }
 
 // ============================================================
@@ -1745,9 +1745,9 @@ async function fetchFromSheets() {
 
 function saveSetup() {
   sheetsUrl = document.getElementById("sheets-url-input").value.trim();
-  geminiApiKey = document.getElementById("gemini-api-key").value.trim();
+  groqApiKey = document.getElementById("groq-api-key").value.trim();
   localStorage.setItem("chat_sheetsUrl", sheetsUrl);
-  localStorage.setItem("chat_gemini_key", geminiApiKey);
+  localStorage.setItem("chat_groq_key", groqApiKey);
   closeModal("setup-modal");
   updateSheetsStatus();
   clearInterval(pollInterval);
@@ -1755,9 +1755,9 @@ function saveSetup() {
 }
 
 // ============================================================
-// 🤖 CHATBOT COM GEMINI
+// 🚀 IA GROQ (ULTRARRÁPIDA)
 // ============================================================
-async function callBotCommand() {
+async function callGroqCommand() {
   const input = document.getElementById("msg-input");
   let text = input.value.trim();
   
@@ -1775,23 +1775,23 @@ async function callBotCommand() {
   }
   
   if (!pergunta) {
-    addSystemMessage("🤖 Comandos disponíveis:\n• `/ia pergunta` - Pergunte algo para a IA\n• Exemplo: `/ia o que é CRM?`\n• Clique no botão 🤖 IA na toolbar");
+    addSystemMessage("🚀 Comandos disponíveis:\n• `/ia pergunta` - Pergunte algo para a IA Groq (ultrarrápida)\n• Exemplo: `/ia o que é CRM?`\n• Clique no botão ⚡ IA Groq na toolbar");
     input.value = "";
     return;
   }
   
   const thinkingId = "bot_thinking_" + Date.now();
-  addTempMessage(thinkingId, "🤖 **IA está pensando** <span class='bot-thinking'><span>●</span><span>●</span><span>●</span></span>");
+  addTempMessage(thinkingId, "🚀 **Groq está pensando** <span class='bot-thinking'><span>●</span><span>●</span><span>●</span></span>");
   
   try {
-    const resposta = await askGemini(pergunta);
+    const resposta = await askGroq(pergunta);
     removeTempMessage(thinkingId);
     
     const botMsg = {
       id: "bot_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
       channel: currentChannel,
-      author: "🤖 Assistente IA",
-      text: `**🤖 Assistente IA:**\n\n${resposta}`,
+      author: "🚀 Assistente Groq",
+      text: `**🚀 Assistente Groq:**\n\n${resposta}`,
       time: new Date().toISOString(),
       reactions: {},
       replyTo: null,
@@ -1805,67 +1805,56 @@ async function callBotCommand() {
     
   } catch (error) {
     removeTempMessage(thinkingId);
-    addSystemMessage(`❌ Erro na IA: ${error.message}`);
+    addSystemMessage(`❌ Erro na Groq: ${error.message}`);
   }
   
   input.value = "";
 }
 
-async function askGemini(pergunta, tentativa = 1) {
-  let geminiKey = localStorage.getItem("chat_gemini_key");
-  if (!geminiKey) {
-    geminiKey = prompt("🔑 Configure sua chave da API Google Gemini:");
-    if (geminiKey) {
-      localStorage.setItem("chat_gemini_key", geminiKey);
+async function askGroq(pergunta) {
+  let groqKey = localStorage.getItem("chat_groq_key");
+  if (!groqKey) {
+    groqKey = prompt("🔑 Configure sua chave da API Groq (grátis em https://console.groq.com/keys):");
+    if (groqKey) {
+      localStorage.setItem("chat_groq_key", groqKey);
     } else {
-      throw new Error("Chave não configurada.");
+      throw new Error("Chave não configurada. Vá em Configurações ⚙️ e cole sua chave Groq.");
     }
   }
   
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`;
-  
-  const prompt = `Você é um assistente profissional chamado "ChatBot" que ajuda uma equipe de escritório. 
+  // 🔥 CORREÇÃO: a variável prompt NÃO pode se chamar "prompt" (conflito com a função nativa)
+  const systemPrompt = `Você é um assistente profissional chamado "GroqBot" que ajuda uma equipe de escritório. 
 Contexto: Os usuários são colaboradores de um escritório (Administrador, Fiscal, Societário, DP, Gestor).
-Seja direto, útil e amigável. Responda em português de forma concisa.
+Seja direto, útil, amigável e conciso. Responda em português.
 Pergunta: ${pergunta}`;
   
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
-      })
-    });
-    
+  const url = "https://api.groq.com/openai/v1/chat/completions";
+  
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${groqKey}`
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: systemPrompt }],
+      temperature: 0.7,
+      max_tokens: 500
+    })
+  });
+  
+  if (!response.ok) {
+    const errorText = await response.text();
     if (response.status === 429) {
-      if (tentativa <= 3) {
-        // Tenta novamente após esperar mais tempo
-        const tempoEspera = tentativa * 3000; // 3s, 6s, 9s
-        addSystemMessage(`⏳ Limite da API atingido. Tentando novamente em ${tempoEspera/1000} segundos... (tentativa ${tentativa}/3)`);
-        await new Promise(resolve => setTimeout(resolve, tempoEspera));
-        return askGemini(pergunta, tentativa + 1);
-      } else {
-        throw new Error("API Gemini está com limite excedido. Tente novamente em alguns minutos.");
-      }
+      throw new Error("Limite de requisições excedido. Aguarde alguns segundos.");
     }
-    
-    if (response.status === 403) {
-      throw new Error("Chave inválida. Crie uma nova chave em aistudio.google.com/apikey");
-    }
-    
-    if (!response.ok) {
-      throw new Error(`Erro ${response.status}: ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
-    
-  } catch (error) {
-    if (error.message.includes("429")) throw error;
-    throw error;
+    throw new Error(`Groq API: ${response.status} - ${errorText.substring(0, 100)}`);
   }
+  
+  const data = await response.json();
+  const resposta = data.choices?.[0]?.message?.content || "Desculpe, não consegui gerar uma resposta.";
+  return resposta;
 }
   
 function addSystemMessage(text) {
@@ -1891,9 +1880,9 @@ function addTempMessage(id, html) {
   div.innerHTML = `<div style="width:36px;flex-shrink:0;"></div>
     <div class="msg-body">
       <div class="msg-meta">
-        <span class="msg-author" style="color:var(--success)">🤖 Assistente IA</span>
+        <span class="msg-author" style="color:var(--success)">🚀 Assistente Groq</span>
         <span class="msg-time">${new Date().toLocaleTimeString()}</span>
-        <span class="bot-badge">🤖 IA</span>
+        <span class="bot-badge">⚡ Groq</span>
       </div>
       <div class="msg-text">${html}</div>
     </div>`;
@@ -1916,7 +1905,6 @@ function copyAppsScript() {
 function doGet(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // Mensagens
   const sheet = ss.getSheetByName('mensagens');
   const data = sheet.getDataRange().getValues();
   const messages = [];
@@ -1931,7 +1919,6 @@ function doGet(e) {
     });
   }
 
-  // Typing
   let typing = [];
   try {
     const ts = ss.getSheetByName('typing');
@@ -1945,7 +1932,6 @@ function doGet(e) {
     }
   } catch(e) {}
 
-  // Profiles
   let profiles = {};
   try {
     const ps = ss.getSheetByName('profiles');
