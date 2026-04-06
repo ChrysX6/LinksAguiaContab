@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat Interno</title>
+<title>Chat Interno + IA 🤖</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -26,7 +26,6 @@
     --dm-color: #f0a500;
     --mention-bg: rgba(88,101,242,0.18);
     --mention-border: rgba(88,101,242,0.5);
-    --reply-bg: rgba(255,255,255,0.04);
     --font: 'IBM Plex Sans', sans-serif;
     --mono: 'IBM Plex Mono', monospace;
     --sidebar-w: 240px;
@@ -176,6 +175,7 @@
   .msg-group:hover { background: rgba(255,255,255,0.025); }
   .msg-group.has-mention { background: var(--mention-bg); border-left: 2px solid var(--mention-border); padding-left: 10px; }
   .msg-group.pinned-msg { background: rgba(240,165,0,0.06); border-left: 2px solid rgba(240,165,0,0.4); padding-left: 10px; }
+  .msg-group.bot-msg { background: rgba(59,165,93,0.08); border-left: 2px solid var(--success); padding-left: 10px; }
 
   .msg-avatar {
     width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
@@ -191,6 +191,7 @@
   .msg-time { font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
   .msg-edited { font-size: 11px; color: var(--text-muted); font-style: italic; }
   .pin-badge { font-size: 10px; color: var(--dm-color); background: rgba(240,165,0,0.12); padding: 1px 5px; border-radius: 4px; }
+  .bot-badge { font-size: 10px; color: var(--success); background: rgba(59,165,93,0.15); padding: 1px 5px; border-radius: 4px; margin-left: 6px; }
 
   .msg-text { font-size: 14px; line-height: 1.55; color: var(--text-primary); word-break: break-word; }
   .msg-text.system { color: var(--text-muted); font-style: italic; font-size: 13px; }
@@ -291,7 +292,7 @@
 
   /* INPUT */
   #input-area { padding: 6px 20px 14px; flex-shrink: 0; }
-  .fmt-toolbar { display: flex; gap: 2px; padding: 2px 0 4px; }
+  .fmt-toolbar { display: flex; gap: 2px; padding: 2px 0 4px; flex-wrap: wrap; }
   .fmt-btn {
     background: none; border: none; color: var(--text-muted); cursor: pointer;
     padding: 3px 7px; border-radius: 5px; font-size: 13px; font-family: var(--font);
@@ -340,7 +341,7 @@
   }
   .modal-box h3 { font-size: 17px; font-weight: 600; margin-bottom: 18px; }
   .modal-box label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; margin-top: 14px; }
-  .modal-box input[type=text], .modal-box input[type=url], .modal-box input[type=color] {
+  .modal-box input[type=text], .modal-box input[type=url], .modal-box input[type=color], .modal-box input[type=password] {
     width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-strong);
     border-radius: 8px; padding: 9px 12px; color: var(--text-primary);
     font-family: var(--font); font-size: 14px; outline: none;
@@ -390,6 +391,8 @@
   .typing-dot { display: inline-block; animation: blink 1.2s infinite; }
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  .bot-thinking { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-tertiary); padding: 2px 8px; border-radius: 12px; font-size: 11px; color: var(--text-muted); }
+  .bot-thinking span { animation: blink 1.2s infinite; }
 
   /* Pinned bar */
   #pinned-bar {
@@ -410,9 +413,9 @@
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
-      <div class="logo-icon">💬</div>
-      <h1>Chat Interno</h1>
-      <p>Acesso exclusivo para colaboradores</p>
+      <div class="logo-icon">🤖</div>
+      <h1>Chat Interno + IA</h1>
+      <p>Com assistente inteligente integrado</p>
     </div>
     <label>Usuário</label>
     <input id="login-user" type="text" placeholder="seu.nome" autocomplete="off" />
@@ -477,6 +480,12 @@
 
     <hr class="setup-section-divider" />
 
+    <label>🤖 Google Gemini API (grátis)</label>
+    <input type="password" id="gemini-api-key" placeholder="AIzaSy..." style="font-family:monospace;" />
+    <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">Pegue sua chave em: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent);">aistudio.google.com/apikey</a></p>
+
+    <hr class="setup-section-divider" />
+
     <label>Aparência</label>
     <div style="display:flex;gap:8px;margin-top:6px;">
       <button class="btn-confirm" id="theme-btn" onclick="toggleTheme()" style="font-size:12px;padding:7px 14px;">🌙 Tema Claro</button>
@@ -491,7 +500,7 @@
 
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('setup-modal')">Fechar</button>
-      <button class="btn-confirm" onclick="saveSetup()">Salvar URL</button>
+      <button class="btn-confirm" onclick="saveSetup()">Salvar</button>
     </div>
   </div>
 </div>
@@ -502,7 +511,7 @@
   <!-- SIDEBAR -->
   <div id="sidebar">
     <div class="sidebar-header">
-      <span class="workspace-name">🏢 Equipe</span>
+      <span class="workspace-name">🤖 Equipe + IA</span>
       <div style="display:flex;align-items:center;gap:5px;">
         <div class="sheets-badge">
           <div class="sheets-dot" id="sheets-dot"></div>
@@ -568,11 +577,13 @@
         <button class="fmt-btn" onclick="insertFormat('_','_')" title="Itálico (Ctrl+I)"><em>I</em></button>
         <button class="fmt-btn" onclick="insertFormat('~~','~~')" title="Riscado"><del>S</del></button>
         <div class="fmt-sep"></div>
-        <button class="fmt-btn" onclick="insertFormat('\`','\`')" title="Código inline">&lt;/&gt;</button>
-        <button class="fmt-btn" onclick="insertFormat('\`\`\`\n','\n\`\`\`')" title="Bloco de código">```</button>
+        <button class="fmt-btn" onclick="insertFormat('`','`')" title="Código inline">&lt;/&gt;</button>
+        <button class="fmt-btn" onclick="insertFormat('```\n','\n```')" title="Bloco de código">```</button>
+        <div class="fmt-sep"></div>
+        <button class="fmt-btn" style="color:var(--success);" onclick="callBotCommand()" title="IA Assistente">🤖 IA</button>
       </div>
       <div class="input-box" style="position:relative;">
-        <textarea id="msg-input" rows="1" placeholder="Mensagem... (@ para mencionar)"></textarea>
+        <textarea id="msg-input" rows="1" placeholder="Mensagem... (/ia pergunta ou @ para mencionar)"></textarea>
         <button class="input-action" onclick="triggerImageUpload()" title="Imagem">🖼️</button>
         <input type="file" id="image-input" accept="image/*" style="display:none" onchange="handleImageUpload(event)" />
         <button class="input-action" onclick="toggleEmoji()" title="Emoji">😊</button>
@@ -595,14 +606,13 @@ const USERS_CONFIG = {
   "Jessica": { pass: "123", name: "Jessica", role: "DP",            color: "#ed4245" },
   "Martins": { pass: "123", name: "Martins", role: "Gestor",        color: "#9b59b6" },
 };
-const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyyW16yOC2SPfAT-5RHnHyMneyC8VcX-dPQr0hPvIC4jzcrd0GBX7nT53SE0TmyFgLe/exec";
+const DEFAULT_SHEETS_URL = "";
 const DEFAULT_CHANNELS = ["geral", "avisos", "fiscal", "societario", "dp"];
 const EMOJIS = ["👍","❤️","😂","😮","😢","🎉","🔥","✅","❌","👀","💯","🙌","😎","🚀","💡","⚠️","📌","🙏","👋","💬","📦","🕐","✔️","❓"];
 const COLOR_SWATCHES = ["#5865f2","#f0a500","#3ba55d","#ed4245","#9b59b6","#e91e8c","#00bcd4","#ff7043","#26c6da","#8bc34a"];
 const STORAGE_USER_KEY = "chat_currentUser";
 const MSG_PER_PAGE = 50;
 
-// ① Constantes de limite — adicionadas conforme solicitado
 const MAX_MSG_LENGTH = 4000;
 const MAX_B64_LENGTH = 40000;
 const MAX_IMG_SIZE_KB = 150;
@@ -617,6 +627,7 @@ let currentChannel = "geral";
 let channels = [...DEFAULT_CHANNELS];
 let messages = {};
 let sheetsUrl = "";
+let geminiApiKey = "";
 let sheetsSynced = false;
 let unreadCounts = {};
 let mutedChannels = {};
@@ -626,7 +637,7 @@ let replyingTo = null;
 let mentionQuery = null;
 let mentionSelectedIdx = 0;
 let lastTypingSent = 0;
-let onlineUsers = {};      // {userKey: lastActiveTimestamp}
+let onlineUsers = {};
 let selectedTheme = "dark";
 let messagePageOffset = {};
 
@@ -649,6 +660,11 @@ window.onload = () => {
   const savedUrl = localStorage.getItem("chat_sheetsUrl");
   sheetsUrl = savedUrl || DEFAULT_SHEETS_URL || "";
   if (!savedUrl && sheetsUrl) localStorage.setItem("chat_sheetsUrl", sheetsUrl);
+  
+  geminiApiKey = localStorage.getItem("chat_gemini_key") || "";
+  if (document.getElementById("gemini-api-key")) {
+    document.getElementById("gemini-api-key").value = geminiApiKey;
+  }
 
   channels = JSON.parse(localStorage.getItem("chat_channels") || JSON.stringify(DEFAULT_CHANNELS));
   mutedChannels = JSON.parse(localStorage.getItem("chat_muted") || "{}");
@@ -659,7 +675,9 @@ window.onload = () => {
   buildColorSwatches();
   applyTheme();
 
-  document.getElementById("sheets-url-input").value = sheetsUrl;
+  if (document.getElementById("sheets-url-input")) {
+    document.getElementById("sheets-url-input").value = sheetsUrl;
+  }
   document.getElementById("login-pass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
   document.getElementById("msg-input").addEventListener("keydown", onInputKeydown);
   document.getElementById("msg-input").addEventListener("input", onInputChange);
@@ -835,7 +853,7 @@ function selectChannel(ch) {
   const other = isDM(ch) ? USERS[dmOtherKey(ch)] : null;
   document.getElementById("msg-input").placeholder = other
     ? `Mensagem privada para ${other.name}...`
-    : `Mensagem em #${ch}... (@ para mencionar)`;
+    : `Mensagem em #${ch}... (/ia pergunta ou @ para mencionar)`;
 
   updatePinnedBar();
   renderMessages();
@@ -927,12 +945,14 @@ function buildMsgEl(msg, idx, msgs) {
   const isMine = msg.author === currentUser.key;
   const hasMention = msg.text && msg.text.includes("@" + currentUser.name);
   const pinned = isPinned(msg.id);
+  const isBot = msg.author === "🤖 Assistente IA" || msg.isBot;
 
   const group = document.createElement("div");
   group.className = "msg-group"
     + (hasMention ? " has-mention" : "")
     + (msg.replyTo ? " is-reply" : "")
-    + (pinned ? " pinned-msg" : "");
+    + (pinned ? " pinned-msg" : "")
+    + (isBot ? " bot-msg" : "");
   group.dataset.msgId = msg.id;
 
   // reply preview
@@ -953,25 +973,26 @@ function buildMsgEl(msg, idx, msgs) {
     <button class="msg-action-btn" onclick="startReply('${msg.id}')" title="Responder">↩️</button>
     <button class="msg-action-btn" onclick="addQuickReaction('${msg.id}')" title="Reagir">😊</button>
     <button class="msg-action-btn" onclick="${pinned ? 'unpinMsg' : 'pinMsg'}('${msg.id}')" title="${pinned ? 'Desafixar' : 'Fixar'}">${pinned ? '📌' : '📍'}</button>`;
-  if (isMine) {
+  if (isMine && !isBot) {
     actionsHTML += `<button class="msg-action-btn" onclick="startEdit('${msg.id}')" title="Editar">✏️</button>
       <button class="msg-action-btn" onclick="deleteMsg('${msg.id}')" title="Excluir" style="color:var(--danger);">🗑️</button>`;
   }
   actionsHTML += "</div>";
 
-  // avatar (hidden if same author in quick succession)
+  // avatar
   const avatarEl = sameAuthor
     ? `<div style="width:36px;flex-shrink:0;"></div>`
-    : `<div class="msg-avatar" style="background:${u.color}22;color:${u.color};" onclick="openDmWith('${msg.author}')">${u.avatar ? `<img src="${u.avatar}" />` : u.name[0]}</div>`;
+    : `<div class="msg-avatar" style="background:${u.color}22;color:${u.color};" onclick="openDmWith('${msg.author}')">${u.avatar ? `<img src="${u.avatar}" />` : (isBot ? "🤖" : u.name[0])}</div>`;
 
   group.innerHTML = `
     ${avatarEl}
     <div class="msg-body">
       ${!sameAuthor ? `<div class="msg-meta">
-        <span class="msg-author" style="color:${u.color}" onclick="openDmWith('${msg.author}')">${u.name}</span>
+        <span class="msg-author" style="color:${isBot ? "var(--success)" : u.color}" onclick="openDmWith('${msg.author}')">${isBot ? "🤖 Assistente IA" : u.name}</span>
         <span class="msg-time">${timeStr}</span>
         ${msg.edited ? `<span class="msg-edited">(editado)</span>` : ""}
         ${pinned ? `<span class="pin-badge">📌 fixado</span>` : ""}
+        ${isBot ? `<span class="bot-badge">🤖 IA</span>` : ""}
       </div>` : ""}
       ${replyHTML}
       <div class="msg-text${msg.isSystem ? " system" : ""}" id="msgtext_${msg.id}">${formatText(msg.text)}</div>
@@ -1083,7 +1104,12 @@ function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
-  // ② Validação de tamanho máximo da mensagem
+  // Comando da IA
+  if (text.startsWith("/ia")) {
+    callBotCommand();
+    return;
+  }
+
   if (text.length > MAX_MSG_LENGTH && !text.startsWith("data:image/")) {
     alert("Mensagem muito longa! Limite: " + MAX_MSG_LENGTH + " caracteres.");
     return;
@@ -1113,27 +1139,22 @@ function sendMessage() {
 }
 
 // ============================================================
-// ADD MESSAGE — FIXED DM BUG
+// ADD MESSAGE
 // ============================================================
 function addMessage(msg) {
   if (!messages[msg.channel]) messages[msg.channel] = [];
   if (messages[msg.channel].find(m => m.id === msg.id)) return false;
   messages[msg.channel].push(msg);
 
-  // Only notify if the message is NOT from me AND (channel != current OR not visible)
-  const isMyMessage = msg.author === currentUser.key;
-  if (isMyMessage) return true; // my own message — no notification
+  const isMyMessage = msg.author === currentUser.key || msg.author === currentUser.name;
+  if (isMyMessage) return true;
 
-  // For DMs: only notify if I am one of the participants
   if (isDM(msg.channel)) {
     const otherKey = dmOtherKey(msg.channel);
-    // The other participant in this DM is the one who wrote it.
-    // I should only get a notification if I AM in this DM (i.e. my key is in the channel key)
     const myKeyInChannel = msg.channel.includes(currentUser.key);
-    if (!myKeyInChannel) return true; // This DM doesn't involve me — skip
+    if (!myKeyInChannel) return true;
   }
 
-  // Now decide: unread badge or active notification
   if (msg.channel !== currentChannel) {
     if (!mutedChannels[msg.channel]) {
       unreadCounts[msg.channel] = (unreadCounts[msg.channel] || 0) + 1;
@@ -1183,7 +1204,6 @@ function confirmEdit(msgId, newText) {
 function deleteMsg(msgId) {
   if (!confirm("Excluir esta mensagem?")) return;
   messages[currentChannel] = (messages[currentChannel] || []).filter(m => m.id !== msgId);
-  // Remove from pinned if pinned
   if (pinnedMessages[currentChannel]) {
     pinnedMessages[currentChannel] = pinnedMessages[currentChannel].filter(id => id !== msgId);
     localStorage.setItem("chat_pinned", JSON.stringify(pinnedMessages));
@@ -1261,7 +1281,6 @@ function doSearch() {
   if (!q) { res.innerHTML = ""; return; }
   let results = [];
   Object.entries(messages).forEach(([ch, msgs]) => {
-    // For DMs, only show if current user is a participant
     if (isDM(ch) && !ch.includes(currentUser.key)) return;
     msgs.forEach(m => { if (m.text && m.text.toLowerCase().includes(q)) results.push({ ch, msg: m }); });
   });
@@ -1353,7 +1372,6 @@ function handleImageUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  // ③ Validação de tamanho do arquivo antes do upload
   if (file.size > MAX_IMG_SIZE_KB * 1024) {
     alert("Imagem muito grande! Máx: " + MAX_IMG_SIZE_KB + "KB");
     e.target.value = "";
@@ -1364,7 +1382,6 @@ function handleImageUpload(e) {
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      // ③ Dimensões máximas reduzidas de 600 para 480px, qualidade de 0.8 para 0.72
       const maxW = MAX_IMG_PIXELS, maxH = MAX_IMG_PIXELS;
       let w = img.width, h = img.height;
       if (w > maxW) { h = h * maxW / w; w = maxW; }
@@ -1495,7 +1512,7 @@ function toggleMute(ch) {
   localStorage.setItem("chat_muted", JSON.stringify(mutedChannels));
   renderSidebar();
   updateTitle();
-  selectChannel(currentChannel); // refresh header mute button
+  selectChannel(currentChannel);
 }
 
 // ============================================================
@@ -1534,17 +1551,14 @@ function handleAvatarUpload(e) {
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      // Redimensiona para 80x80px máximo — suficiente para avatar, cabe no Sheets (~8kb)
       const SIZE = 80;
       const canvas = document.createElement("canvas");
       canvas.width = SIZE; canvas.height = SIZE;
       const ctx = canvas.getContext("2d");
-      // Recorte centralizado (crop quadrado)
       const side = Math.min(img.width, img.height);
       const sx = (img.width  - side) / 2;
       const sy = (img.height - side) / 2;
       ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
-      // Qualidade 0.7 → ~6-10kb
       const compressed = canvas.toDataURL("image/jpeg", 0.7);
       document.getElementById("profile-avatar-url").value = compressed;
       document.getElementById("profile-preview").innerHTML =
@@ -1559,16 +1573,13 @@ function saveProfile() {
   const avatar = document.getElementById("profile-avatar-url").value.trim();
   const color  = document.getElementById("profile-color").value;
 
-  // Aviso se a foto ainda for grande demais (ex: URL externa muito longa ou base64 antigo)
   if (avatar.length > 50000) {
-    alert("⚠️ A foto é grande demais para sincronizar com o Sheets.\nUse uma URL externa (ex: link do Google Drive/Imgur) ou faça upload de uma imagem pelo botão acima.");
+    alert("⚠️ A foto é grande demais para sincronizar com o Sheets.\nUse uma URL externa ou faça upload de uma imagem menor.");
     return;
   }
 
-  // 1. Salvar localmente
   localStorage.setItem("chat_profile_" + currentUser.key, JSON.stringify({ avatar, color }));
 
-  // 2. Sincronizar no Sheets para todos verem
   if (sheetsUrl) {
     fetch(sheetsUrl, {
       method: "POST", redirect: "follow",
@@ -1638,7 +1649,7 @@ function updateTitle() {
   const total = Object.entries(unreadCounts)
     .filter(([ch]) => !mutedChannels[ch])
     .reduce((sum, [, c]) => sum + c, 0);
-  document.title = total > 0 ? `(${total}) Chat Interno` : "Chat Interno";
+  document.title = total > 0 ? `(${total}) Chat + IA 🤖` : "Chat + IA 🤖";
 }
 
 // ============================================================
@@ -1703,7 +1714,6 @@ async function fetchFromSheets() {
     const data = await res.json();
     if (data && data.messages) {
       let hasNew = false;
-      // ④ Filtrar mensagens com texto muito grande antes de processar
       const safe = data.messages.filter(m => m && String(m.text || '').length <= MAX_B64_LENGTH);
       safe.forEach(msg => { if (addMessage(msg)) hasNew = true; });
       if (hasNew) { saveLocalMessages(); renderMessages(); renderSidebar(); }
@@ -1716,11 +1726,10 @@ async function fetchFromSheets() {
         Object.entries(data.online).forEach(([key, ts]) => { onlineUsers[key] = ts; });
         renderSidebar();
       }
-      // Sincronizar perfis de outros usuários (cor e foto)
       if (data.profiles) {
         let profilesChanged = false;
         Object.entries(data.profiles).forEach(([key, profile]) => {
-          if (key === currentUser.key) return; // não sobrescreve perfil local próprio
+          if (key === currentUser.key) return;
           const local = JSON.parse(localStorage.getItem("chat_profile_" + key) || "null");
           if (!local || local.color !== profile.color || local.avatar !== profile.avatar) {
             localStorage.setItem("chat_profile_" + key, JSON.stringify({ color: profile.color, avatar: profile.avatar }));
@@ -1736,11 +1745,145 @@ async function fetchFromSheets() {
 
 function saveSetup() {
   sheetsUrl = document.getElementById("sheets-url-input").value.trim();
+  geminiApiKey = document.getElementById("gemini-api-key").value.trim();
   localStorage.setItem("chat_sheetsUrl", sheetsUrl);
+  localStorage.setItem("chat_gemini_key", geminiApiKey);
   closeModal("setup-modal");
   updateSheetsStatus();
   clearInterval(pollInterval);
   if (sheetsUrl) { fetchFromSheets(); pollInterval = setInterval(fetchFromSheets, 3000); }
+}
+
+// ============================================================
+// 🤖 CHATBOT COM GEMINI
+// ============================================================
+async function callBotCommand() {
+  const input = document.getElementById("msg-input");
+  let text = input.value.trim();
+  
+  if (!text) {
+    input.value = "/ia ";
+    input.focus();
+    return;
+  }
+  
+  let pergunta = text;
+  if (text.startsWith("/ia ")) {
+    pergunta = text.substring(4).trim();
+  } else if (text.startsWith("/ia")) {
+    pergunta = text.substring(3).trim();
+  }
+  
+  if (!pergunta) {
+    addSystemMessage("🤖 Comandos disponíveis:\n• `/ia pergunta` - Pergunte algo para a IA\n• Exemplo: `/ia o que é CRM?`\n• Clique no botão 🤖 IA na toolbar");
+    input.value = "";
+    return;
+  }
+  
+  const thinkingId = "bot_thinking_" + Date.now();
+  addTempMessage(thinkingId, "🤖 **IA está pensando** <span class='bot-thinking'><span>●</span><span>●</span><span>●</span></span>");
+  
+  try {
+    const resposta = await askGemini(pergunta);
+    removeTempMessage(thinkingId);
+    
+    const botMsg = {
+      id: "bot_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+      channel: currentChannel,
+      author: "🤖 Assistente IA",
+      text: `**🤖 Assistente IA:**\n\n${resposta}`,
+      time: new Date().toISOString(),
+      reactions: {},
+      replyTo: null,
+      edited: false,
+      isBot: true
+    };
+    addMessage(botMsg);
+    saveLocalMessages();
+    renderMessages();
+    scrollToBottom();
+    
+  } catch (error) {
+    removeTempMessage(thinkingId);
+    addSystemMessage(`❌ Erro na IA: ${error.message}`);
+  }
+  
+  input.value = "";
+}
+
+async function askGemini(pergunta) {
+  let geminiKey = localStorage.getItem("chat_gemini_key");
+  if (!geminiKey) {
+    geminiKey = prompt("🔑 Configure sua chave da API Google Gemini (grátis em https://aistudio.google.com/apikey):");
+    if (geminiKey) {
+      localStorage.setItem("chat_gemini_key", geminiKey);
+    } else {
+      throw new Error("Chave não configurada. Vá em Configurações ⚙️ e cole sua chave Gemini.");
+    }
+  }
+  
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`;
+  
+  const prompt = `Você é um assistente profissional chamado "ChatBot" que ajuda uma equipe de escritório. 
+Contexto: Os usuários são colaboradores de um escritório (Administrador, Fiscal, Societário, DP, Gestor).
+Seja direto, útil e amigável. Responda em português.
+Pergunta: ${pergunta}`;
+  
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+    })
+  });
+  
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`API Gemini: ${response.status} - Verifique sua chave`);
+  }
+  
+  const data = await response.json();
+  const resposta = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
+  return resposta;
+}
+
+function addSystemMessage(text) {
+  const msg = {
+    id: "sys_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+    channel: currentChannel,
+    author: "system",
+    text,
+    time: new Date().toISOString(),
+    reactions: {},
+    isSystem: true
+  };
+  addMessage(msg);
+  renderMessages();
+  scrollToBottom();
+}
+
+function addTempMessage(id, html) {
+  const area = document.getElementById("messages-area");
+  const div = document.createElement("div");
+  div.id = id;
+  div.className = "msg-group bot-msg";
+  div.innerHTML = `<div style="width:36px;flex-shrink:0;"></div>
+    <div class="msg-body">
+      <div class="msg-meta">
+        <span class="msg-author" style="color:var(--success)">🤖 Assistente IA</span>
+        <span class="msg-time">${new Date().toLocaleTimeString()}</span>
+        <span class="bot-badge">🤖 IA</span>
+      </div>
+      <div class="msg-text">${html}</div>
+    </div>`;
+  area.appendChild(div);
+  scrollToBottom();
+}
+
+function removeTempMessage(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
 }
 
 // ============================================================
@@ -1782,7 +1925,7 @@ function doGet(e) {
     }
   } catch(e) {}
 
-  // Profiles (foto + cor de cada usuário)
+  // Profiles
   let profiles = {};
   try {
     const ps = ss.getSheetByName('profiles');
@@ -1844,7 +1987,6 @@ function doPost(e) {
     ts.appendRow([p.user, p.userName, p.channel, p.ts]);
   }
 
-  // Salvar perfil (foto comprimida + cor)
   if (p.action === 'saveProfile') {
     const ps = ss.getSheetByName('profiles');
     const rows = ps.getDataRange().getValues();
@@ -1863,7 +2005,7 @@ function doPost(e) {
 
 function ok() { return ContentService.createTextOutput('ok'); }`;
   navigator.clipboard.writeText(code).then(() =>
-    alert("Código copiado!\n\n✅ Próximos passos:\n1. Apague o código antigo do Apps Script\n2. Cole este novo código\n3. Clique em Implantar → Nova implantação\n4. Tipo: Web App, acesso: Qualquer pessoa\n5. Crie a aba 'profiles' na planilha (além de 'mensagens' e 'typing')")
+    alert("✅ Código copiado!\n\nCrie as abas 'mensagens', 'typing' e 'profiles' na planilha e cole este código no Apps Script.")
   );
 }
 
