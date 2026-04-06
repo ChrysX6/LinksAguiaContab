@@ -1826,26 +1826,41 @@ async function askGemini(pergunta) {
   
   const prompt = `Você é um assistente profissional chamado "ChatBot" que ajuda uma equipe de escritório. 
 Contexto: Os usuários são colaboradores de um escritório (Administrador, Fiscal, Societário, DP, Gestor).
-Seja direto, útil e amigável. Responda em português.
+Seja direto, útil e amigável. Responda em português de forma concisa (máximo 3 parágrafos).
 Pergunta: ${pergunta}`;
   
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
-    })
-  });
-  
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`API Gemini: ${response.status} - Verifique sua chave`);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
+      })
+    });
+    
+    if (response.status === 429) {
+      throw new Error("Limite de requisições excedido (429). Aguarde 1 minuto e tente novamente. O plano gratuito do Gemini tem limite de 60 req/minuto.");
+    }
+    
+    if (response.status === 403) {
+      throw new Error("Chave inválida ou não autorizada (403). Crie uma nova chave em https://aistudio.google.com/apikey");
+    }
+    
+    if (!response.ok) {
+      throw new Error(`Erro ${response.status}: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    const resposta = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
+    return resposta;
+    
+  } catch (error) {
+    if (error.message.includes("429")) {
+      throw new Error("⏳ Muitas requisições! Aguarde 1 minuto e tente novamente.");
+    }
+    throw error;
   }
-  
-  const data = await response.json();
-  const resposta = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta.";
-  return resposta;
 }
 
 function addSystemMessage(text) {
