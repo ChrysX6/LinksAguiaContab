@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal interno dos funcionários da AGUIACONTAB TATUAPÉ">
+    <meta name="keywords" content="Controle, Links, Aguiacontab, Lucro Presumido, Simples Nacional">
+    <meta name="author" content="Chrystian Gabriel">
+    <title>Portal Aguiacontab</title>
+    <link rel="shortcut icon" href="links/img/logo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="links/style.css">
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+    <div class="sidebar-logo">
+        <img src="links/img/logo1.jpg" alt="Logo Aguiacontab" id="sidebar-logo">
+        <span class="sidebar-logo-title">Portal Interno</span>
+    </div>
+
+    <div class="sidebar-section-label">Acesso Rápido</div>
+    <nav class="nav-links">
+        <a class="nav-link" href="https://docs.google.com/spreadsheets/d/19wW4JANvW-ve-tozKRYY7yviYHfE-AhGlIGzpdhkz1I/edit?gid=0#gid=0" target="_blank">
+            <i class="fas fa-database"></i> Dados Empresas
+        </a>
+        <a class="nav-link" href="https://hub.sieg.com/" target="_blank">
+            <i class="fas fa-clipboard-list"></i> SIEG Hub
+        </a>
+        <a class="nav-link" href="https://www.dominioweb.com.br/" target="_blank">
+            <i class="fas fa-globe"></i> Domínios
+        </a>
+        <a class="nav-link" href="https://onvio.com.br/login/#/" target="_blank">
+            <i class="fas fa-comments"></i> Onvio
+        </a>
+        <a class="nav-link" href="https://docs.google.com/spreadsheets/d/1ydNLKX0uswjixbrXFk_CjrLtWZp5qg5yKUR1px2lhCw/edit?gid=237378784#gid=237378784" target="_blank">
+            <i class="fas fa-university"></i> Empresas Pref.
+        </a>
+        <a class="nav-link" href="https://email.uolhost.com.br/" target="_blank">
+            <i class="fas fa-envelope"></i> E-mail UOL
+        </a>
+    </nav>
+
+    <div class="sidebar-section-label" style="margin-top:10px;">Departamentos</div>
+    <nav class="nav-links">
+
+        <!-- DEP. FISCAL -->
+        <div class="nav-dropdown" id="dd-fiscal">
+            <button class="nav-link nav-dropdown-toggle" onclick="toggleDD('dd-fiscal')">
+                <i class="fas fa-chart-line"></i> Dep. Fiscal
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <div class="nav-dropdown-content">
+                <div class="dropdown-inner">
+                    <h5>Tipo de Controle</h5>
+                    <button class="dropdown-item" onclick="showYearSelection('lucro-presumido')">
+                        <i class="fas fa-calculator"></i> Lucro Presumido/Real
+                    </button>
+                    <button class="dropdown-item" onclick="showYearSelection('simples-nacional')">
+                        <i class="fas fa-building"></i> Simples Nacional
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEP. PESSOAL -->
+        <div class="nav-dropdown" id="dd-pessoal">
+            <button class="nav-link nav-dropdown-toggle" onclick="toggleDD('dd-pessoal')">
+                <i class="fas fa-users"></i> Dep. Pessoal
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <div class="nav-dropdown-content">
+                <div class="dropdown-inner">
+                    <h5>Controles DP</h5>
+                    <a href="https://drive.google.com/drive/folders/16dJiLfzd98m7XixRstjNuIFTjHlAC4mQ" target="_blank" class="dropdown-item">
+                        <i class="fas fa-folder"></i> Todos os Controles
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEP. CONTÁBIL -->
+        <div class="nav-dropdown" id="dd-contabil">
+            <button class="nav-link nav-dropdown-toggle" onclick="toggleDD('dd-contabil')">
+                <i class="fas fa-book"></i> Dep. Contábil
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <div class="nav-dropdown-content">
+                <div class="dropdown-inner">
+                    <h5>Controles Contábeis</h5>
+                    <a href="https://drive.google.com/drive/folders/1afARryGTwrtxzlE25qCjvkTvZd1HtH1Z" target="_blank" class="dropdown-item">
+                        <i class="fas fa-folder"></i> Drive Contábil
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1aCNLJoU2HiXHAVwfhmTxPmhVog3d2vee7u31TIBFg6k/edit?usp=sharing" target="_blank" class="dropdown-item">
+                        <i class="fas fa-table"></i> Planilha Nicoly
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        Aguiacontab Tatuapé<br>Portal Interno v2.0
+    </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div id="main">
+
+    <!-- TOPBAR -->
+    <header id="topbar">
+        <div class="topbar-left">
+            <button id="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <input type="text" id="search-bar" placeholder="Buscar sistema ou serviço… (ex: E-CAC, FGTS, eSocial)" oninput="filterLinks()">
+            <button class="topbar-btn-ia" title="Assistente IA" onclick="openAI('https://chat.deepseek.com/')"><i class="fas fa-robot"></i></button>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main id="content">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div class="page-header-text">
+                <h1 id="saudacao-text">☀️ Bom dia, colaborador!</h1>
+                <p>Sistemas, controles e links do escritório</p>
+            </div>
+            <div class="date-badge" id="date-badge">Carregando…</div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="section-title"><i class="fas fa-search"></i> Sistemas e Serviços</div>
+        <div class="section-divider"></div>
+        <div id="search-results"></div>
+
+    </main>
+
+    <footer>
+        Portal atualizado mensalmente · Criado para facilitar a navegação dos colaboradores ·
+        <strong>Aguiacontab Tatuapé</strong>
+    </footer>
+</div>
+
+<!-- ===== MODAL ANO/MÊS ===== -->
+<div class="modal-overlay" id="year-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3 id="modal-title">Selecionar Período</h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="year-section">
+                <div class="modal-section-title">Selecione o Ano</div>
+                <div class="year-btns">
+                    <button class="year-btn" onclick="showMonths(2026)">2026</button>
+                </div>
+            </div>
+            <div id="month-section" style="display:none">
+                <div class="modal-section-title">Selecione o Mês</div>
+                <div class="month-grid" id="month-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== LEFT PANELS ===== -->
+<div class="left-panel-group">
+    <!-- Recados -->
+    <div style="position:relative">
+        <button class="panel-bubble" id="recados-btn" onclick="toggleRecadosPanel()" title="Mural de Recados">
+            <i class="fas fa-sticky-note"></i>
+            <span class="fab-badge" id="recados-badge" style="display:none">0</span>
+        </button>
+        <div class="panel-window" id="recados-panel">
+            <div class="pw-header">
+                <h3><i class="fas fa-sticky-note"></i> Mural de Recados</h3>
+                <button class="pw-close" onclick="closeRecadosPanel()">×</button>
+            </div>
+            <div class="recados-list" id="recados-list"></div>
+            <div class="recado-form">
+                <textarea class="recado-textarea" id="novo-recado" placeholder="Digite seu recado…"></textarea>
+                <div class="recado-form-foot">
+                    <label class="recado-anon-label">
+                        <input type="checkbox" id="recado-anon"> Anônimo
+                    </label>
+                    <button class="recado-send-btn" id="recado-send-btn">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </div>
+            <div class="pw-footer"><i class="fas fa-users"></i> Visível para todos os funcionários</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== FAB GROUP (right) ===== -->
+<div class="fab-group">
+    <button class="fab fab-theme" id="theme-toggle" onclick="toggleTheme()" title="Tema">
+        ☀️
+        <span class="fab-tooltip">Mudar tema</span>
+    </button>
+    <a class="fab fab-bday" href="aniversario/aniversario.html" target="_blank" title="Aniversários">
+        <i class="fas fa-cake-candles"></i>
+        <span class="fab-tooltip">Aniversários</span>
+    </a>
+    <button class="fab fab-notif" id="notif-bell" onclick="toggleNotif()" title="Notificações">
+        🔔
+        <span class="fab-tooltip">Notificações</span>
+    </button>
+</div>
+
+<!-- ===== BOTÃO SECRETO (Ctrl+Y) ===== -->
+<button id="secret-btn" class="secret-btn" onclick="handleSecretBtnClick()" title="Botão Secreto">
+    <i class="fas fa-star"></i> Botão Secreto
+</button>
+
+<!-- ===== SCRIPTS ===== -->
+    <script src="links/javascript.js"></script>
+</body>
+</html>
