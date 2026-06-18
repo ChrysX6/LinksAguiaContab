@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aniversariantes — Aguiacontab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #FFFFFF;
+            --card: #F8F9FF;
+            --card-hover: #EEF2FF;
+            --azul-detalhe: #090950;
+            --gold: #BF932C;
+            --gold-dim: rgba(191, 147, 44, 0.12);
+            --text: #1A1A2E;
+            --text-light: #4A4A6A;
+            --text-muted: #6C6C8A;
+            --border: #E2E6F0;
+            --shadow: 0 4px 12px rgba(9, 9, 80, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+            border-radius: 32px;
+            background: var(--bg);
+        }
+
+        /* Logo da empresa — apenas imagem */
+        .logo-area {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: var(--bg);
+            padding: 1rem 0 0.75rem;
+        }
+
+        .logo-img {
+            max-width: 300px;
+            border-radius: 18px;
+            height: auto;
+            display: inline-block;
+            filter: drop-shadow(0 4px 12px rgba(9, 9, 80, 0.14));
+        }
+
+        /* Título */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center;
+            color: var(--azul-detalhe);
+            margin-bottom: 0.3rem;
+        }
+
+        h1 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .sub {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Busca */
+        .search-box {
+            background: var(--card);
+            border: 1px solid rgba(9, 9, 80, 0.16);
+            border-radius: 60px;
+            padding: 0.75rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--azul-detalhe);
+            box-shadow: 0 0 0 2px rgba(9, 9, 80, 0.1);
+        }
+
+        .search-box span {
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Cards de estatísticas */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            background: var(--card);
+            border: 1px solid rgba(9, 9, 80, 0.16);
+            border-radius: 24px;
+            padding: 0.6rem 0.8rem;
+            text-align: center;
+            flex: 1;
+            transition: all 0.2s;
+        }
+
+        .stat:hover {
+            border-color: var(--gold);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--azul-detalhe);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* Lista */
+        .list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(9, 9, 80, 0.16);
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            border-color: var(--azul-detalhe);
+            box-shadow: 0 6px 14px rgba(9, 9, 80, 0.08);
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--azul-detalhe);
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .card:hover .avatar {
+            border-color: var(--gold);
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--azul-detalhe);
+            margin-bottom: 0.2rem;
+        }
+
+        .date {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .badge {
+            background: var(--gold-dim);
+            border-radius: 40px;
+            padding: 0.3rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--gold);
+            border: 1px solid rgba(191, 147, 44, 0.25);
+        }
+
+        .badge.today {
+            background: var(--gold);
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .badge.past {
+            opacity: 0.6;
+            background: #EEEEF4;
+            color: var(--text-muted);
+        }
+
+        .highlight {
+            background: var(--gold);
+            color: white;
+            padding: 0 2px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-muted);
+            background: var(--card);
+            border-radius: 28px;
+            border: 1px dashed var(--border);
+        }
+
+        .empty span {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        footer span {
+            color: var(--gold);
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                padding: 1.2rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .stats {
+                gap: 0.6rem;
+            }
+            .card {
+                padding: 0.8rem;
+            }
+            .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 0.85rem;
+            }
+            .badge {
+                padding: 0.2rem 0.6rem;
+                font-size: 0.65rem;
+            }
+            .logo-img {
+                max-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- ÁREA DA LOGO: apenas imagem (substitua "logo.png" pelo nome do seu arquivo de logo) -->
+    <div class="logo-area">
+        <img class="logo-img" src="../links/img/logo1.jpg" alt="Logo da empresa" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%2250%22 viewBox=%220 0 150 50%22%3E%3Crect width=%22150%22 height=%2250%22 fill=%22%23F8F9FF%22 stroke=%22%23BF932C%22 stroke-width=%221%22/%3E%3Ctext x=%2275%22 y=%2230%22 text-anchor=%22middle%22 fill=%22%23090950%22 font-size=%2212%22%3EColocar logo aqui%3C/text%3E%3C/svg%3E';">
+    </div>
+
+    <h1>Aniversariantes <em>•</em></h1>
+    <div style="text-align: center;">
+        <div class="sub">celebre cada data especial</div>
+    </div>
+
+    <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar por nome...">
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-number" id="totalCount">0</div>
+            <div class="stat-label">Total</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number" id="monthCount">0</div>
+            <div class="stat-label">Este mês</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number" id="todayCount">0</div>
+            <div class="stat-label">Aniversariantes hoje</div>
+        </div>
+    </div>
+
+    <ul class="list" id="listContainer"></ul>
+
+    <footer>
+        🎂 Feliz aniversário! — com carinho para <span>Aguiacontab</span>
+    </footer>
+</div>
+
+<script>
+    const people = [
+        { name: "Ananda",        date: "2027-02-15" },
+        { name: "Chrystian",     date: "2026-11-25" },
+        { name: "Edson",         date: "2026-08-04" },
+        { name: "Felipe",        date: "2026-08-01" },
+        { name: "Jéssica",       date: "2026-12-20" },
+        { name: "Jorginho",      date: "2026-08-10" },
+        { name: "Lucas",         date: "2026-11-02" },
+        { name: "Marcelo",       date: "2026-09-04" },
+        { name: "Márcia Barreto",date: "2027-02-14" },
+        { name: "Marcio",        date: "2026-07-10" },
+        { name: "Martins",       date: "2027-02-25" },
+        { name: "Nicoly",        date: "2026-04-30" },
+        { name: "Ryan",          date: "2026-04-24" },
+        { name: "Tânia",         date: "2026-05-27" },
+        { name: "Victhor",       date: "2026-07-13" },
+        { name: "Andrea",        date: "2026-12-15" }
+    ];
+
+    const monthsPt = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    function parseDate(dateStr) {
+        const [y, m, d] = dateStr.split('-').map(Number);
+        return { year: y, month: m - 1, day: d };
+    }
+
+    function daysUntilNext(dateStr) {
+        const { month, day } = parseDate(dateStr);
+        let next = new Date(today.getFullYear(), month, day);
+        next.setHours(0, 0, 0, 0);
+        if (next < today) {
+            next.setFullYear(today.getFullYear() + 1);
+        }
+        return Math.round((next - today) / 86400000);
+    }
+
+    function formatDate(dateStr) {
+        const { year, month, day } = parseDate(dateStr);
+        return `${day.toString().padStart(2, '0')} de ${monthsPt[month]} de ${year}`;
+    }
+
+    function getInitials(name) {
+        return name.trim().split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    }
+
+    function highlightText(text, term) {
+        if (!term) return text;
+        const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    const searchInput = document.getElementById('searchInput');
+    const listContainer = document.getElementById('listContainer');
+    const totalSpan = document.getElementById('totalCount');
+    const monthSpan = document.getElementById('monthCount');
+    const todaySpan = document.getElementById('todayCount');
+
+    function updateStatsAndRender() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const currentMonth = today.getMonth();
+        
+        let filtered = people.filter(person => {
+            if (searchTerm && !person.name.toLowerCase().includes(searchTerm)) return false;
+            return true;
+        });
+        
+        let totalThisMonth = 0;
+        let totalToday = 0;
+        people.forEach(person => {
+            const { month } = parseDate(person.date);
+            if (month === currentMonth) totalThisMonth++;
+            if (daysUntilNext(person.date) === 0) totalToday++;
+        });
+        
+        totalSpan.textContent = people.length;
+        monthSpan.textContent = totalThisMonth;
+        todaySpan.textContent = totalToday;
+        
+        filtered.sort((a, b) => daysUntilNext(a.date) - daysUntilNext(b.date));
+        
+        if (filtered.length === 0) {
+            listContainer.innerHTML = `<li class="empty"><span>🎂</span><p>Nenhum aniversariante encontrado</p></li>`;
+            return;
+        }
+        
+        listContainer.innerHTML = '';
+        filtered.forEach(person => {
+            const days = daysUntilNext(person.date);
+            const isToday = days === 0;
+            const isPast = days < 0;
+            
+            let badgeClass = '';
+            let badgeText = '';
+            
+            if (isToday) {
+                badgeClass = 'today';
+                badgeText = '🎉 HOJE!';
+            } else if (isPast) {
+                badgeClass = 'past';
+                badgeText = `Há ${Math.abs(days)} dias`;
+            } else if (days === 1) {
+                badgeText = 'Amanhã';
+            } else {
+                badgeText = `Em ${days} dias`;
+            }
+            
+            const li = document.createElement('li');
+            li.className = 'card';
+            li.innerHTML = `
+                <div class="avatar">${getInitials(person.name)}</div>
+                <div class="info">
+                    <div class="name">${highlightText(person.name, searchTerm)}</div>
+                    <div class="date">${formatDate(person.date)}</div>
+                </div>
+                <div class="badge ${badgeClass}">${badgeText}</div>
+            `;
+            listContainer.appendChild(li);
+        });
+    }
+    
+    searchInput.addEventListener('input', updateStatsAndRender);
+    updateStatsAndRender();
+</script>
+</body>
+</html>
