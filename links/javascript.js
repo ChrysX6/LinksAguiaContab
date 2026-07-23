@@ -93,7 +93,7 @@ function toggleTheme() {
 // ==============================
 const systemsDB = [
     { name:"E-CAC", desc:"Centro Virtual de Atendimento da Receita Federal", url:"https://cav.receita.fazenda.gov.br/", icon:"fas fa-file-invoice-dollar", tags:["receita federal","impostos","declaracoes","fiscal","ecac"] },
-    { name:"DISTRIBUIÇÃO 2025", desc:"Planilha de distribuições do ano de 2025", url:"https://docs.google.com/spreadsheets/d/1KnV2UPIZuCA3rBcubj9-h65jTwY3ypMQ/edit?gid=816413539#gid=816413539", icon:"fas fa-file-invoice-dollar", tags:["Martins","distribuição"] },
+    { name:"ANIVERSARIOS CLIENTES", desc:"Site para visualizar os aniversários dos clientes", url:"https://chrysx6.github.io/AniversariosClientes/", icon:"fa-solid fa-cake-candles", tags:["Martins","clientes","Aniversários"] },
     { name:"CONSULTA OPTANTES SIMPLES", desc:"Consultar empresas optantes pelo Simples Nacional", url:"https://consopt.www8.receita.fazenda.gov.br/consultaoptantes", icon:"fas fa-users", tags:["simples nacional","consulta","optantes"] },
     { name:"CONSULTA CNPJ", desc:"Consulta de CNPJ da Receita Federal", url:"https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp", icon:"fas fa-database", tags:["cnpj","consulta","receita federal"] },
     { name:"JUCESP", desc:"Junta Comercial do Estado de São Paulo", url:"https://www.jucesponline.sp.gov.br/", icon:"fas fa-landmark", tags:["junta comercial","sp","empresas"] },
