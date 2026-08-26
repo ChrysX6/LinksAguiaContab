@@ -95,6 +95,7 @@ const systemsDB = [
     { name:"E-CAC", desc:"Centro Virtual de Atendimento da Receita Federal", url:"https://cav.receita.fazenda.gov.br/", icon:"fas fa-file-invoice-dollar", tags:["receita federal","impostos","declaracoes","fiscal","ecac"] },
     { name:"FECHAMENTO SN", desc:"Fechamento Fiscal - SN", url:"https://chrysx6.github.io/Controle-Fiscal-SN/", icon:"fa-solid fa-solidLarge fa-chart-pie", tags:["fiscal","fechamento","declaracoes",] },
     { name:"FECHAMENTO LP/LR", desc:"Fechamento Fiscal - LP/LR", url:"https://chrysx6.github.io/Controle-Fiscal/", icon:"fa-solid fa-solidLarge fa-chart-pie", tags:["fiscal","fechamento","declaracoes",] },
+    { name:"FECHAMENTO DP", desc:"Fechamento DP", url:"https://chrysx6.github.io/ControleDP/", icon:"fa-solid fa-solidLarge fa-chart-pie", tags:["Departamento Pessoal","fechamento","declaracoes",] },
     { name:"ANIVERSARIOS EMPRESAS", desc:"Site para visualizar os aniversários das empresas", url:"https://chrysx6.github.io/AniversariosEmpresas/", icon:"fa-solid fa-cake-candles", tags:["Martins","empresas","Aniversários"] },
     { name:"ANIVERSARIOS CLIENTES", desc:"Site para visualizar os aniversários dos clientes", url:"https://chrysx6.github.io/AniversariosClientes/", icon:"fa-solid fa-cake-candles", tags:["Martins","clientes","Aniversários"] },
     { name:"CONSULTA OPTANTES SIMPLES", desc:"Consultar empresas optantes pelo Simples Nacional", url:"https://consopt.www8.receita.fazenda.gov.br/consultaoptantes", icon:"fas fa-users", tags:["simples nacional","consulta","optantes"] },
