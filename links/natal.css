@@ -1,0 +1,134 @@
+/* ==============================
+   TEMA NATAL - sobrescreve style.css
+   ============================== */
+:root {
+    --navy:       #14452f;
+    --navy-mid:   #1a5a3d;
+    --navy-light: #1f6b49;
+    --natal-red:      #9b1c24;
+    --natal-red-dark: #6e1018;
+    --natal-green:    #14452f;
+    --natal-green-dk: #0c2e1f;
+    --bg:         #f7f3ea;
+    --bg-hover:   #f3ede0;
+    --border:     #e6dcc6;
+    --shadow-sm:  0 2px 8px rgba(20,69,47,.10);
+    --shadow-md:  0 6px 24px rgba(20,69,47,.16);
+    --shadow-lg:  0 16px 48px rgba(20,69,47,.22);
+}
+
+body.dark {
+    --bg:         #07140e;
+    --bg-card:    #0e2619;
+    --bg-hover:   #14452f;
+    --border:     #1d4a33;
+}
+
+/* Sidebar */
+#sidebar {
+    background: linear-gradient(170deg, #0c2e1f 0%, #14452f 60%, #082017 100%);
+    box-shadow: 4px 0 32px rgba(12,46,31,.40);
+}
+#sidebar::before {
+    content: '';
+    display: block;
+    height: 5px;
+    flex-shrink: 0;
+    background: repeating-linear-gradient(
+        45deg, #9b1c24 0 12px, #f7f3ea 12px 24px
+    );
+}
+
+/* Cabeçalhos e botões que eram azul-marinho */
+.date-badge,
+.sys-icon,
+.year-btn,
+.fab-main,
+.fab-theme,
+.panel-bubble,
+.pw-btn,
+.recado-send-btn {
+    background: linear-gradient(135deg, #14452f 0%, #1a5a3d 100%);
+}
+.modal-head,
+.pw-header {
+    background: linear-gradient(135deg, #9b1c24 0%, #6e1018 100%);
+}
+.system-card::after { background: linear-gradient(135deg, #14452f, #1a5a3d); }
+.month-btn:hover { background: #14452f; border-color: #14452f; }
+.icon-btn:hover { background: #14452f; border-color: #14452f; }
+.fab-tooltip { background: #14452f; }
+.modal-overlay { background: rgba(12,46,31,.60); }
+.fab-bday { background: linear-gradient(135deg, #9b1c24, #b8323b); }
+
+/* Linha decorativa no topo da barra superior */
+#topbar { border-bottom: 2px solid var(--border); position: sticky; }
+#topbar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #9b1c24, #BF932C, #14452f, #BF932C, #9b1c24);
+}
+
+/* Faixa de boas-festas */
+.natal-banner {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    color: #fff;
+    background: linear-gradient(120deg, #6e1018 0%, #9b1c24 55%, #14452f 100%);
+    border: 1px solid rgba(191,147,44,.55);
+    box-shadow: var(--shadow-md);
+}
+.natal-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 90% 20%, rgba(191,147,44,.25), transparent 45%);
+    pointer-events: none;
+}
+.natal-banner-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+.natal-banner-title span { color: #d4a83e; }
+.natal-banner-sub { font-size: 12.5px; opacity: .85; margin-top: 3px; }
+.natal-countdown {
+    position: relative;
+    z-index: 1;
+    background: rgba(0,0,0,.25);
+    border: 1px solid rgba(191,147,44,.5);
+    color: #d4a83e;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Neve */
+#natal-snow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 700;
+}
+
+footer strong { color: #9b1c24; }
+body.dark footer strong { color: #d4a83e; }
+
+@media (max-width: 768px) {
+    .natal-banner { padding: 14px 16px; }
+}
